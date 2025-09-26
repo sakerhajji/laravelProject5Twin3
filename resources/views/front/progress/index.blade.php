@@ -11,9 +11,14 @@
                 $userProgress = $o->progresses->where('user_id', auth()->id());
                 $sum = $userProgress->sum('value');
                 $pct = $o->target_value > 0 ? min(100, round(($sum/$o->target_value)*100)) : 0;
+                $trend = method_exists($o, 'trendForUser') ? $o->trendForUser(auth()->id()) : 'flat';
+                $lastUpdate = method_exists($o, 'lastUpdateForUser') ? $o->lastUpdateForUser(auth()->id()) : null;
             @endphp
             <div class="col-md-6 mb-4">
-                <div class="card h-100">
+                <div class="card h-100 shadow-sm overflow-hidden">
+                    @if($o->cover_url)
+                        <img src="{{ $o->cover_url }}" class="w-100" style="max-height: 140px; object-fit: cover;" alt="cover">
+                    @endif
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -25,8 +30,18 @@
                         <div class="progress mt-3" style="height: 10px;">
                             <div class="progress-bar" role="progressbar" style="width: {{ $pct }}%" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <div class="d-flex justify-content-between mt-2 small text-secondary">
-                            <div>Progression</div><div>{{ $pct }}%</div>
+                        <div class="d-flex justify-content-between mt-2 small text-secondary align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <span>Progression</span>
+                                @if($trend==='up')
+                                    <span class="text-success"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                                @elseif($trend==='down')
+                                    <span class="text-danger"><i class="fa-solid fa-arrow-trend-down"></i></span>
+                                @else
+                                    <span class="text-muted"><i class="fa-solid fa-minus"></i></span>
+                                @endif
+                            </div>
+                            <div>{{ $pct }}%</div>
                         </div>
 
                         <form action="{{ route('front.progress.store') }}" method="post" class="mt-3">
@@ -40,8 +55,12 @@
                         </form>
 
                         @if($userProgress->count())
-                            <div class="mt-3 small text-secondary">Dernière mise à jour: {{ optional($userProgress->first())->entry_date?->format('Y-m-d') }}</div>
+                            <div class="mt-3 small text-secondary">Dernière mise à jour: {{ $lastUpdate ?? optional($userProgress->first())->entry_date?->format('Y-m-d') }}</div>
                         @endif
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between">
+                        <a href="{{ route('front.objectives.show', $o) }}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                        <a href="{{ route('front.objectives.index') }}" class="btn btn-sm btn-light">Parcourir</a>
                     </div>
                 </div>
             </div>

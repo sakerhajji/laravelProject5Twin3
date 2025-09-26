@@ -110,6 +110,36 @@ class Objective extends Model
             'unit' => $this->unit,
         ];
     }
+
+    /**
+     * Trend direction for last 7 days vs previous 7 days: up|down|flat
+     */
+    public function trendForUser(int $userId): string
+    {
+        $today = now()->startOfDay();
+        $w1Start = (clone $today)->subDays(6);
+        $w2Start = (clone $today)->subDays(13);
+
+        $last7 = (float) $this->progresses()
+            ->where('user_id', $userId)
+            ->whereBetween('entry_date', [$w1Start->toDateString(), $today->toDateString()])
+            ->sum('value');
+        $prev7 = (float) $this->progresses()
+            ->where('user_id', $userId)
+            ->whereBetween('entry_date', [$w2Start->toDateString(), $w1Start->subDay()->toDateString()])
+            ->sum('value');
+
+        if ($prev7 <= 0 && $last7 <= 0) return 'flat';
+        if ($last7 > $prev7 * 1.05) return 'up';
+        if ($last7 < $prev7 * 0.95) return 'down';
+        return 'flat';
+    }
+
+    public function lastUpdateForUser(int $userId): ?string
+    {
+        $d = $this->progresses()->where('user_id', $userId)->latest('entry_date')->value('entry_date');
+        return $d ? (string) $d : null;
+    }
 }
 
 
