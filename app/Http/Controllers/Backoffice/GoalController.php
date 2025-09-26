@@ -21,6 +21,13 @@ class GoalController extends Controller
         return view('backoffice.goals.create');
     }
 
+    public function show(Goal $goal)
+    {
+        $this->authorizeGoal($goal);
+        $entries = $goal->entries()->orderBy('entry_date')->get();
+        return view('backoffice.goals.show', compact('goal', 'entries'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
