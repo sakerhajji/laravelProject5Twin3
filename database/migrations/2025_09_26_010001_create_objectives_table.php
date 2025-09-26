@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('unit');
+            $table->string('cover_url')->nullable();
             $table->decimal('target_value', 10, 2);
             $table->enum('category', ['activite','nutrition','sommeil','sante']);
             $table->timestamps();

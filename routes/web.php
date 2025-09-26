@@ -72,7 +72,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Front user: browse objectives and record progress
     Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
+    Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
     Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
     Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
     Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');
+
+    // Demo workout editor UI
+    Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
 });

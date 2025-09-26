@@ -16,6 +16,15 @@ class ObjectiveBrowseController extends Controller
         return view('front.objectives.index', compact('objectives'));
     }
 
+    public function show(Objective $objective, Request $request)
+    {
+        $days = (int) $request->query('days', 30);
+        $days = in_array($days, [7,30,90]) ? $days : 30;
+        $series = $objective->seriesForUser(Auth::id(), $days);
+        $percent = $objective->computeProgressPercent(Auth::id(), (string) $days);
+        return view('front.objectives.show', compact('objective','series','percent','days'));
+    }
+
     public function activate(Objective $objective)
     {
         UserObjective::firstOrCreate([
