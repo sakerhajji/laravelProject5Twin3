@@ -8,7 +8,7 @@
         <div class="row align-items-center g-4">
             <div class="col-lg-7" data-aos="fade-right">
                 <h1 class="display-5 fw-bold mb-3">Suivez votre santé avec <span class="text-primary">Health Tracker</span></h1>
-                <p class="lead text-muted">Un tableau de bord simple et épuré pour visualiser vos données, suivre vos progrès et gérer vos objectifs au quotidien.</p>
+                <p class="lead text-secondary">Un tableau de bord <span class="fw-semibold">lisible</span> et <span class="fw-semibold">moderne</span> pour suivre vos progrès et gérer vos objectifs au quotidien.</p>
                 <div class="d-flex gap-2 mt-3">
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
@@ -22,7 +22,7 @@
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary btn-lg">Paramètres</a>
                     @endguest
                 </div>
-                <div class="d-flex gap-4 mt-4 text-muted small">
+                <div class="d-flex flex-wrap gap-4 mt-4 text-secondary small">
                     <div><i class="fa-solid fa-shield-heart me-1 text-primary"></i> Données sécurisées</div>
                     <div><i class="fa-solid fa-mobile-screen-button me-1 text-primary"></i> 100% responsive</div>
                     <div><i class="fa-solid fa-wand-magic-sparkles me-1 text-primary"></i> UX moderne</div>
@@ -41,7 +41,7 @@
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Tout ce dont vous avez besoin</h2>
-            <p class="text-muted">Un kit minimaliste pour démarrer rapidement et évoluer ensuite.</p>
+            <p class="text-secondary">Un kit minimaliste pour démarrer rapidement et évoluer ensuite.</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4" data-aos="zoom-in" data-aos-delay="0">
@@ -99,7 +99,7 @@
     <div class="container mt-5" data-aos="fade-up">
         <div class="text-center mb-4">
             <h4 class="fw-bold">Ils utilisent Health Tracker</h4>
-            <p class="text-muted">Quelques retours de nos utilisateurs</p>
+            <p class="text-secondary">Quelques retours de nos utilisateurs</p>
         </div>
         <div class="row g-4">
             <div class="col-md-4">
