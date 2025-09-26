@@ -23,6 +23,11 @@ class User extends Authenticatable
         'role',
     ];
 
+    public function badges()
+    {
+        return $this->hasMany(UserBadge::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
