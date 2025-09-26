@@ -3,10 +3,10 @@
 @section('title', 'Accueil')
 
 @section('content')
-<section class="py-5 bg-light rounded-3 mx-2">
+<section class="py-5 bg-light rounded-3 mx-2" data-aos="fade-up">
     <div class="container py-5">
         <div class="row align-items-center g-4">
-            <div class="col-lg-7">
+            <div class="col-lg-7" data-aos="fade-right">
                 <h1 class="display-5 fw-bold mb-3">Suivez votre santé avec <span class="text-primary">Health Tracker</span></h1>
                 <p class="lead text-muted">Un tableau de bord simple et épuré pour visualiser vos données, suivre vos progrès et gérer vos objectifs au quotidien.</p>
                 <div class="d-flex gap-2 mt-3">
@@ -28,7 +28,7 @@
                     <div><i class="fa-solid fa-wand-magic-sparkles me-1 text-primary"></i> UX moderne</div>
                 </div>
             </div>
-            <div class="col-lg-5 text-center">
+            <div class="col-lg-5 text-center" data-aos="fade-left">
                 <div class="p-2">
                     <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop" class="img-fluid rounded-4 shadow-sm" alt="Fitness illustration" />
                 </div>
@@ -37,14 +37,14 @@
     </div>
 </section>
 
-<section id="features" class="py-5">
+<section id="features" class="py-5" data-aos="fade-up">
     <div class="container">
         <div class="text-center mb-5">
             <h2 class="fw-bold">Tout ce dont vous avez besoin</h2>
             <p class="text-muted">Un kit minimaliste pour démarrer rapidement et évoluer ensuite.</p>
         </div>
         <div class="row g-4">
-            <div class="col-md-4">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="0">
                 <div class="card h-100 border-0 shadow-sm overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1554284126-aa88f22d8b74?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Rapide" />
                     <div class="card-body text-center p-4">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
                 <div class="card h-100 border-0 shadow-sm overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Évolutif" />
                     <div class="card-body text-center p-4">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
                 <div class="card h-100 border-0 shadow-sm overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Sécurisé" />
                     <div class="card-body text-center p-4">
@@ -80,11 +80,11 @@
 
 <section class="py-5">
     <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-lg-6 order-lg-2">
+        <div class="row g-4 align-items-center" data-aos="fade-up">
+            <div class="col-lg-6 order-lg-2" data-aos="fade-left">
                 <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop" class="img-fluid rounded-4 shadow-sm" alt="Mes données" />
             </div>
-            <div class="col-lg-6 order-lg-1">
+            <div class="col-lg-6 order-lg-1" data-aos="fade-right">
                 <h3 class="fw-bold mb-3">Vos données, au bon endroit</h3>
                 <p class="text-muted">Visualisez l'essentiel: rythme cardiaque, sommeil, hydratation et habitudes. Un design clair, des cartes lisibles, et une navigation ultra-simple.</p>
                 <ul class="list-unstyled mt-3">
@@ -96,7 +96,7 @@
         </div>
     </div>
     
-    <div class="container mt-5">
+    <div class="container mt-5" data-aos="fade-up">
         <div class="text-center mb-4">
             <h4 class="fw-bold">Ils utilisent Health Tracker</h4>
             <p class="text-muted">Quelques retours de nos utilisateurs</p>
@@ -141,6 +141,31 @@
                             </div>
                         </div>
                         <p class="mb-0 text-muted">Un look moderne et des appels à l'action bien placés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="parallax py-5" style="background-image:url('https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1600&auto=format&fit=crop');">
+    <div class="container text-center text-white py-5" data-aos="zoom-in">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h2 class="fw-bold mb-3">Des objectifs simples, des résultats concrets</h2>
+                <p class="lead mb-4">Hydratation, sommeil, activité — restez régulier, on s’occupe du reste.</p>
+                <div class="d-flex justify-content-center gap-4">
+                    <div>
+                        <div class="h2 mb-0" data-counter data-target="7000">0</div>
+                        <div class="small">Pas / jour</div>
+                    </div>
+                    <div>
+                        <div class="h2 mb-0" data-counter data-target="8">0</div>
+                        <div class="small">Heures de sommeil</div>
+                    </div>
+                    <div>
+                        <div class="h2 mb-0" data-counter data-target="2">0</div>
+                        <div class="small">Litres d’eau</div>
                     </div>
                 </div>
             </div>

@@ -13,6 +13,8 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- AOS Animations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components.css') }}">
@@ -24,6 +26,14 @@
     .navbar-brand { font-weight: 800; letter-spacing: .3px; }
     .nav-link { font-weight: 500; }
     footer { background: #f8f9fa; border-top: 1px solid #e9ecef; }
+    .glass { backdrop-filter: blur(8px); background: rgba(255,255,255,.6); }
+    .gradient-divider { height: 2px; background: linear-gradient(90deg, #0d6efd, #20c997, #6f42c1); opacity: .25; }
+    .parallax {
+        background-attachment: fixed; background-size: cover; background-position: center; color: #fff;
+        position: relative;
+    }
+    .parallax::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.35); }
+    .parallax > .container { position: relative; z-index: 1; }
     </style>
 </head>
 <body>
@@ -86,6 +96,26 @@
 
     <!-- Bootstrap 5 bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animations -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            if (window.AOS) { AOS.init({ once: true, duration: 800, easing: 'ease-out-quart' }); }
+            // Simple counter animation
+            const counters = document.querySelectorAll('[data-counter]');
+            const observe = new IntersectionObserver((entries)=>{
+                entries.forEach(entry=>{
+                    if(entry.isIntersecting){
+                        const el = entry.target; const target = parseInt(el.getAttribute('data-target')); let cur = 0;
+                        const inc = Math.max(1, Math.floor(target/60));
+                        const t = setInterval(()=>{ cur += inc; if(cur >= target){ cur = target; clearInterval(t);} el.textContent = cur; }, 16);
+                        observe.unobserve(el);
+                    }
+                });
+            }, { threshold: .4 });
+            counters.forEach(c=>observe.observe(c));
+        });
+    </script>
 
     @stack('scripts')
 </body>
