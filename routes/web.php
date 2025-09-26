@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', function () {
-            return view('home');
+            return view('backoffice.dashboard');
         })->name('dashboard');
         // add more admin routes here
     });
@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
     // Client routes
     Route::middleware(['client'])->prefix('client')->name('client.')->group(function () {
         Route::get('/dashboard', function () {
-            return view('home');
+            return view('backoffice.dashboard');
         })->name('dashboard');
         // add more client routes here
     });
