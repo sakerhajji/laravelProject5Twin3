@@ -44,4 +44,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         // add more client routes here
     });
+
+    // Goals management (backoffice - accessible to any authenticated user)
+    Route::prefix('back')->name('back.')->group(function () {
+        Route::get('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'index'])->name('goals.index');
+        Route::get('/goals/create', [App\Http\Controllers\Backoffice\GoalController::class, 'create'])->name('goals.create');
+        Route::post('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'store'])->name('goals.store');
+        Route::get('/goals/{goal}/edit', [App\Http\Controllers\Backoffice\GoalController::class, 'edit'])->name('goals.edit');
+        Route::put('/goals/{goal}', [App\Http\Controllers\Backoffice\GoalController::class, 'update'])->name('goals.update');
+        Route::delete('/goals/{goal}', [App\Http\Controllers\Backoffice\GoalController::class, 'destroy'])->name('goals.destroy');
+
+        Route::post('/goals/{goal}/entries', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'store'])->name('goal-entries.store');
+        Route::delete('/goals/{goal}/entries/{entry}', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'destroy'])->name('goal-entries.destroy');
+    });
 });
