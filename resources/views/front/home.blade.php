@@ -29,15 +29,8 @@
                 </div>
             </div>
             <div class="col-lg-5 text-center">
-                <div class="p-4 bg-white border rounded-4 shadow-sm">
-                    <div class="row row-cols-3 g-2">
-                        <div class="col"><div class="border rounded-3 py-4 fw-bold">7k<br><span class="text-muted small">Pas</span></div></div>
-                        <div class="col"><div class="border rounded-3 py-4 fw-bold">68<br><span class="text-muted small">BPM</span></div></div>
-                        <div class="col"><div class="border rounded-3 py-4 fw-bold">1.9k<br><span class="text-muted small">Kcal</span></div></div>
-                        <div class="col"><div class="border rounded-3 py-4 fw-bold">8h<br><span class="text-muted small">Sommeil</span></div></div>
-                        <div class="col"><div class="border rounded-3 py-4 fw-bold">2L<br><span class="text-muted small">Eau</span></div></div>
-                        <div class="col"><div class="border rounded-3 py-4 fw-bold">5/7<br><span class="text-muted small">Habitudes</span></div></div>
-                    </div>
+                <div class="p-2">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1200&auto=format&fit=crop" class="img-fluid rounded-4 shadow-sm" alt="Fitness illustration" />
                 </div>
             </div>
         </div>
@@ -52,7 +45,8 @@
         </div>
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1554284126-aa88f22d8b74?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Rapide" />
                     <div class="card-body text-center p-4">
                         <i class="fa-solid fa-bolt fa-2x text-primary mb-3"></i>
                         <h5 class="card-title">Rapide</h5>
@@ -61,7 +55,8 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Évolutif" />
                     <div class="card-body text-center p-4">
                         <i class="fa-solid fa-layer-group fa-2x text-primary mb-3"></i>
                         <h5 class="card-title">Évolutif</h5>
@@ -70,11 +65,82 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=1200&auto=format&fit=crop" class="card-img-top" alt="Sécurisé" />
                     <div class="card-body text-center p-4">
                         <i class="fa-solid fa-user-shield fa-2x text-primary mb-3"></i>
                         <h5 class="card-title">Sécurisé</h5>
                         <p class="card-text text-muted">Routes protégées par rôle (admin / client), profil et mot de passe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1200&auto=format&fit=crop" class="img-fluid rounded-4 shadow-sm" alt="Mes données" />
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <h3 class="fw-bold mb-3">Vos données, au bon endroit</h3>
+                <p class="text-muted">Visualisez l'essentiel: rythme cardiaque, sommeil, hydratation et habitudes. Un design clair, des cartes lisibles, et une navigation ultra-simple.</p>
+                <ul class="list-unstyled mt-3">
+                    <li class="mb-2"><i class="fa-solid fa-circle-check text-primary me-2"></i>Cartes et graphiques lisibles</li>
+                    <li class="mb-2"><i class="fa-solid fa-circle-check text-primary me-2"></i>Mode responsive mobile-first</li>
+                    <li class="mb-2"><i class="fa-solid fa-circle-check text-primary me-2"></i>Accès rapide au profil et paramètres</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h4 class="fw-bold">Ils utilisent Health Tracker</h4>
+            <p class="text-muted">Quelques retours de nos utilisateurs</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://i.pravatar.cc/80?img=12" class="rounded-circle me-3" width="48" height="48" alt="avatar" />
+                            <div>
+                                <div class="fw-semibold">Sarah</div>
+                                <div class="text-muted small">Sportive</div>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-muted">Interface super claire, j'adore les cartes et la navigation rapide.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://i.pravatar.cc/80?img=5" class="rounded-circle me-3" width="48" height="48" alt="avatar" />
+                            <div>
+                                <div class="fw-semibold">Yassine</div>
+                                <div class="text-muted small">Développeur</div>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-muted">Simple et efficace. Le responsive est nickel sur mobile.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://i.pravatar.cc/80?img=32" class="rounded-circle me-3" width="48" height="48" alt="avatar" />
+                            <div>
+                                <div class="fw-semibold">Amel</div>
+                                <div class="text-muted small">Etudiante</div>
+                            </div>
+                        </div>
+                        <p class="mb-0 text-muted">Un look moderne et des appels à l'action bien placés.</p>
                     </div>
                 </div>
             </div>
