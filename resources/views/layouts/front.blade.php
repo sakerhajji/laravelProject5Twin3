@@ -23,8 +23,11 @@
     @stack('css')
     <style>
     body { padding-top: 72px; }
-    .navbar-brand { font-weight: 800; letter-spacing: .3px; }
-    .nav-link { font-weight: 500; }
+    .navbar-brand { font-weight: 800; letter-spacing: .3px; color:#0b1220 !important; }
+    .navbar-light .navbar-nav .nav-link { color: #0b1220 !important; opacity: 1 !important; font-weight: 600; }
+    .navbar-light .navbar-nav .nav-link:hover { color:#0d6efd !important; }
+    .navbar-light .navbar-nav .nav-link.active { color:#0d6efd !important; }
+    .dropdown-menu { border-radius: .65rem; }
     footer { background: #f8f9fa; border-top: 1px solid #e9ecef; }
     .glass { backdrop-filter: blur(8px); background: rgba(255,255,255,.6); }
     .gradient-divider { height: 2px; background: linear-gradient(90deg, #0d6efd, #20c997, #6f42c1); opacity: .25; }
