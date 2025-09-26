@@ -18,6 +18,15 @@
                 <a class="nav-link" href="{{ url('hakakses') }}"><i class="fas fa-user-shield"></i> <span>Hak Akses</span></a>
             </li>
             @endif
+            @if (in_array(Auth::user()->role, ['admin','superadmin']))
+            <li class="menu-header">Administration</li>
+            <li class="{{ Request::is('admin/objectifs*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.objectives.index') }}"><i class="fas fa-bullseye"></i> <span>Objectifs types</span></a>
+            </li>
+            <li class="{{ Request::is('admin/users/objectifs*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.objectives.assignments') }}"><i class="fas fa-user-plus"></i> <span>Attribuer objectifs</span></a>
+            </li>
+            @endif
             <!-- profile ganti password -->
             <li class="menu-header">Profile</li>
             <li class="{{ Request::is('profile/edit') ? 'active' : '' }}">

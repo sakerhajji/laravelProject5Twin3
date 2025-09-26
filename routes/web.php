@@ -36,6 +36,17 @@ Route::middleware(['auth'])->group(function () {
     // Admin routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
+        // Objectives CRUD
+        Route::get('/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'index'])->name('objectives.index');
+        Route::get('/objectifs/create', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'create'])->name('objectives.create');
+        Route::post('/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'store'])->name('objectives.store');
+        Route::get('/objectifs/{objective}/edit', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'edit'])->name('objectives.edit');
+        Route::put('/objectifs/{objective}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'update'])->name('objectives.update');
+        Route::delete('/objectifs/{objective}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'destroy'])->name('objectives.destroy');
+        // Assignments
+        Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
+        Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
+        Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
         // add more admin routes here
     });
 
@@ -58,4 +69,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/goals/{goal}/entries', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'store'])->name('goal-entries.store');
         Route::delete('/goals/{goal}/entries/{entry}', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'destroy'])->name('goal-entries.destroy');
     });
+
+    // Front user: browse objectives and record progress
+    Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
+    Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
+    Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
+    Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');
 });
