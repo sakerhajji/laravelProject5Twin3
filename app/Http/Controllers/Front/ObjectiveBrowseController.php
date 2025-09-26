@@ -13,7 +13,8 @@ class ObjectiveBrowseController extends Controller
     public function index()
     {
         $objectives = Objective::latest()->paginate(12);
-        return view('front.objectives.index', compact('objectives'));
+        $recommended = Objective::inRandomOrder()->limit(3)->get();
+        return view('front.objectives.index', compact('objectives','recommended'));
     }
 
     public function show(Objective $objective, Request $request)
