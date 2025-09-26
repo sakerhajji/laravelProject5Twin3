@@ -3,9 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('front.home');
-});
+Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
 
 Auth::routes();
 
@@ -37,17 +35,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Admin routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('backoffice.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         // add more admin routes here
     });
 
     // Client routes
     Route::middleware(['client'])->prefix('client')->name('client.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('backoffice.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         // add more client routes here
     });
 });
