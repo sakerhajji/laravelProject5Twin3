@@ -140,6 +140,11 @@ class Objective extends Model
         $d = $this->progresses()->where('user_id', $userId)->latest('entry_date')->value('entry_date');
         return $d ? (string) $d : null;
     }
+
+    public function badges()
+    {
+        return $this->hasMany(UserBadge::class);
+    }
 }
 
 

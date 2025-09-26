@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Objective;
 use App\Models\Progress;
+use App\Models\UserBadge;
+use App\Http\Requests\StoreProgressRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,16 +20,22 @@ class ProgressController extends Controller
         return view('front.progress.index', compact('myObjectives'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProgressRequest $request)
     {
-        $data = $request->validate([
-            'objective_id' => 'required|exists:objectives,id',
-            'entry_date' => 'required|date',
-            'value' => 'required|numeric|min:0.01',
-            'note' => 'nullable|string|max:500',
-        ]);
+        $data = $request->validated();
         $data['user_id'] = Auth::id();
-        Progress::create($data);
+        $progress = Progress::create($data);
+        
+        // Vérifier et attribuer des badges
+        UserBadge::checkAndAwardBadges(Auth::id(), $data['objective_id']);
+        
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Progrès ajouté avec succès'
+            ]);
+        }
+        
         return back()->with('status', 'Progrès ajouté');
     }
 }
