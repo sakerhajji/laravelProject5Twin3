@@ -9,17 +9,26 @@
             <div class="col-lg-7" data-aos="fade-right">
                 <h1 class="display-5 fw-bold mb-3">Suivez votre santé avec <span class="text-primary">Health Tracker</span></h1>
                 <p class="lead text-secondary">Un tableau de bord <span class="fw-semibold">lisible</span> et <span class="fw-semibold">moderne</span> pour suivre vos progrès et gérer vos objectifs au quotidien.</p>
-                <div class="d-flex gap-2 mt-3">
+                <div class="d-flex flex-wrap gap-2 mt-3">
                     @guest
                         <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
                             <i class="fa-solid fa-right-to-bracket me-2"></i>Commencer
                         </a>
-                        <a href="#features" class="btn btn-outline-primary btn-lg">En savoir plus</a>
+                        <a href="{{ route('front.objectives.index') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fa-solid fa-bullseye me-2"></i>Parcourir les objectifs
+                        </a>
+                        <a href="#features" class="btn btn-outline-secondary btn-lg">En savoir plus</a>
                     @else
                         <a href="{{ route('home') }}" class="btn btn-primary btn-lg">
                             <i class="fa-solid fa-gauge-high me-2"></i>Aller au tableau de bord
                         </a>
-                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary btn-lg">Paramètres</a>
+                        <a href="{{ route('front.objectives.index') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fa-solid fa-bullseye me-2"></i>Parcourir les objectifs
+                        </a>
+                        <a href="{{ route('front.progress.index') }}" class="btn btn-outline-success btn-lg">
+                            <i class="fa-solid fa-bars-progress me-2"></i>Mes progrès
+                        </a>
+                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary btn-lg">Paramètres</a>
                     @endguest
                 </div>
                 <div class="d-flex flex-wrap gap-4 mt-4 text-secondary small">
