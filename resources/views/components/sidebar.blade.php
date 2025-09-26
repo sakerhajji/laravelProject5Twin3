@@ -26,6 +26,10 @@
             <li class="{{ Request::is('profile/change-password') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('profile/change-password') }}"><i class="fas fa-key"></i> <span>Ganti Password</span></a>
             </li>
+            <li class="menu-header">Health</li>
+            <li class="{{ Request::is('back/goals*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('back.goals.index') }}"><i class="fas fa-bullseye"></i> <span>Mes objectifs</span></a>
+            </li>
             <li class="menu-header">Starter</li>
             <li class="{{ Request::is('blank-page') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('blank-page') }}"><i class="far fa-square"></i> <span>Blank Page</span></a>

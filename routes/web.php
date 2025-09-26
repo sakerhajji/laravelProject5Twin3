@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'index'])->name('goals.index');
         Route::get('/goals/create', [App\Http\Controllers\Backoffice\GoalController::class, 'create'])->name('goals.create');
         Route::post('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'store'])->name('goals.store');
+        Route::get('/goals/{goal}', [App\Http\Controllers\Backoffice\GoalController::class, 'show'])->name('goals.show');
         Route::get('/goals/{goal}/edit', [App\Http\Controllers\Backoffice\GoalController::class, 'edit'])->name('goals.edit');
         Route::put('/goals/{goal}', [App\Http\Controllers\Backoffice\GoalController::class, 'update'])->name('goals.update');
         Route::delete('/goals/{goal}', [App\Http\Controllers\Backoffice\GoalController::class, 'destroy'])->name('goals.destroy');

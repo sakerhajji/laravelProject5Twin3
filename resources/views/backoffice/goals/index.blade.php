@@ -52,6 +52,7 @@
                         </form>
 
                         <div class="mt-3">
+                            <a href="{{ route('back.goals.show', $goal) }}" class="btn btn-sm btn-primary">Voir</a>
                             <a href="{{ route('back.goals.edit', $goal) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
                             <form action="{{ route('back.goals.destroy', $goal) }}" method="post" class="d-inline" onsubmit="return confirm('Supprimer cet objectif ?')">
                                 @csrf
