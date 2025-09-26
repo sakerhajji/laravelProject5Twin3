@@ -37,6 +37,18 @@
     }
     .parallax::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.35); }
     .parallax > .container { position: relative; z-index: 1; }
+    /* Circular ring progress */
+    .ring { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background:
+      conic-gradient(var(--color, #0d6efd) calc(var(--val,0) * 1%), #e9ecef 0);
+    }
+    .ring::before { content: ""; width: 44px; height: 44px; border-radius: 50%; background: #fff; display:block; }
+    .ring > span { position: absolute; font-size: .75rem; font-weight: 700; }
+    /* Skeleton */
+    .skeleton { position: relative; overflow: hidden; background: #e9ecef; }
+    .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+      animation: shimmer 1.6s infinite; }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
     </style>
 </head>
 <body>
@@ -117,8 +129,22 @@
                 });
             }, { threshold: .4 });
             counters.forEach(c=>observe.observe(c));
+
+            // Flash toast
+            const flash = document.getElementById('flash-toast');
+            if (flash) { const t = new bootstrap.Toast(flash); t.show(); }
         });
     </script>
+    @if(session('status'))
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
+        <div id="flash-toast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">{{ session('status') }}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    @endif
 
     @stack('scripts')
 </body>

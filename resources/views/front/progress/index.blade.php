@@ -27,8 +27,15 @@
                             </div>
                             <span class="badge bg-primary text-white">{{ ucfirst($o->category) }}</span>
                         </div>
-                        <div class="progress mt-3" style="height: 10px;">
-                            <div class="progress-bar" role="progressbar" style="width: {{ $pct }}%" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="d-flex align-items-center gap-3 mt-3">
+                            <div class="ring" style="--val: {{ $pct }}; --color: {{ $trend==='down'?'#dc3545':($trend==='up'?'#28a745':'#0d6efd') }}">
+                                <span>{{ $pct }}%</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ $pct }}%" aria-valuenow="{{ $pct }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between mt-2 small text-secondary align-items-center">
                             <div class="d-flex align-items-center gap-2">
