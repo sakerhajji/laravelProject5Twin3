@@ -48,15 +48,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
         Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
         
-        // Partners CRUD
-        Route::get('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'index'])->name('partners.index');
-        Route::get('/partenaires/create', [App\Http\Controllers\Backoffice\PartnerController::class, 'create'])->name('partners.create');
-        Route::post('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'store'])->name('partners.store');
-        Route::get('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'show'])->name('partners.show');
-        Route::get('/partenaires/{partner}/edit', [App\Http\Controllers\Backoffice\PartnerController::class, 'edit'])->name('partners.edit');
-        Route::put('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'update'])->name('partners.update');
-        Route::delete('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'destroy'])->name('partners.destroy');
-        Route::patch('/partenaires/{partner}/toggle-status', [App\Http\Controllers\Backoffice\PartnerController::class, 'toggleStatus'])->name('partners.toggle-status');
+        // Partners CRUD - avec middlewares de validation et logging
+        Route::middleware(['partner.management', 'partner.log'])->group(function () {
+            Route::get('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'index'])->name('partners.index');
+            Route::get('/partenaires/create', [App\Http\Controllers\Backoffice\PartnerController::class, 'create'])->name('partners.create');
+            Route::post('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'store'])->name('partners.store')->middleware('partner.data');
+            
+            Route::middleware(['partner.validate'])->group(function () {
+                Route::get('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'show'])->name('partners.show');
+                Route::get('/partenaires/{partner}/edit', [App\Http\Controllers\Backoffice\PartnerController::class, 'edit'])->name('partners.edit');
+                Route::put('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'update'])->name('partners.update')->middleware('partner.data');
+                Route::delete('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'destroy'])->name('partners.destroy');
+                Route::patch('/partenaires/{partner}/toggle-status', [App\Http\Controllers\Backoffice\PartnerController::class, 'toggleStatus'])->name('partners.toggle-status');
+            });
+        });
         
         // add more admin routes here
     });
@@ -86,12 +91,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
     Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
     
-    // Partners frontend routes
-    Route::get('/partenaires', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('front.partners.index');
-    Route::get('/partenaires/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('front.partners.show');
-    Route::get('/partenaires/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('front.partners.by-type');
-    Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('front.partners.favorites');
-    Route::post('/partenaires/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('front.partners.toggle-favorite');
+    // Partners frontend routes - avec validation
+    Route::prefix('partenaires')->name('front.partners.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
+        Route::get('/search', [App\Http\Controllers\Front\PartnerController::class, 'search'])->name('search'); // Route AJAX
+        Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
+        Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
+        
+        Route::middleware(['partner.validate'])->group(function () {
+            Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
+            Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite')->middleware('auth');
+        });
+    });
     
     Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
     Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');

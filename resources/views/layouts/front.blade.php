@@ -74,11 +74,13 @@
                                 <i class="fas fa-heartbeat text-danger me-1"></i>Santé & Bien-être
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="healthDropdown">
+                                <!--
                                 <li><h6 class="dropdown-header"><i class="fas fa-bullseye text-primary me-2"></i>Mes Objectifs</h6></li>
                                 <li><a class="dropdown-item" href="{{ route('back.goals.index') }}">
                                     <i class="fas fa-bullseye me-2"></i>Mes objectifs
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
+                                -->
                                 <li><h6 class="dropdown-header"><i class="fas fa-hospital text-success me-2"></i>Partenaires</h6></li>
                                 <li><a class="dropdown-item" href="{{ route('front.partners.index') }}">
                                     <i class="fas fa-hospital me-2"></i>Partenaires Santé
@@ -86,11 +88,13 @@
                                 <li><a class="dropdown-item" href="{{ route('front.partners.favorites') }}">
                                     <i class="fas fa-heart text-danger me-2"></i>Mes Favoris
                                 </a></li>
+                                <!--
                                 <li><hr class="dropdown-divider"></li>
                                 <li><h6 class="dropdown-header"><i class="fas fa-chart-line text-info me-2"></i>Suivi</h6></li>
                                 <li><a class="dropdown-item" href="{{ route('front.progress.index') }}">
                                     <i class="fas fa-chart-line me-2"></i>Mes Progrès
                                 </a></li>
+                                -->
                             </ul>
                         </li>
                         

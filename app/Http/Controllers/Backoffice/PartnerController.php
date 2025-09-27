@@ -46,26 +46,13 @@ class PartnerController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => ['required', Rule::in(array_keys(Partner::getTypes()))],
-            'description' => 'nullable|string|max:2000',
-            'email' => 'required|email|unique:partners,email',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-            'city' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:10',
-            'website' => 'nullable|url|max:255',
-            'license_number' => 'nullable|string|max:100',
-            'specialization' => 'nullable|string|max:255',
-            'status' => ['required', Rule::in(array_keys(Partner::getStatuses()))],
-            'contact_person' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'services' => 'nullable|array',
-            'services.*' => 'string|max:255',
-            'opening_hours' => 'nullable|array',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+        // La validation est déjà effectuée par le middleware partner.data
+        // On récupère seulement les données nécessaires
+        $data = $request->only([
+            'name', 'type', 'description', 'email', 'phone', 'address', 
+            'city', 'postal_code', 'website', 'license_number', 'specialization', 
+            'status', 'contact_person', 'services', 'opening_hours', 
+            'latitude', 'longitude', 'rating'
         ]);
 
         // Handle logo upload
@@ -78,44 +65,51 @@ class PartnerController extends Controller
             $data['services'] = array_filter($data['services']);
         }
 
-        Partner::create($data);
+        $partner = Partner::create($data);
 
         return redirect()->route('admin.partners.index')
             ->with('status', 'Partenaire créé avec succès.');
     }
 
-    public function show(Partner $partner)
+    public function show(Request $request, Partner $partner = null)
     {
+        // Récupérer le partenaire du middleware si disponible
+        $partner = $request->get('partnerModel') ?? $partner;
+        
+        if (!$partner) {
+            abort(404, 'Partenaire non trouvé.');
+        }
+        
         return view('backoffice.partners.show', compact('partner'));
     }
 
-    public function edit(Partner $partner)
+    public function edit(Request $request, Partner $partner = null)
     {
+        // Récupérer le partenaire du middleware si disponible
+        $partner = $request->get('partnerModel') ?? $partner;
+        
+        if (!$partner) {
+            abort(404, 'Partenaire non trouvé.');
+        }
+        
         return view('backoffice.partners.edit', compact('partner'));
     }
 
-    public function update(Request $request, Partner $partner)
+    public function update(Request $request, Partner $partner = null)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => ['required', Rule::in(array_keys(Partner::getTypes()))],
-            'description' => 'nullable|string|max:2000',
-            'email' => ['required', 'email', Rule::unique('partners', 'email')->ignore($partner->id)],
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:500',
-            'city' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:10',
-            'website' => 'nullable|url|max:255',
-            'license_number' => 'nullable|string|max:100',
-            'specialization' => 'nullable|string|max:255',
-            'status' => ['required', Rule::in(array_keys(Partner::getStatuses()))],
-            'contact_person' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'services' => 'nullable|array',
-            'services.*' => 'string|max:255',
-            'opening_hours' => 'nullable|array',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+        // Récupérer le partenaire du middleware si disponible
+        $partner = $request->get('partnerModel') ?? $partner;
+        
+        if (!$partner) {
+            abort(404, 'Partenaire non trouvé.');
+        }
+
+        // La validation est déjà effectuée par le middleware partner.data
+        $data = $request->only([
+            'name', 'type', 'description', 'email', 'phone', 'address', 
+            'city', 'postal_code', 'website', 'license_number', 'specialization', 
+            'status', 'contact_person', 'services', 'opening_hours', 
+            'latitude', 'longitude', 'rating'
         ]);
 
         // Handle logo upload

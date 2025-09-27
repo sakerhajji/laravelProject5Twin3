@@ -3,13 +3,12 @@
 @section('title', 'Gestion des Partenaires')
 
 @section('content')
-<div class="main-content">
-    <div class="section-header">
-        <h1>Gestion des Partenaires</h1>
-        <div class="section-header-button">
-            <a href="{{ route('admin.partners.create') }}" class="btn btn-primary">Nouveau Partenaire</a>
-        </div>
+<div class="section-header">
+    <h1>Gestion des Partenaires</h1>
+    <div class="section-header-button">
+        <a href="{{ route('admin.partners.create') }}" class="btn btn-primary">Nouveau Partenaire</a>
     </div>
+</div>
     
     @if(session('status'))
         <div class="alert alert-success alert-dismissible show fade">
@@ -156,7 +155,6 @@
             </div>
         @endif
     </div>
-</div>
 @endsection
 
 @push('scripts')

@@ -59,8 +59,88 @@ class PartnerController extends Controller
             ->pluck('city')
             ->sort()
             ->values();
+
+        // Get user's favorite partner IDs if authenticated
+        $userFavorites = [];
+        if (Auth::check()) {
+            $userFavorites = Auth::user()->favoritedPartners()->pluck('partners.id')->toArray();
+        }
         
-        return view('front.partners.index', compact('partners', 'cities'));
+        // Si c'est une requête AJAX, retourner seulement la vue partielle
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('front.partners.partials.partners-grid', compact('partners', 'userFavorites'))->render(),
+                'pagination' => $partners->hasPages() ? $partners->appends($request->all())->links()->toHtml() : '',
+                'count' => $partners->total()
+            ]);
+        }
+        
+        return view('front.partners.index', compact('partners', 'cities', 'userFavorites'));
+    }
+
+    /**
+     * Recherche AJAX optimisée pour les partenaires
+     */
+    public function search(Request $request)
+    {
+        $query = Partner::active();
+        
+        // Filter by type
+        if ($request->filled('type') && $request->type !== 'all') {
+            $query->ofType($request->type);
+        }
+        
+        // Filter by city
+        if ($request->filled('city') && $request->city !== '') {
+            $query->where('city', 'like', '%' . $request->city . '%');
+        }
+        
+        // Search
+        if ($request->filled('search') && $request->search !== '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('specialization', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+        
+        // Sort by rating or distance (if location provided)
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'rating':
+                    $query->orderBy('rating', 'desc');
+                    break;
+                case 'name':
+                    $query->orderBy('name', 'asc');
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+        
+        $partners = $query->paginate(12);
+        
+        // Get user's favorite partner IDs if authenticated
+        $userFavorites = [];
+        if (Auth::check()) {
+            $userFavorites = Auth::user()->favoritedPartners()->pluck('partners.id')->toArray();
+        }
+
+        return response()->json([
+            'html' => view('front.partners.partials.partners-grid', compact('partners', 'userFavorites'))->render(),
+            'pagination' => $partners->hasPages() ? $partners->appends($request->all())->links()->toHtml() : '',
+            'count' => $partners->total(),
+            'filters' => [
+                'search' => $request->search ?? '',
+                'type' => $request->type ?? 'all',
+                'city' => $request->city ?? '',
+                'sort' => $request->sort ?? 'latest'
+            ]
+        ]);
     }
 
     public function show(Partner $partner)
@@ -84,32 +164,62 @@ class PartnerController extends Controller
         return view('front.partners.show', compact('partner', 'isFavorite', 'similarPartners'));
     }
 
-    public function toggleFavorite(Request $request, Partner $partner)
+    public function toggleFavorite(Request $request, Partner $partner = null)
     {
+        // Debug: Vérifier les paramètres reçus
         if (!Auth::check()) {
-            return response()->json(['error' => 'Vous devez être connecté.'], 401);
+            return response()->json([
+                'success' => false, 
+                'message' => 'Vous devez être connecté.'
+            ], 401);
         }
 
-        $user = Auth::user();
-        $favorite = $user->favoritedPartners()->where('partner_id', $partner->id)->first();
+        try {
+            // Utiliser le partenaire du middleware s'il existe
+            $validatedPartner = $request->get('validatedPartner');
+            if ($validatedPartner) {
+                $partner = $validatedPartner;
+            }
+            
+            if (!$partner) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Partenaire non trouvé.'
+                ], 404);
+            }
+            
+            $user = Auth::user();
+            
+            // Vérifier si le partenaire est déjà en favori
+            $isFavorited = $user->favoritedPartners()->where('partner_id', $partner->id)->exists();
 
-        if ($favorite) {
-            // Remove from favorites
-            $user->favoritedPartners()->detach($partner->id);
-            $action = 'removed';
-            $message = 'Partenaire retiré des favoris.';
-        } else {
-            // Add to favorites
-            $user->favoritedPartners()->attach($partner->id);
-            $action = 'added';
-            $message = 'Partenaire ajouté aux favoris.';
+            if ($isFavorited) {
+                // Remove from favorites
+                $user->favoritedPartners()->detach($partner->id);
+                $action = 'removed';
+                $message = 'Partenaire retiré des favoris.';
+                $isFavorite = false;
+            } else {
+                // Add to favorites
+                $user->favoritedPartners()->attach($partner->id);
+                $action = 'added';
+                $message = 'Partenaire ajouté aux favoris.';
+                $isFavorite = true;
+            }
+
+            return response()->json([
+                'success' => true,
+                'action' => $action,
+                'message' => $message,
+                'is_favorite' => $isFavorite
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue: ' . $e->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'action' => $action,
-            'message' => $message
-        ]);
     }
 
     public function favorites()
