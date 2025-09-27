@@ -5,6 +5,7 @@ namespace App\Http\Middleware\Partner;
 use App\Models\Partner;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckPartnerStatus
@@ -64,7 +65,7 @@ class CheckPartnerStatus
         
         // Vérifier si c'est bien un objet Partner
         if (!($partner instanceof Partner)) {
-            \Log::error('Invalid partner object in CheckPartnerStatus middleware', [
+            Log::error('Invalid partner object in CheckPartnerStatus middleware', [
                 'partner_type' => get_class($partner),
                 'partner_data' => $partner
             ]);
