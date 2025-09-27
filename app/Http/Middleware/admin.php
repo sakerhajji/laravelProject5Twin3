@@ -16,11 +16,11 @@ class admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             return $next($request);
         }
 
-        abort(403, 'Tidak Memiliki Akses!');
+        abort(403, 'Accès non autorisé!');
     }
 }
 

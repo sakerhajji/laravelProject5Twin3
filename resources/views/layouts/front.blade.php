@@ -67,11 +67,37 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Accueil</a></li>
                     @auth
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Tableau de bord</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Mes données</a></li>
+                        
+                        <!-- Health Dropdown Menu -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-heartbeat text-danger me-1"></i>Santé & Bien-être
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="healthDropdown">
+                                <li><h6 class="dropdown-header"><i class="fas fa-bullseye text-primary me-2"></i>Mes Objectifs</h6></li>
+                                <li><a class="dropdown-item" href="{{ route('back.goals.index') }}">
+                                    <i class="fas fa-bullseye me-2"></i>Mes objectifs
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-hospital text-success me-2"></i>Partenaires</h6></li>
+                                <li><a class="dropdown-item" href="{{ route('front.partners.index') }}">
+                                    <i class="fas fa-hospital me-2"></i>Partenaires Santé
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ route('front.partners.favorites') }}">
+                                    <i class="fas fa-heart text-danger me-2"></i>Mes Favoris
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-chart-line text-info me-2"></i>Suivi</h6></li>
+                                <li><a class="dropdown-item" href="{{ route('front.progress.index') }}">
+                                    <i class="fas fa-chart-line me-2"></i>Mes Progrès
+                                </a></li>
+                            </ul>
+                        </li>
+                        
                         <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Paramètres</a></li>
                     @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Tableau de bord</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Mes données</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Partenaires</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Paramètres</a></li>
                     @endauth
                 </ul>
