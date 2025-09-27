@@ -26,6 +26,9 @@
             <li class="{{ Request::is('admin/users/objectifs*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.objectives.assignments') }}"><i class="fas fa-user-plus"></i> <span>Attribuer objectifs</span></a>
             </li>
+            <li class="{{ Request::is('admin/partenaires*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.partners.index') }}"><i class="fas fa-handshake"></i> <span>Partenaires</span></a>
+            </li>
             @endif
             <!-- profile ganti password -->
             <li class="menu-header">Profile</li>
@@ -38,6 +41,12 @@
             <li class="menu-header">Health</li>
             <li class="{{ Request::is('back/goals*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('back.goals.index') }}"><i class="fas fa-bullseye"></i> <span>Mes objectifs</span></a>
+            </li>
+            <li class="{{ Request::is('partenaires*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('front.partners.index') }}"><i class="fas fa-hospital"></i> <span>Partenaires Santé</span></a>
+            </li>
+            <li class="{{ Request::is('mes-favoris*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('front.partners.favorites') }}"><i class="fas fa-heart"></i> <span>Mes Favoris</span></a>
             </li>
             <li class="menu-header">Starter</li>
             <li class="{{ Request::is('blank-page') ? 'active' : '' }}">

@@ -29,6 +29,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the partners favorited by this user
+     */
+    public function favoritedPartners()
+    {
+        return $this->belongsToMany(Partner::class, 'partner_favorites')->withTimestamps();
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>

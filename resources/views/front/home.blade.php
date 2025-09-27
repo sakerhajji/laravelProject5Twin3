@@ -28,6 +28,9 @@
                         <a href="{{ route('front.progress.index') }}" class="btn btn-outline-success btn-lg">
                             <i class="fa-solid fa-bars-progress me-2"></i>Mes progrès
                         </a>
+                        <a href="{{ route('front.partners.index') }}" class="btn btn-outline-info btn-lg">
+                            <i class="fa-solid fa-hospital me-2"></i>Nos partenaires
+                        </a>
                         <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary btn-lg">Paramètres</a>
                     @endguest
                 </div>
@@ -84,6 +87,112 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Partners Section -->
+<section class="py-5 bg-primary text-white" data-aos="fade-up">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-white">Nos Partenaires Santé</h2>
+            <p class="text-white-50">Découvrez notre réseau de professionnels de la santé</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-2" data-aos="zoom-in" data-aos-delay="100">
+                <a href="{{ route('front.partners.by-type', 'doctor') }}" class="text-decoration-none">
+                    <div class="card border-0 text-center h-100" style="background: rgba(255,255,255,0.1);">
+                        <div class="card-body p-3">
+                            <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-user-md fa-2x"></i>
+                            </div>
+                            <h6 class="text-white fw-bold mb-1">Médecins</h6>
+                            <small class="text-white-50">Consultations</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-2" data-aos="zoom-in" data-aos-delay="200">
+                <a href="{{ route('front.partners.by-type', 'gym') }}" class="text-decoration-none">
+                    <div class="card border-0 text-center h-100" style="background: rgba(255,255,255,0.1);">
+                        <div class="card-body p-3">
+                            <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-dumbbell fa-2x"></i>
+                            </div>
+                            <h6 class="text-white fw-bold mb-1">Fitness</h6>
+                            <small class="text-white-50">Salles de sport</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-2" data-aos="zoom-in" data-aos-delay="300">
+                <a href="{{ route('front.partners.by-type', 'laboratory') }}" class="text-decoration-none">
+                    <div class="card border-0 text-center h-100" style="background: rgba(255,255,255,0.1);">
+                        <div class="card-body p-3">
+                            <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-flask fa-2x"></i>
+                            </div>
+                            <h6 class="text-white fw-bold mb-1">Laboratoires</h6>
+                            <small class="text-white-50">Analyses</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-2" data-aos="zoom-in" data-aos-delay="400">
+                <a href="{{ route('front.partners.by-type', 'pharmacy') }}" class="text-decoration-none">
+                    <div class="card border-0 text-center h-100" style="background: rgba(255,255,255,0.1);">
+                        <div class="card-body p-3">
+                            <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-pills fa-2x"></i>
+                            </div>
+                            <h6 class="text-white fw-bold mb-1">Pharmacies</h6>
+                            <small class="text-white-50">Médicaments</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-2" data-aos="zoom-in" data-aos-delay="500">
+                <a href="{{ route('front.partners.by-type', 'nutritionist') }}" class="text-decoration-none">
+                    <div class="card border-0 text-center h-100" style="background: rgba(255,255,255,0.1);">
+                        <div class="card-body p-3">
+                            <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-apple-alt fa-2x"></i>
+                            </div>
+                            <h6 class="text-white fw-bold mb-1">Nutrition</h6>
+                            <small class="text-white-50">Diététiciens</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-2" data-aos="zoom-in" data-aos-delay="600">
+                <a href="{{ route('front.partners.by-type', 'psychologist') }}" class="text-decoration-none">
+                    <div class="card border-0 text-center h-100" style="background: rgba(255,255,255,0.1);">
+                        <div class="card-body p-3">
+                            <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background: rgba(255,255,255,0.2);">
+                                <i class="fas fa-brain fa-2x"></i>
+                            </div>
+                            <h6 class="text-white fw-bold mb-1">Psychologie</h6>
+                            <small class="text-white-50">Bien-être mental</small>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        @auth
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h4 class="fw-bold text-white mb-3">Actions Rapides</h4>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{{ route('front.partners.index') }}" class="btn btn-light">
+                        <i class="fas fa-hospital me-2"></i>Tous les partenaires
+                    </a>
+                    <a href="{{ route('front.partners.favorites') }}" class="btn btn-outline-light">
+                        <i class="fas fa-heart me-2"></i>Mes favoris
+                    </a>
+                </div>
+            </div>
+        </div>
+        @endauth
     </div>
 </section>
 
