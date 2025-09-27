@@ -7,10 +7,7 @@
     <!-- Header Section -->
     <div class="row mb-5">
         <div class="col-12 text-center">
-            <h1 class="display-5 fw-bold text-primary mb-3">
-                <i class="fas fa-hospital-user me-3"></i>Nos Partenaires Santé
-            </h1>
-            <p class="lead text-muted">Découvrez notre réseau de professionnels de la santé pour vous accompagner</p>
+            
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center bg-transparent">
                     <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-decoration-none">Accueil</a></li>
@@ -32,269 +29,145 @@
         </div>
     </div>
 
-        <!-- Quick Access Categories -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4><i class="fas fa-th-large"></i> Catégories de Partenaires</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach(\App\Models\Partner::getTypes() as $key => $value)
-                                <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
-                                    <a href="{{ route('front.partners.by-type', $key) }}" class="btn btn-outline-primary btn-lg btn-block py-3 category-card" data-type="{{ $key }}">
-                                        <div class="category-icon mb-2">
-                                            @if($key == 'doctor')
-                                                <i class="fas fa-user-md fa-2x text-primary"></i>
-                                            @elseif($key == 'gym')
-                                                <i class="fas fa-dumbbell fa-2x text-success"></i>
-                                            @elseif($key == 'laboratory')
-                                                <i class="fas fa-flask fa-2x text-info"></i>
-                                            @elseif($key == 'pharmacy')
-                                                <i class="fas fa-pills fa-2x text-warning"></i>
-                                            @elseif($key == 'nutritionist')
-                                                <i class="fas fa-apple-alt fa-2x text-success"></i>
-                                            @else
-                                                <i class="fas fa-brain fa-2x text-purple"></i>
-                                            @endif
-                                        </div>
-                                        <div class="category-name">
-                                            <small class="font-weight-bold">{{ $value }}</small>
-                                        </div>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+    <!-- Quick Access Categories -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-th-large"></i> Catégories de Partenaires</h4>
                 </div>
-            </div>
-        </div>
-
-        <!-- Advanced Filters -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4><i class="fas fa-filter"></i> Filtres de Recherche</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="GET" action="{{ route('front.partners.index') }}" class="row align-items-end">
-                            <div class="col-md-3">
-                                <label for="partner-type" class="form-label fw-bold">Type de partenaire</label>
-                                <select name="type" id="partner-type" class="form-select">
-                                    <option value="">Tous les types</option>
-                                    @foreach(\App\Models\Partner::getTypes() as $key => $value)
-                                        <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
-                                            {{ $value }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="partner-city" class="form-label fw-bold">Ville</label>
-                                <select name="city" id="partner-city" class="form-select">
-                                    <option value="">Toutes les villes</option>
-                                    @foreach($cities as $city)
-                                        <option value="{{ $city }}" {{ request('city') == $city ? 'selected' : '' }}>
-                                            {{ $city }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="partner-search" class="form-label fw-bold">Recherche</label>
-                                <div class="input-group">
-                                    <input type="text" name="search" id="partner-search" class="form-control" placeholder="Nom, spécialisation..." value="{{ request('search') }}">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i>
-                                    </button>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach(\App\Models\Partner::getTypes() as $key => $value)
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
+                                <a href="{{ route('front.partners.by-type', $key) }}" class="btn btn-outline-primary btn-lg btn-block py-3 category-card" data-type="{{ $key }}">
+                                    <div class="category-icon mb-2">
+                                        @if($key == 'doctor')
+                                            <i class="fas fa-user-md fa-2x text-primary"></i>
+                                        @elseif($key == 'gym')
+                                            <i class="fas fa-dumbbell fa-2x text-success"></i>
+                                        @elseif($key == 'laboratory')
+                                            <i class="fas fa-flask fa-2x text-info"></i>
+                                        @elseif($key == 'pharmacy')
+                                            <i class="fas fa-pills fa-2x text-warning"></i>
+                                        @elseif($key == 'nutritionist')
+                                            <i class="fas fa-apple-alt fa-2x text-success"></i>
+                                        @else
+                                            <i class="fas fa-brain fa-2x text-purple"></i>
+                                        @endif
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <a href="{{ route('front.partners.index') }}" class="btn btn-secondary btn-block">
-                                    <i class="fas fa-undo"></i> Reset
+                                    <div class="category-name">
+                                        <small class="font-weight-bold">{{ $value }}</small>
+                                    </div>
                                 </a>
                             </div>
-                        </form>
+                        @endforeach
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Results Count -->
-        @if($partners->count() > 0)
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        <strong>{{ $partners->total() }}</strong> partenaire(s) trouvé(s)
-                        @if(request()->filled('type') || request()->filled('city') || request()->filled('search'))
-                            selon vos critères de recherche
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <!-- Partners Grid -->
-        <div class="row">
-            @forelse($partners as $partner)
-                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
-                    <div class="card partner-card h-100 shadow-sm">
-                        <!-- Partner Image/Logo -->
-                        <div class="partner-image-container position-relative">
-                            @if($partner->logo)
-                                <img src="{{ asset('storage/' . $partner->logo) }}"
-                                     class="card-img-top partner-image"
-                                     alt="{{ $partner->name }}"
-                                     style="height: 220px; object-fit: cover;">
-                            @else
-                                <div class="card-img-top bg-gradient-primary d-flex align-items-center justify-content-center partner-image-placeholder" style="height: 220px;">
-                                    @if($partner->type == 'doctor')
-                                        <i class="fas fa-user-md fa-4x text-white opacity-75"></i>
-                                    @elseif($partner->type == 'gym')
-                                        <i class="fas fa-dumbbell fa-4x text-white opacity-75"></i>
-                                    @elseif($partner->type == 'laboratory')
-                                        <i class="fas fa-flask fa-4x text-white opacity-75"></i>
-                                    @elseif($partner->type == 'pharmacy')
-                                        <i class="fas fa-pills fa-4x text-white opacity-75"></i>
-                                    @elseif($partner->type == 'nutritionist')
-                                        <i class="fas fa-apple-alt fa-4x text-white opacity-75"></i>
-                                    @else
-                                        <i class="fas fa-brain fa-4x text-white opacity-75"></i>
-                                    @endif
-                                </div>
-                            @endif
-                            
-                            <!-- Favorite Button -->
-                            @auth
-                                <button class="btn btn-sm btn-light position-absolute favorite-btn toggle-favorite rounded-circle shadow"
-                                        style="top: 10px; right: 10px; width: 40px; height: 40px;"
-                                        data-partner-id="{{ $partner->id }}"
-                                        title="Ajouter aux favoris">
-                                    <i class="fas fa-heart text-danger"></i>
-                                </button>
-                            @endauth
-                            
-                            <!-- Type Badge -->
-                            <div class="position-absolute" style="bottom: 10px; left: 10px;">
-                                <span class="badge badge-primary badge-lg px-3 py-2">{{ $partner->type_label }}</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Card Body -->
-                        <div class="card-body">
-                            <!-- Partner Name & Rating -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0 font-weight-bold">{{ $partner->name }}</h5>
-                                @if($partner->rating > 0)
-                                    <div class="rating">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="fas fa-star {{ $i <= $partner->rating ? 'text-warning' : 'text-muted' }}"></i>
-                                        @endfor
-                                        <span class="rating-text ml-1 text-muted">{{ number_format($partner->rating, 1) }}</span>
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <!-- Specialization -->
-                            @if($partner->specialization)
-                                <p class="text-primary font-weight-bold mb-2">
-                                    <i class="fas fa-certificate"></i> {{ $partner->specialization }}
-                                </p>
-                            @endif
-                            
-                            <!-- Description -->
-                            @if($partner->description)
-                                <p class="card-text text-muted">{{ Str::limit($partner->description, 120) }}</p>
-                            @endif
-                            
-                            <!-- Location -->
-                            @if($partner->city)
-                                <div class="location mb-3">
-                                    <i class="fas fa-map-marker-alt text-danger"></i>
-                                    <span class="text-muted">{{ $partner->city }}</span>
-                                </div>
-                            @endif
-                            
-                            <!-- Services Preview -->
-                            @if($partner->services && count($partner->services) > 0)
-                                <div class="services-preview mb-3">
-                                    <small class="text-muted font-weight-bold">Services:</small>
-                                    <div class="mt-1">
-                                        @foreach(array_slice($partner->services, 0, 2) as $service)
-                                            <span class="badge badge-light text-dark mr-1 mb-1">{{ $service }}</span>
-                                        @endforeach
-                                        @if(count($partner->services) > 2)
-                                            <span class="badge badge-info">+{{ count($partner->services) - 2 }} autres</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        
-                        <!-- Card Footer -->
-                        <div class="card-footer bg-transparent border-0">
-                            <div class="row no-gutters">
-                                <div class="col-8">
-                                    <a href="{{ route('front.partners.show', $partner) }}" class="btn btn-primary btn-block">
-                                        <i class="fas fa-info-circle"></i> Voir détails
-                                    </a>
-                                </div>
-                                <div class="col-4 pl-2">
-                                    <div class="btn-group btn-block">
-                                        @if($partner->phone)
-                                            <a href="tel:{{ $partner->phone }}" class="btn btn-success" title="Appeler">
-                                                <i class="fas fa-phone"></i>
-                                            </a>
-                                        @endif
-                                        @if($partner->email)
-                                            <a href="mailto:{{ $partner->email }}" class="btn btn-info" title="Email">
-                                                <i class="fas fa-envelope"></i>
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-12">
-                    <div class="empty-state text-center py-5">
-                        <div class="card">
-                            <div class="card-body py-5">
-                                <i class="fas fa-search fa-4x text-muted mb-4"></i>
-                                <h4 class="text-muted">Aucun partenaire trouvé</h4>
-                                <p class="text-muted">Aucun partenaire ne correspond à vos critères de recherche.</p>
-                                <div class="mt-4">
-                                    <a href="{{ route('front.partners.index') }}" class="btn btn-primary mr-2">
-                                        <i class="fas fa-undo"></i> Réinitialiser les filtres
-                                    </a>
-                                    <button class="btn btn-outline-primary" onclick="window.scrollTo(0,0)">
-                                        <i class="fas fa-filter"></i> Modifier les critères
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforelse
-        </div>
-
-        <!-- Pagination -->
-        @if($partners->hasPages())
-            <div class="row">
-                <div class="col-12 d-flex justify-content-center">
-                    <div class="pagination-wrapper">
-                        {{ $partners->appends(request()->all())->links() }}
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
+
+    <!-- Advanced Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-filter"></i> Filtres de Recherche Automatique</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 mb-3">
+                            <label for="partner-type" class="form-label fw-bold">Type de partenaire</label>
+                            <select name="type" id="partner-type" class="form-select auto-filter" data-filter="type">
+                                <option value="">Tous les types</option>
+                                @foreach(\App\Models\Partner::getTypes() as $key => $value)
+                                    <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="partner-city" class="form-label fw-bold">Ville</label>
+                            <select name="city" id="partner-city" class="form-select auto-filter" data-filter="city">
+                                <option value="">Toutes les villes</option>
+                                @foreach($cities as $city)
+                                    <option value="{{ $city }}" {{ request('city') == $city ? 'selected' : '' }}>
+                                        {{ $city }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="partner-search" class="form-label fw-bold">Recherche instantanée</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" name="search" id="partner-search" class="form-control auto-filter" 
+                                       data-filter="search" placeholder="Nom, spécialisation..." value="{{ request('search') }}">
+                                <button type="button" id="clear-search" class="btn btn-outline-secondary" title="Effacer la recherche" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="reset-filters" class="form-label fw-bold d-block">&nbsp;</label>
+                            <button type="button" id="reset-filters" class="btn btn-secondary w-100" title="Réinitialiser tous les filtres">
+                                <i class="fas fa-undo me-2"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Indicateur de chargement -->
+                    <div id="loading-indicator" class="text-center py-2" style="display: none;">
+                        <div class="spinner-border spinner-border-sm text-primary me-2" role="status" aria-label="Chargement">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <small class="text-muted">Recherche en cours...</small>
+                    </div>
+                    
+                    <!-- Filters active indicator -->
+                    <div id="active-filters" class="mt-3" style="display: none;">
+                        <small class="text-muted fw-bold">Filtres actifs :</small>
+                        <div id="active-filters-list" class="mt-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Count -->
+    @if($partners->count() > 0)
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>{{ $partners->total() }}</strong> partenaire(s) trouvé(s)
+                    @if(request()->filled('type') || request()->filled('city') || request()->filled('search'))
+                        selon vos critères de recherche
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Partners Grid -->
+    <div id="partners-grid" class="row">
+        @include('front.partners.partials.partners-grid', ['partners' => $partners, 'userFavorites' => $userFavorites])
+    </div>
+
+    <!-- Pagination -->
+    @if($partners->hasPages())
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="pagination-wrapper">
+                    {{ $partners->appends(request()->all())->links() }}
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 @endsection
 
@@ -329,24 +202,64 @@
 }
 
 .favorite-btn {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
     display: flex !important;
     align-items: center;
     justify-content: center;
-    background: rgba(255,255,255,0.9) !important;
+    background: rgba(255,255,255,0.95) !important;
+    border: 2px solid #e9ecef;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .favorite-btn:hover {
-    background: white !important;
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
+}
+
+.favorite-btn.favorited {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+    border-color: #ff6b6b !important;
+    animation: heartBeat 0.6s ease-in-out;
+}
+
+.favorite-btn.favorited:hover {
+    background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%) !important;
+    transform: scale(1.2);
+}
+
+.favorite-btn:not(.favorited):hover {
+    background: rgba(255,255,255,1) !important;
+    border-color: #ff6b6b !important;
+}
+
+.favorite-btn i {
+    transition: all 0.3s ease;
 }
 
 .favorite-btn.favorited i {
-    color: #dc3545 !important;
+    color: white !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.favorite-btn:not(.favorited) i {
+    color: #ff6b6b !important;
+}
+
+.favorite-btn:not(.favorited):hover i {
+    color: #ff5252 !important;
+    transform: scale(1.1);
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3); }
+    50% { transform: scale(1.1); }
+    75% { transform: scale(1.25); }
+    100% { transform: scale(1.15); }
 }
 
 .category-card {
@@ -360,10 +273,81 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
 }
 
-.filter-card {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
+.auto-filter {
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef;
+}
+
+.auto-filter:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.auto-filter:hover {
+    border-color: #007bff;
+}
+
+#loading-indicator {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#active-filters .badge {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+#clear-search {
+    border-left: none;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+#clear-search:hover {
+    background: #e9ecef;
+    color: #dc3545;
+}
+
+#reset-filters {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+#reset-filters:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#active-filters {
+    background: rgba(0, 123, 255, 0.05);
+    border-radius: 10px;
+    padding: 10px 15px;
+    border-left: 4px solid #007bff;
+}
+
+.partner-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .bg-gradient-primary {
@@ -372,43 +356,6 @@
 
 .rounded-4 {
     border-radius: 1rem !important;
-}
-
-.hero-categories .card {
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.hero-categories .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 15px;
-}
-
-.rating {
-    font-size: 14px;
-}
-
-.badge-lg {
-    font-size: 0.875rem;
-}
-
-.services-preview .badge {
-    font-size: 0.75rem;
-}
-
-.empty-state .card {
-    border: none;
-    background: #f8f9fa;
-    border-radius: 15px;
-}
-
-.location {
-    font-size: 14px;
 }
 
 .pagination-wrapper {
@@ -423,87 +370,533 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Toggle favorite functionality
-    const favoriteButtons = document.querySelectorAll('.toggle-favorite');
+    let searchTimeout;
+    const searchDelay = 500;
     
-    favoriteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const partnerId = this.dataset.partnerId;
-            const heartIcon = this.querySelector('i');
+    // Get filter elements
+    const searchInput = document.getElementById('partner-search');
+    const typeSelect = document.getElementById('partner-type');
+    const citySelect = document.getElementById('partner-city');
+    const clearSearchBtn = document.getElementById('clear-search');
+    const resetFiltersBtn = document.getElementById('reset-filters');
+    
+    // Results and loading elements
+    const partnersGrid = document.getElementById('partners-grid');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const activeFilters = document.getElementById('active-filters');
+    const activeFiltersList = document.getElementById('active-filters-list');
+    
+    // Perform AJAX search function
+    function performSearch() {
+        clearTimeout(searchTimeout);
+        
+        searchTimeout = setTimeout(() => {
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'block';
+            }
             
-            fetch(`/partenaires/${partnerId}/toggle-favorite`, {
-                method: 'POST',
+            const params = new URLSearchParams();
+            
+            if (searchInput && searchInput.value.trim()) {
+                params.append('search', searchInput.value.trim());
+            }
+            
+            if (typeSelect && typeSelect.value && typeSelect.value !== '') {
+                params.append('type', typeSelect.value);
+            }
+            
+            if (citySelect && citySelect.value && citySelect.value !== '') {
+                params.append('city', citySelect.value);
+            }
+            
+            fetch(`{{ route('front.partners.search') }}?${params}`, {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                if (data.status === 'success') {
-                    if (data.action === 'added') {
-                        heartIcon.classList.remove('far');
-                        heartIcon.classList.add('fas');
-                        this.classList.remove('btn-light');
-                        this.classList.add('btn-danger');
-                        this.title = 'Retirer des favoris';
-                        
-                        // Animation de succès
-                        this.style.transform = 'scale(1.3)';
-                        setTimeout(() => {
-                            this.style.transform = 'scale(1)';
-                        }, 200);
-                    } else {
-                        heartIcon.classList.remove('fas');
-                        heartIcon.classList.add('far');
-                        this.classList.remove('btn-danger');
-                        this.classList.add('btn-light');
-                        this.title = 'Ajouter aux favoris';
-                    }
-                    
-                    // Show toast notification
-                    showToast(data.message, 'success');
+                if (partnersGrid && data.html) {
+                    partnersGrid.innerHTML = data.html;
+                    initializeFavoriteButtons();
+                }
+                
+                updateActiveFilters(data.filters);
+                
+                if (params.toString()) {
+                    const newUrl = `${window.location.pathname}?${params}`;
+                    window.history.pushState({}, '', newUrl);
+                } else {
+                    window.history.pushState({}, '', window.location.pathname);
+                }
+                
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+                
+                if (partnersGrid) {
+                    partnersGrid.style.opacity = '0.7';
+                    setTimeout(() => {
+                        partnersGrid.style.opacity = '1';
+                    }, 100);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showToast('Une erreur est survenue.', 'error');
+                console.error('Search error:', error);
+                
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+                
+                if (partnersGrid) {
+                    partnersGrid.innerHTML = `
+                        <div class="col-12">
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Erreur lors de la recherche. Veuillez réessayer.
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                showToast('Erreur lors de la recherche', 'error');
             });
+        }, searchDelay);
+    }
+    
+    // Update active filters display
+    function updateActiveFilters(filters = null) {
+        if (!activeFilters || !activeFiltersList) return;
+        
+        let filtersHtml = '';
+        let hasActiveFilters = false;
+        
+        if (!filters) {
+            filters = {
+                search: searchInput ? searchInput.value : '',
+                type: typeSelect ? typeSelect.value : '',
+                city: citySelect ? citySelect.value : ''
+            };
+        }
+        
+        if (filters.search && filters.search.trim() !== '') {
+            hasActiveFilters = true;
+            filtersHtml += `
+                <span class="badge bg-primary me-2 mb-2">
+                    <i class="fas fa-search me-1"></i>
+                    "${filters.search}"
+                    <button type="button" class="btn-close btn-close-white ms-1" data-clear="search" title="Supprimer ce filtre"></button>
+                </span>
+            `;
+        }
+        
+        if (filters.type && filters.type !== '') {
+            hasActiveFilters = true;
+            const typeOption = typeSelect ? typeSelect.querySelector(`option[value="${filters.type}"]`) : null;
+            const typeText = typeOption ? typeOption.textContent : filters.type;
+            
+            filtersHtml += `
+                <span class="badge bg-success me-2 mb-2">
+                    <i class="fas fa-tag me-1"></i>
+                    ${typeText}
+                    <button type="button" class="btn-close btn-close-white ms-1" data-clear="type" title="Supprimer ce filtre"></button>
+                </span>
+            `;
+        }
+        
+        if (filters.city && filters.city !== '') {
+            hasActiveFilters = true;
+            filtersHtml += `
+                <span class="badge bg-info me-2 mb-2">
+                    <i class="fas fa-map-marker-alt me-1"></i>
+                    ${filters.city}
+                    <button type="button" class="btn-close btn-close-white ms-1" data-clear="city" title="Supprimer ce filtre"></button>
+                </span>
+            `;
+        }
+        
+        if (hasActiveFilters) {
+            activeFiltersList.innerHTML = filtersHtml;
+            activeFilters.style.display = 'block';
+            
+            activeFiltersList.querySelectorAll('[data-clear]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const filterType = this.getAttribute('data-clear');
+                    clearFilter(filterType);
+                });
+            });
+        } else {
+            activeFilters.style.display = 'none';
+        }
+        
+        if (clearSearchBtn) {
+            if (searchInput && searchInput.value.trim()) {
+                clearSearchBtn.style.display = 'block';
+            } else {
+                clearSearchBtn.style.display = 'none';
+            }
+        }
+    }
+    
+    function clearFilter(filterType) {
+        switch (filterType) {
+            case 'search':
+                if (searchInput) searchInput.value = '';
+                break;
+            case 'type':
+                if (typeSelect) typeSelect.value = '';
+                break;
+            case 'city':
+                if (citySelect) citySelect.value = '';
+                break;
+        }
+        performSearch();
+    }
+    
+    function clearAllFilters() {
+        if (searchInput) searchInput.value = '';
+        if (typeSelect) typeSelect.value = '';
+        if (citySelect) citySelect.value = '';
+        performSearch();
+    }
+    
+    function initializeFavoriteButtons() {
+        document.querySelectorAll('.toggle-favorite').forEach(button => {
+            button.replaceWith(button.cloneNode(true));
         });
-    });
+        
+        document.querySelectorAll('.toggle-favorite').forEach(button => {
+            button.addEventListener('click', handleFavoriteClick);
+        });
+    }
+    
+    function handleFavoriteClick(event) {
+        event.preventDefault();
+        const button = this;
+        const partnerId = button.getAttribute('data-partner-id');
+        const heartIcon = button.querySelector('i');
+        
+        button.disabled = true;
+        
+        button.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            button.style.transform = 'scale(1)';
+        }, 150);
+        
+        fetch(`{{ url('/partenaires') }}/${partnerId}/toggle-favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.is_favorite) {
+                    button.classList.remove('btn-light');
+                    button.classList.add('btn-danger', 'favorited');
+                    heartIcon.classList.remove('text-danger');
+                    heartIcon.classList.add('text-white');
+                    button.title = 'Retirer des favoris';
+                    
+                    // Notification verte pour l'ajout aux favoris
+                    showFavoriteToast('Partenaire ajouté aux favoris avec succès !', 'added');
+                } else {
+                    button.classList.remove('btn-danger', 'favorited');
+                    button.classList.add('btn-light');
+                    heartIcon.classList.remove('text-white');
+                    heartIcon.classList.add('text-danger');
+                    button.title = 'Ajouter aux favoris';
+                    
+                    // Notification bleue pour la suppression des favoris
+                    showFavoriteToast('Partenaire retiré des favoris.', 'removed');
+                }
+            } else {
+                showToast(data.message || 'Une erreur est survenue.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Une erreur est survenue.', 'error');
+        })
+        .finally(() => {
+            button.disabled = false;
+        });
+    }
+    
+    // Event listeners
+    if (searchInput) {
+        searchInput.addEventListener('input', performSearch);
+        searchInput.addEventListener('keyup', function(event) {
+            if (event.key === 'Escape') {
+                this.value = '';
+                performSearch();
+            }
+        });
+    }
+    
+    if (typeSelect) {
+        typeSelect.addEventListener('change', performSearch);
+    }
+    
+    if (citySelect) {
+        citySelect.addEventListener('change', performSearch);
+    }
+    
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+            if (searchInput) searchInput.value = '';
+            performSearch();
+        });
+    }
+    
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', clearAllFilters);
+    }
+    
+    // Initialize
+    initializeFavoriteButtons();
+    updateActiveFilters();
     
     // Category hover effects
     document.querySelectorAll('.category-card').forEach(card => {
         card.addEventListener('mouseenter', function() {
-            this.querySelector('i').style.transform = 'scale(1.1)';
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'scale(1.1)';
+                icon.style.transition = 'transform 0.3s ease';
+            }
         });
         
         card.addEventListener('mouseleave', function() {
-            this.querySelector('i').style.transform = 'scale(1)';
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'scale(1)';
+            }
         });
     });
 });
 
 // Toast notification function
-function showToast(message, type = 'info') {
+function showToast(message, type = 'info', icon = null) {
+    let iconClass, alertClass;
+    
+    switch (type) {
+        case 'success':
+            iconClass = icon || 'check-circle';
+            alertClass = 'alert-success';
+            break;
+        case 'error':
+            iconClass = icon || 'exclamation-circle';
+            alertClass = 'alert-danger';
+            break;
+        case 'warning':
+            iconClass = icon || 'exclamation-triangle';
+            alertClass = 'alert-warning';
+            break;
+        default:
+            iconClass = icon || 'info-circle';
+            alertClass = 'alert-info';
+    }
+    
     const toast = document.createElement('div');
-    toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
-    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.className = `alert ${alertClass} alert-dismissible fade show position-fixed shadow-lg`;
+    toast.style.cssText = `
+        top: 30px; 
+        right: 30px; 
+        z-index: 9999; 
+        min-width: 350px; 
+        border: none; 
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        animation: slideInRight 0.5s ease-out;
+    `;
+    
     toast.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        ${message}
-        <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${iconClass} me-3" style="font-size: 20px;"></i>
+            <div class="flex-grow-1">
+                <strong>${message}</strong>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     `;
     
     document.body.appendChild(toast);
     
     setTimeout(() => {
         if (toast.parentNode) {
-            toast.parentNode.removeChild(toast);
+            toast.style.animation = 'slideOutRight 0.5s ease-in forwards';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 500);
         }
-    }, 5000);
+    }, 4000);
 }
+
+// Fonction spécialisée pour les notifications de favoris
+function showFavoriteToast(message, action) {
+    let iconClass, alertClass, bgGradient;
+    
+    if (action === 'added') {
+        iconClass = 'heart';
+        alertClass = 'alert-success';
+        bgGradient = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+    } else {
+        iconClass = 'heart-broken';
+        alertClass = 'alert-info';
+        bgGradient = 'linear-gradient(135deg, #17a2b8 0%, #6610f2 100%)';
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `alert ${alertClass} alert-dismissible fade show position-fixed shadow-lg`;
+    toast.style.cssText = `
+        top: 30px; 
+        right: 30px; 
+        z-index: 9999; 
+        min-width: 350px; 
+        border: none; 
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        animation: slideInRight 0.5s ease-out;
+        background: ${bgGradient} !important;
+        border-left: 5px solid ${action === 'added' ? '#155724' : '#0c5460'};
+        color: white !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    `;
+    
+    toast.innerHTML = `
+        <div class="d-flex align-items-center">
+            <div class="favorite-icon me-3" style="position: relative;">
+                <i class="fas fa-${iconClass}" style="font-size: 24px; color: white; animation: ${action === 'added' ? 'heartPulse' : 'fadeInOut'} 1s ease-in-out;"></i>
+                ${action === 'added' ? '<div class="sparkles"></div>' : ''}
+            </div>
+            <div class="flex-grow-1">
+                <strong>${message}</strong>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Ajouter les styles pour les animations
+    if (!document.querySelector('#favorite-toast-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'favorite-toast-styles';
+        styles.textContent = `
+            @keyframes heartPulse {
+                0% { transform: scale(1); }
+                25% { transform: scale(1.3); }
+                50% { transform: scale(1.1); }
+                75% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+            
+            @keyframes fadeInOut {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
+            }
+            
+            .sparkles {
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                width: 40px;
+                height: 40px;
+                pointer-events: none;
+            }
+            
+            .sparkles::before,
+            .sparkles::after {
+                content: '✨';
+                position: absolute;
+                font-size: 16px;
+                animation: sparkle 1.5s ease-in-out infinite;
+            }
+            
+            .sparkles::before {
+                top: 0;
+                left: 0;
+                animation-delay: 0.3s;
+            }
+            
+            .sparkles::after {
+                bottom: 0;
+                right: 0;
+                animation-delay: 0.8s;
+            }
+            
+            @keyframes sparkle {
+                0%, 100% { opacity: 0; transform: scale(0.5); }
+                50% { opacity: 1; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.style.animation = 'slideOutRight 0.5s ease-in forwards';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 500);
+        }
+    }, 4000);
+}
+
+// CSS animations
+const styles = document.createElement('style');
+styles.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    #partners-grid {
+        transition: opacity 0.3s ease;
+    }
+    
+    .auto-filter {
+        transition: border-color 0.3s ease;
+    }
+    
+    .auto-filter:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+`;
+document.head.appendChild(styles);
 </script>
 @endpush

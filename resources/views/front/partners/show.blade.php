@@ -86,15 +86,20 @@
                 </div>
 
                 @if($partner->services && count($partner->services) > 0)
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Services proposés</h4>
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-light border-bottom">
+                            <h4 class="mb-0 text-primary">
+                                <i class="fas fa-concierge-bell me-2 text-primary"></i>Services proposés
+                            </h4>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body bg-white">
                             <div class="row">
                                 @foreach($partner->services as $service)
-                                    <div class="col-md-6 mb-2">
-                                        <span class="badge badge-outline-primary">{{ $service }}</span>
+                                    <div class="col-lg-6 col-md-6 mb-3">
+                                        <div class="service-item p-3 border rounded-3 h-100 shadow-sm bg-light">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <span class="service-text fw-semibold">{{ trim($service) }}</span>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -103,18 +108,9 @@
                 @endif
 
                 @if($partner->opening_hours && count($partner->opening_hours) > 0)
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Horaires d'ouverture</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                @foreach($partner->opening_hours as $day => $hours)
-                                    <div class="col-md-6 mb-2">
-                                        <strong>{{ ucfirst($day) }}:</strong> {{ $hours }}
-                                    </div>
-                                @endforeach
-                            </div>
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body p-4">
+                            <x-opening-hours :partner="$partner" />
                         </div>
                     </div>
                 @endif
@@ -228,6 +224,35 @@
     </div>
 </div>
 @endsection
+
+@push('css')
+<style>
+.service-item {
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef !important;
+}
+
+.service-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,123,255,0.15) !important;
+    border-color: #007bff !important;
+}
+
+.service-text {
+    font-size: 0.95rem;
+    color: #2c3e50;
+}
+
+.card-header {
+    border-bottom: 3px solid #007bff !important;
+}
+
+.card-header h4 {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+</style>
+@endpush
 
 @push('scripts')
 <script>

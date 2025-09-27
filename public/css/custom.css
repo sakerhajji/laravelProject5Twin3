@@ -5,4 +5,20 @@
  * 
  */
 
+/* Ajustement de l'espacement pour le contenu principal */
+.main-content {
+    padding-top: 120px !important; /* Augmentation de l'espacement supérieur */
+}
+
+/* Espacement supplémentaire pour les sections */
+.section-header {
+    margin-bottom: 30px !important;
+}
+
+.section-body {
+    padding-top: 20px;
+}
+
+
+
 /*# sourceMappingURL=custom.css.map */

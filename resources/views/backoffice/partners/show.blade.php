@@ -3,11 +3,10 @@
 @section('title', 'Détails du Partenaire')
 
 @section('content')
-<div class="main-content">
-    <div class="section-header">
-        <div class="section-header-back">
-            <a href="{{ route('admin.partners.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
-        </div>
+<div class="section-header">
+    <div class="section-header-back">
+        <a href="{{ route('admin.partners.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+    </div>
         <h1>{{ $partner->name }}</h1>
         <div class="section-header-button">
             <a href="{{ route('admin.partners.edit', $partner) }}" class="btn btn-warning">Modifier</a>
@@ -82,13 +81,41 @@
                 @if($partner->opening_hours && count($partner->opening_hours) > 0)
                     <div class="card">
                         <div class="card-header">
-                            <h4>Horaires d'ouverture</h4>
+                            <h4><i class="fas fa-clock text-primary"></i> Horaires d'ouverture</h4>
+                            <div class="card-header-action">
+                                @php $currentStatus = $partner->current_day_status @endphp
+                                <span class="badge badge-{{ $currentStatus['status'] === 'open' ? 'success' : ($currentStatus['status'] === 'break' ? 'warning' : 'secondary') }}">
+                                    {{ $currentStatus['message'] }}
+                                </span>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                @foreach($partner->opening_hours as $day => $hours)
-                                    <div class="col-md-6 mb-2">
-                                        <strong>{{ ucfirst($day) }}:</strong> {{ $hours }}
+                                @php $formattedHours = $partner->formatted_opening_hours @endphp
+                                @foreach($formattedHours as $day => $dayInfo)
+                                    @php
+                                        $isToday = strtolower(date('l')) === $day;
+                                        $cardClass = $isToday ? 'border-primary bg-light' : '';
+                                    @endphp
+                                    <div class="col-md-6 col-lg-4 mb-3">
+                                        <div class="card {{ $cardClass }} mb-0">
+                                            <div class="card-body p-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h6 class="mb-1 {{ $isToday ? 'text-primary font-weight-bold' : '' }}">
+                                                        {{ $dayInfo['label'] }}
+                                                        @if($isToday)
+                                                            <small class="badge badge-primary ml-1">Aujourd'hui</small>
+                                                        @endif
+                                                    </h6>
+                                                    <span class="badge badge-{{ $dayInfo['is_open'] ? 'success' : 'secondary' }} badge-sm">
+                                                        <i class="fas fa-{{ $dayInfo['is_open'] ? 'check' : 'times' }}"></i>
+                                                    </span>
+                                                </div>
+                                                <p class="mb-0 small {{ $dayInfo['is_open'] ? 'text-success' : 'text-muted' }}">
+                                                    {{ $dayInfo['hours'] }}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>
@@ -170,7 +197,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')

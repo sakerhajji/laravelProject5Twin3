@@ -13,10 +13,16 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
         $middleware->alias([
-
             'superadmin' => \App\Http\Middleware\superadmin::class,
             'admin' => \App\Http\Middleware\admin::class,
             'client' => \App\Http\Middleware\client::class,
+            
+            // Partner Management Middlewares
+            'partner.management' => \App\Http\Middleware\Partner\PartnerManagement::class,
+            'partner.validate' => \App\Http\Middleware\Partner\ValidatePartner::class,
+            'partner.data' => \App\Http\Middleware\Partner\ValidatePartnerData::class,
+            'partner.status' => \App\Http\Middleware\Partner\CheckPartnerStatus::class,
+            'partner.log' => \App\Http\Middleware\Partner\LogPartnerActivity::class,
         ]);
 
     })

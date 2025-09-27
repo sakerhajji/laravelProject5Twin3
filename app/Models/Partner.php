@@ -119,4 +119,228 @@ class Partner extends Model
     {
         return $this->belongsToMany(User::class, 'partner_favorites')->withTimestamps();
     }
+
+    /**
+     * Check if partner is active
+     */
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * Check if partner is inactive
+     */
+    public function isInactive(): bool
+    {
+        return $this->status === self::STATUS_INACTIVE;
+    }
+
+    /**
+     * Check if partner is pending
+     */
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    /**
+     * Get services attribute with proper decoding
+     */
+    public function getServicesAttribute($value)
+    {
+        if (empty($value)) {
+            return [];
+        }
+
+        // Si c'est déjà un array, le retourner
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // Si c'est une string JSON, la décoder
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            
+            // Si le décodage a échoué, essayer de nettoyer et redécoder
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                // Nettoyer les caractères unicode mal encodés
+                $cleaned = preg_replace('/\\\\u([0-9a-fA-F]{4})/', '&#x$1;', $value);
+                $cleaned = html_entity_decode($cleaned, ENT_QUOTES, 'UTF-8');
+                $decoded = json_decode($cleaned, true);
+            }
+            
+            return is_array($decoded) ? $decoded : [];
+        }
+
+        return [];
+    }
+
+    /**
+     * Get formatted opening hours for display
+     */
+    public function getFormattedOpeningHoursAttribute()
+    {
+        if (empty($this->opening_hours)) {
+            return [];
+        }
+
+        $days = [
+            'monday' => 'Lundi',
+            'tuesday' => 'Mardi', 
+            'wednesday' => 'Mercredi',
+            'thursday' => 'Jeudi',
+            'friday' => 'Vendredi',
+            'saturday' => 'Samedi',
+            'sunday' => 'Dimanche'
+        ];
+
+        $formatted = [];
+        $rawHours = $this->opening_hours;
+
+        foreach ($days as $key => $label) {
+            $dayData = null;
+            $frenchKey = strtolower($label);
+            
+            // Check both English and French keys
+            if (isset($rawHours[$key])) {
+                $dayData = $rawHours[$key];
+            } elseif (isset($rawHours[$frenchKey])) {
+                $dayData = $rawHours[$frenchKey];
+            }
+
+            if ($dayData) {
+                if (is_array($dayData)) {
+                    // New format
+                    if (isset($dayData['is_open']) && $dayData['is_open']) {
+                        $hours = ($dayData['open_time'] ?? '09:00') . ' - ' . ($dayData['close_time'] ?? '18:00');
+                        
+                        if (isset($dayData['has_break']) && $dayData['has_break']) {
+                            $breakStart = $dayData['break_start'] ?? '12:00';
+                            $breakEnd = $dayData['break_end'] ?? '13:00';
+                            $hours .= ' (pause: ' . $breakStart . '-' . $breakEnd . ')';
+                        }
+                        
+                        $formatted[$key] = [
+                            'label' => $label,
+                            'hours' => $hours,
+                            'is_open' => true
+                        ];
+                    } else {
+                        $formatted[$key] = [
+                            'label' => $label,
+                            'hours' => 'Fermé',
+                            'is_open' => false
+                        ];
+                    }
+                } else {
+                    // Old format - string like "10:00-19:00" or "Fermé"
+                    $dayData = trim($dayData);
+                    if ($dayData === 'Fermé' || $dayData === 'Ferme' || empty($dayData)) {
+                        $formatted[$key] = [
+                            'label' => $label,
+                            'hours' => 'Fermé',
+                            'is_open' => false
+                        ];
+                    } else {
+                        $formatted[$key] = [
+                            'label' => $label,
+                            'hours' => $dayData,
+                            'is_open' => true
+                        ];
+                    }
+                }
+            } else {
+                $formatted[$key] = [
+                    'label' => $label,
+                    'hours' => 'Fermé',
+                    'is_open' => false
+                ];
+            }
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Get current day status (open/closed)
+     */
+    public function getCurrentDayStatusAttribute()
+    {
+        $currentDay = strtolower(date('l')); // monday, tuesday, etc.
+        $currentTime = date('H:i');
+        
+        $rawHours = $this->opening_hours;
+        if (empty($rawHours)) {
+            return ['status' => 'closed', 'message' => 'Fermé'];
+        }
+
+        $dayData = null;
+        $frenchDays = [
+            'monday' => 'lundi',
+            'tuesday' => 'mardi',
+            'wednesday' => 'mercredi',
+            'thursday' => 'jeudi',
+            'friday' => 'vendredi',
+            'saturday' => 'samedi',
+            'sunday' => 'dimanche'
+        ];
+
+        // Check both English and French keys
+        if (isset($rawHours[$currentDay])) {
+            $dayData = $rawHours[$currentDay];
+        } elseif (isset($rawHours[$frenchDays[$currentDay]])) {
+            $dayData = $rawHours[$frenchDays[$currentDay]];
+        }
+
+        if (!$dayData) {
+            return ['status' => 'closed', 'message' => 'Fermé'];
+        }
+
+        if (is_array($dayData)) {
+            // New format
+            if (!isset($dayData['is_open']) || !$dayData['is_open']) {
+                return ['status' => 'closed', 'message' => 'Fermé'];
+            }
+            
+            $openTime = $dayData['open_time'] ?? '09:00';
+            $closeTime = $dayData['close_time'] ?? '18:00';
+            
+            // Check if currently within opening hours
+            if ($currentTime >= $openTime && $currentTime <= $closeTime) {
+                // Check if it's break time
+                if (isset($dayData['has_break']) && $dayData['has_break']) {
+                    $breakStart = $dayData['break_start'] ?? '12:00';
+                    $breakEnd = $dayData['break_end'] ?? '13:00';
+                    
+                    if ($currentTime >= $breakStart && $currentTime <= $breakEnd) {
+                        return ['status' => 'break', 'message' => 'En pause (ferme à ' . $breakEnd . ')'];
+                    }
+                }
+                
+                return ['status' => 'open', 'message' => 'Ouvert (ferme à ' . $closeTime . ')'];
+            }
+            
+            return ['status' => 'closed', 'message' => 'Fermé (ouvre à ' . $openTime . ')'];
+        } else {
+            // Old format
+            $dayData = trim($dayData);
+            if ($dayData === 'Fermé' || $dayData === 'Ferme' || empty($dayData)) {
+                return ['status' => 'closed', 'message' => 'Fermé'];
+            } elseif (strpos($dayData, '-') !== false) {
+                // Format like "10:00-19:00"
+                $times = explode('-', $dayData);
+                $openTime = trim($times[0]);
+                $closeTime = trim($times[1]);
+                
+                if ($currentTime >= $openTime && $currentTime <= $closeTime) {
+                    return ['status' => 'open', 'message' => 'Ouvert (ferme à ' . $closeTime . ')'];
+                }
+                
+                return ['status' => 'closed', 'message' => 'Fermé (ouvre à ' . $openTime . ')'];
+            }
+        }
+        
+        return ['status' => 'closed', 'message' => 'Fermé'];
+    }
 }

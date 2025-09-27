@@ -3,13 +3,12 @@
 @section('title', 'Nouveau Partenaire')
 
 @section('content')
-<div class="main-content">
-    <div class="section-header">
-        <div class="section-header-back">
-            <a href="{{ route('admin.partners.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
-        </div>
-        <h1>Nouveau Partenaire</h1>
+<div class="section-header" style="margin-top: 40px;">
+    <div class="section-header-back">
+        <a href="{{ route('admin.partners.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
     </div>
+    <h1>Nouveau Partenaire</h1>
+</div>
 
     <div class="section-body">
         <div class="row">
@@ -221,6 +220,123 @@
                                     </div>
                                 </div>
 
+                                <!-- Opening Hours -->
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-clock text-primary"></i> Horaires d'ouverture</label>
+                                        <div class="card">
+                                            <div class="card-body">
+                                @php
+                                    $days = [
+                                        'monday' => 'Lundi',
+                                        'tuesday' => 'Mardi',
+                                        'wednesday' => 'Mercredi',
+                                        'thursday' => 'Jeudi',
+                                        'friday' => 'Vendredi',
+                                        'saturday' => 'Samedi',
+                                        'sunday' => 'Dimanche'
+                                    ];
+                                    $currentHours = old('opening_hours', []);
+                                    
+                                    // Set default values for new forms
+                                    $processedHours = [];
+                                    foreach ($days as $englishDay => $frenchLabel) {
+                                        if (isset($currentHours[$englishDay])) {
+                                            $processedHours[$englishDay] = $currentHours[$englishDay];
+                                        } else {
+                                            // Default values - weekdays open, weekend closed
+                                            $isWeekday = in_array($englishDay, ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
+                                            $processedHours[$englishDay] = [
+                                                'is_open' => $isWeekday,
+                                                'open_time' => '09:00',
+                                                'close_time' => '18:00',
+                                                'has_break' => false,
+                                                'break_start' => '12:00',
+                                                'break_end' => '13:00'
+                                            ];
+                                        }
+                                    }
+                                @endphp                                                <div class="row">
+                                                    @foreach($days as $dayKey => $dayLabel)
+                                                        <div class="col-md-6 col-lg-4 mb-3">
+                                                            <div class="day-schedule border rounded p-3 bg-light">
+                                                                <!-- Hidden inputs to ensure all data is sent -->
+                                                                <input type="hidden" name="opening_hours[{{ $dayKey }}][day]" value="{{ $dayKey }}">
+                                                                
+                                                                <div class="d-flex align-items-center mb-2">
+                                                                    <label class="form-check-label font-weight-bold mb-0 mr-2">
+                                                                        {{ $dayLabel }}
+                                                                    </label>
+                                                                    <div class="custom-control custom-switch">
+                                                                        <input type="checkbox" class="custom-control-input day-toggle" 
+                                                                               id="toggle-{{ $dayKey }}" name="opening_hours[{{ $dayKey }}][is_open]" 
+                                                                               value="1" {{ isset($processedHours[$dayKey]['is_open']) && $processedHours[$dayKey]['is_open'] ? 'checked' : '' }}>
+                                                                        <label class="custom-control-label" for="toggle-{{ $dayKey }}">
+                                                                            <small class="text-muted">Ouvert</small>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="time-inputs" style="{{ isset($processedHours[$dayKey]['is_open']) && $processedHours[$dayKey]['is_open'] ? '' : 'display: none;' }}">
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <label class="small text-muted">Ouverture</label>
+                                                                            <input type="time" name="opening_hours[{{ $dayKey }}][open_time]" 
+                                                                                   class="form-control form-control-sm"
+                                                                                   value="{{ $processedHours[$dayKey]['open_time'] ?? '09:00' }}">
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <label class="small text-muted">Fermeture</label>
+                                                                            <input type="time" name="opening_hours[{{ $dayKey }}][close_time]" 
+                                                                                   class="form-control form-control-sm"
+                                                                                   value="{{ $processedHours[$dayKey]['close_time'] ?? '18:00' }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <div class="mt-2">
+                                                                        <div class="custom-control custom-checkbox">
+                                                                            <input type="checkbox" class="custom-control-input break-toggle" 
+                                                                                   id="break-{{ $dayKey }}" name="opening_hours[{{ $dayKey }}][has_break]" 
+                                                                                   value="1" {{ isset($processedHours[$dayKey]['has_break']) && $processedHours[$dayKey]['has_break'] ? 'checked' : '' }}>
+                                                                            <label class="custom-control-label small text-muted" for="break-{{ $dayKey }}">
+                                                                                Pause déjeuner
+                                                                            </label>
+                                                                        </div>
+                                                                        
+                                                                        <div class="break-times mt-1" style="{{ isset($processedHours[$dayKey]['has_break']) && $processedHours[$dayKey]['has_break'] ? '' : 'display: none;' }}">
+                                                                            <div class="row">
+                                                                                <div class="col-6">
+                                                                                    <input type="time" name="opening_hours[{{ $dayKey }}][break_start]" 
+                                                                                           class="form-control form-control-sm" placeholder="Début pause"
+                                                                                           value="{{ $processedHours[$dayKey]['break_start'] ?? '12:00' }}">
+                                                                                </div>
+                                                                                <div class="col-6">
+                                                                                    <input type="time" name="opening_hours[{{ $dayKey }}][break_end]" 
+                                                                                           class="form-control form-control-sm" placeholder="Fin pause"
+                                                                                           value="{{ $processedHours[$dayKey]['break_end'] ?? '13:00' }}">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                
+                                                <div class="mt-3 text-center">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" id="copy-hours">
+                                                        <i class="fas fa-copy"></i> Copier les horaires du lundi vers tous les jours
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary ml-2" id="weekdays-only">
+                                                        <i class="fas fa-business-time"></i> Appliquer uniquement en semaine
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Location -->
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -255,12 +371,12 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Services functionality
     const addServiceBtn = document.getElementById('add-service');
     const servicesContainer = document.getElementById('services-container');
 
@@ -286,6 +402,257 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // Opening Hours functionality
+    const dayToggles = document.querySelectorAll('.day-toggle');
+    const breakToggles = document.querySelectorAll('.break-toggle');
+
+    // Handle day toggle changes
+    dayToggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const timeInputs = this.closest('.day-schedule').querySelector('.time-inputs');
+            if (this.checked) {
+                timeInputs.style.display = '';
+                // Enable time inputs
+                timeInputs.querySelectorAll('input').forEach(input => input.disabled = false);
+            } else {
+                timeInputs.style.display = 'none';
+                // Don't disable inputs, just hide them so they still submit
+                // timeInputs.querySelectorAll('input').forEach(input => input.disabled = true);
+            }
+        });
+    });
+
+    // Handle break toggle changes
+    breakToggles.forEach(toggle => {
+        toggle.addEventListener('change', function() {
+            const breakTimes = this.closest('.day-schedule').querySelector('.break-times');
+            if (this.checked) {
+                breakTimes.style.display = '';
+                breakTimes.querySelectorAll('input').forEach(input => input.disabled = false);
+            } else {
+                breakTimes.style.display = 'none';
+                // Don't disable inputs, just hide them so they still submit
+                // breakTimes.querySelectorAll('input').forEach(input => input.disabled = true);
+            }
+        });
+    });
+
+    // Copy Monday's hours to all days
+    document.getElementById('copy-hours').addEventListener('click', function() {
+        const mondaySchedule = document.querySelector('[id="toggle-monday"]').closest('.day-schedule');
+        const mondayData = {
+            isOpen: mondaySchedule.querySelector('[name="opening_hours[monday][is_open]"]').checked,
+            openTime: mondaySchedule.querySelector('[name="opening_hours[monday][open_time]"]').value,
+            closeTime: mondaySchedule.querySelector('[name="opening_hours[monday][close_time]"]').value,
+            hasBreak: mondaySchedule.querySelector('[name="opening_hours[monday][has_break]"]').checked,
+            breakStart: mondaySchedule.querySelector('[name="opening_hours[monday][break_start]"]').value,
+            breakEnd: mondaySchedule.querySelector('[name="opening_hours[monday][break_end]"]').value
+        };
+
+        const days = ['tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        days.forEach(day => {
+            const daySchedule = document.querySelector(`[id="toggle-${day}"]`).closest('.day-schedule');
+            
+            // Set main toggle
+            const dayToggle = daySchedule.querySelector(`[name="opening_hours[${day}][is_open]"]`);
+            dayToggle.checked = mondayData.isOpen;
+            dayToggle.dispatchEvent(new Event('change'));
+            
+            // Set times
+            daySchedule.querySelector(`[name="opening_hours[${day}][open_time]"]`).value = mondayData.openTime;
+            daySchedule.querySelector(`[name="opening_hours[${day}][close_time]"]`).value = mondayData.closeTime;
+            
+            // Set break
+            const breakToggle = daySchedule.querySelector(`[name="opening_hours[${day}][has_break]"]`);
+            breakToggle.checked = mondayData.hasBreak;
+            breakToggle.dispatchEvent(new Event('change'));
+            
+            daySchedule.querySelector(`[name="opening_hours[${day}][break_start]"]`).value = mondayData.breakStart;
+            daySchedule.querySelector(`[name="opening_hours[${day}][break_end]"]`).value = mondayData.breakEnd;
+        });
+        
+        // Show success message
+        showNotification('Horaires du lundi copiés vers tous les jours', 'success');
+    });
+
+    // Apply to weekdays only
+    document.getElementById('weekdays-only').addEventListener('click', function() {
+        const mondaySchedule = document.querySelector('[id="toggle-monday"]').closest('.day-schedule');
+        const mondayData = {
+            isOpen: mondaySchedule.querySelector('[name="opening_hours[monday][is_open]"]').checked,
+            openTime: mondaySchedule.querySelector('[name="opening_hours[monday][open_time]"]').value,
+            closeTime: mondaySchedule.querySelector('[name="opening_hours[monday][close_time]"]').value,
+            hasBreak: mondaySchedule.querySelector('[name="opening_hours[monday][has_break]"]').checked,
+            breakStart: mondaySchedule.querySelector('[name="opening_hours[monday][break_start]"]').value,
+            breakEnd: mondaySchedule.querySelector('[name="opening_hours[monday][break_end]"]').value
+        };
+
+        const weekdays = ['tuesday', 'wednesday', 'thursday', 'friday'];
+        weekdays.forEach(day => {
+            const daySchedule = document.querySelector(`[id="toggle-${day}"]`).closest('.day-schedule');
+            
+            // Set main toggle
+            const dayToggle = daySchedule.querySelector(`[name="opening_hours[${day}][is_open]"]`);
+            dayToggle.checked = mondayData.isOpen;
+            dayToggle.dispatchEvent(new Event('change'));
+            
+            // Set times
+            daySchedule.querySelector(`[name="opening_hours[${day}][open_time]"]`).value = mondayData.openTime;
+            daySchedule.querySelector(`[name="opening_hours[${day}][close_time]"]`).value = mondayData.closeTime;
+            
+            // Set break
+            const breakToggle = daySchedule.querySelector(`[name="opening_hours[${day}][has_break]"]`);
+            breakToggle.checked = mondayData.hasBreak;
+            breakToggle.dispatchEvent(new Event('change'));
+            
+            daySchedule.querySelector(`[name="opening_hours[${day}][break_start]"]`).value = mondayData.breakStart;
+            daySchedule.querySelector(`[name="opening_hours[${day}][break_end]"]`).value = mondayData.breakEnd;
+        });
+        
+        // Close weekend
+        ['saturday', 'sunday'].forEach(day => {
+            const dayToggle = document.querySelector(`[name="opening_hours[${day}][is_open]"]`);
+            dayToggle.checked = false;
+            dayToggle.dispatchEvent(new Event('change'));
+        });
+        
+        // Show success message
+        showNotification('Horaires appliqués en semaine uniquement', 'success');
+    });
+
+    // Set default weekday hours (Monday to Friday open, weekend closed)
+    function setDefaultHours() {
+        const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        weekdays.forEach(day => {
+            const dayToggle = document.querySelector(`[name="opening_hours[${day}][is_open]"]`);
+            if (!dayToggle.checked) {
+                dayToggle.checked = true;
+                dayToggle.dispatchEvent(new Event('change'));
+            }
+        });
+        
+        ['saturday', 'sunday'].forEach(day => {
+            const dayToggle = document.querySelector(`[name="opening_hours[${day}][is_open]"]`);
+            dayToggle.checked = false;
+            dayToggle.dispatchEvent(new Event('change'));
+        });
+    }
+
+    // Initialize with default hours
+    setTimeout(setDefaultHours, 100);
+
+    // Notification function
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span>
+            </button>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
+    }
+
+    // Initialize day toggles state
+    dayToggles.forEach(toggle => {
+        toggle.dispatchEvent(new Event('change'));
+    });
+
+    // Initialize break toggles state
+    breakToggles.forEach(toggle => {
+        toggle.dispatchEvent(new Event('change'));
+    });
+
+    // Form submission handler
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Ensure all hidden time inputs are enabled before submission
+            document.querySelectorAll('.time-inputs input, .break-times input').forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Debug: log form data before submission
+            const formData = new FormData(form);
+            console.log('Form data being submitted:');
+            for (let [key, value] of formData.entries()) {
+                if (key.includes('opening_hours')) {
+                    console.log(key, value);
+                }
+            }
+        });
+    }
 });
 </script>
+
+<style>
+.day-schedule {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.day-schedule:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.custom-switch .custom-control-label::before {
+    background-color: #dee2e6;
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.time-inputs {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 200px;
+    }
+}
+
+.break-times {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.form-control-sm {
+    font-size: 0.875rem;
+}
+
+.alert {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+}
+
+.day-schedule .custom-control-label {
+    cursor: pointer;
+}
+
+.btn-outline-primary:hover, .btn-outline-secondary:hover {
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+</style>
 @endpush
