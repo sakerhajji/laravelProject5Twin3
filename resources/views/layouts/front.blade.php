@@ -66,6 +66,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Accueil</a></li>
                     @auth
+                        <li class="nav-item"><a class="nav-link" href="{{ route('front.smart-dashboard.index') }}">Dashboard IA</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Tableau de bord</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Mes données</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Paramètres</a></li>

@@ -78,6 +78,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/goals/{goal}/entries/{entry}', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'destroy'])->name('goal-entries.destroy');
     });
 
+    // Smart Dashboard
+    Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
+    Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
+    Route::get('/smart-dashboard/insights', [App\Http\Controllers\Front\SmartDashboardController::class, 'getInsights'])->name('front.smart-dashboard.insights');
+    Route::get('/smart-dashboard/predictions', [App\Http\Controllers\Front\SmartDashboardController::class, 'getPredictions'])->name('front.smart-dashboard.predictions');
+
     // Front user: browse objectives and record progress
     Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
     Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
