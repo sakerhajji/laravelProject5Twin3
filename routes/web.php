@@ -47,6 +47,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
         Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
+        
+        // Progress admin listing/export/delete (front data managed in backoffice)
+        Route::get('/progress', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'index'])->name('progress.index');
+        Route::get('/progress/export', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'export'])->name('progress.export');
+        Route::delete('/progress/{progress}', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'destroy'])->name('progress.destroy');
+
+        // User drilldown
+        Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
         // add more admin routes here
     });
 
