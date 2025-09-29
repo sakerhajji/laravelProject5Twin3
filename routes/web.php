@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
@@ -98,4 +99,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Demo workout editor UI
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+
+
+    ///
+Route::resource('categories', CategoryController::class);
+
+
 });
