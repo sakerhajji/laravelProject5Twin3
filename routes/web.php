@@ -110,6 +110,10 @@ Route::middleware(['auth', 'superadmin'])->group(function () {
     Route::resource('activities', App\Http\Controllers\ActivityController::class);
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('activities', App\Http\Controllers\ActivityController::class);
+});
+
 
 
 
