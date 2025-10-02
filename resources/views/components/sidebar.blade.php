@@ -9,9 +9,11 @@
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="{{ Request::is('home') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('home') }}"><i class="fas fa-fire"></i><span>Dashboard</span></a>
-            </li>
+            @if (in_array(Auth::user()->role, ['admin', 'superadmin']))
+                <li class="{{ Request::is('admin/dashboard') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('admin.dashboard') }}"><i class="fas fa-fire"></i><span>Dashboard Admin</span></a>
+                </li>
+            @endif
             @if (Auth::user()->role == 'superadmin')
             <li class="menu-header">Hak Akses</li>
             <li class="{{ Request::is('hakakses') ? 'active' : '' }}">
@@ -32,22 +34,30 @@
             @endif
             <!-- profile ganti password -->
             <li class="menu-header">Profile</li>
-            <li class="{{ Request::is('profile/edit') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('profile/edit') }}"><i class="far fa-user"></i> <span>Profile</span></a>
+            <li class="{{ Request::is('admin/profile/edit') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('admin/profile/edit') }}"><i class="far fa-user"></i> <span>Profile</span></a>
             </li>
-            <li class="{{ Request::is('profile/change-password') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('profile/change-password') }}"><i class="fas fa-key"></i> <span>Ganti Password</span></a>
+            <li class="{{ Request::is('admin/profile/change-password') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('admin/profile/change-password') }}"><i class="fas fa-key"></i> <span>Ganti Password</span></a>
             </li>
             <li class="menu-header">Health</li>
-            <li class="{{ Request::is('back/goals*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('back.goals.index') }}"><i class="fas fa-bullseye"></i> <span>Mes objectifs</span></a>
+            @if (in_array(Auth::user()->role, ['admin', 'superadmin']))
+            <li class="{{ Request::is('admin/goals*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.goals.index') }}"><i class="fas fa-bullseye"></i> <span>Gestion Goals</span></a>
             </li>
+            @else
+            <li class="{{ Request::is('objectifs*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('front.objectives.index') }}"><i class="fas fa-bullseye"></i> <span>Mes objectifs</span></a>
+            </li>
+            @endif
+            @if (Auth::user()->role === 'user')
             <li class="{{ Request::is('partenaires*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('front.partners.index') }}"><i class="fas fa-hospital"></i> <span>Partenaires Santé</span></a>
             </li>
             <li class="{{ Request::is('mes-favoris*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('front.partners.favorites') }}"><i class="fas fa-heart"></i> <span>Mes Favoris</span></a>
             </li>
+            @endif
             <li class="menu-header">Starter</li>
             <li class="{{ Request::is('blank-page') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('blank-page') }}"><i class="far fa-square"></i> <span>Blank Page</span></a>

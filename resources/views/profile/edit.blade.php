@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('Edit Profile') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('profile.update') }}">
+                    <form method="POST" action="{{ route('admin.profile.update') }}">
                         @csrf
                         @method('PUT')
                         <div class="form-group row">
@@ -45,6 +45,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Update Profile') }}
                                 </button>
+                                <a href="{{ route('admin.profile.change-password') }}" class="btn btn-outline-warning ml-2">
+                                    {{ __('Changer mot de passe') }}
+                                </a>
                             </div>
                         </div>
                     </form>

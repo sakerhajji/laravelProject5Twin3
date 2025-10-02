@@ -20,7 +20,7 @@
     <!-- Hero Section -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="bg-gradient-primary text-white rounded-4 p-5 shadow-lg">
+            <div class="py-5 bg-primary text-white rounded-4 p-5 shadow-lg">
                 <div class="text-center">
                     <h2 class="display-6 fw-bold mb-3">Trouvez le partenaire santé qu'il vous faut</h2>
                     <p class="lead mb-0">Notre réseau de professionnels de santé qualifiés vous accompagne dans votre parcours bien-être</p>
@@ -37,10 +37,10 @@
                     <h4><i class="fas fa-th-large"></i> Catégories de Partenaires</h4>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row g-3">
                         @foreach(\App\Models\Partner::getTypes() as $key => $value)
-                            <div class="col-lg-2 col-md-4 col-sm-6 col-6 mb-3">
-                                <a href="{{ route('front.partners.by-type', $key) }}" class="btn btn-outline-primary btn-lg btn-block py-3 category-card" data-type="{{ $key }}">
+                            <div class="col-lg-2 col-md-4 col-sm-6 col-6">
+                                <a href="{{ route('front.partners.by-type', $key) }}" class="btn btn-outline-primary h-100 d-flex flex-column align-items-center justify-content-center p-3 category-card" data-type="{{ $key }}">
                                     <div class="category-icon mb-2">
                                         @if($key == 'doctor')
                                             <i class="fas fa-user-md fa-2x text-primary"></i>
@@ -56,8 +56,8 @@
                                             <i class="fas fa-brain fa-2x text-purple"></i>
                                         @endif
                                     </div>
-                                    <div class="category-name">
-                                        <small class="font-weight-bold">{{ $value }}</small>
+                                    <div class="category-name text-center">
+                                        <small class="fw-bold">{{ $value }}</small>
                                     </div>
                                 </a>
                             </div>
@@ -174,6 +174,27 @@
 @push('css')
 <style>
 /* Custom Styles for Professional Look */
+.category-card {
+    min-height: 120px;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    text-decoration: none;
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-color: var(--bs-primary);
+}
+
+.category-icon {
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+    transform: scale(1.1);
+}
+
 .partner-card {
     transition: all 0.3s ease;
     border: none;

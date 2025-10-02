@@ -21,7 +21,7 @@
     <!-- Hero Section -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="bg-gradient-primary text-white rounded-4 p-5 shadow-lg">
+            <div class="py-5 bg-primary text-white rounded-4 p-5 shadow-lg">
                 <div class="text-center">
                     <h2 class="display-6 fw-bold mb-3">
                         <i class="fas fa-heart-circle-plus me-3"></i>Vos Partenaires du Cœur

@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'superadmin' => \App\Http\Middleware\superadmin::class,
             'admin' => \App\Http\Middleware\admin::class,
-            'client' => \App\Http\Middleware\client::class,
+            'user' => \App\Http\Middleware\user::class,
             
             // Partner Management Middlewares
             'partner.management' => \App\Http\Middleware\Partner\PartnerManagement::class,

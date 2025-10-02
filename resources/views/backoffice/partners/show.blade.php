@@ -16,14 +16,14 @@
     <div class="section-body">
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row g-3">
                             <div class="col-md-4">
                                 @if($partner->logo)
-                                    <img src="{{ Storage::url($partner->logo) }}" class="img-fluid rounded mb-3" alt="{{ $partner->name }}">
+                                    <img src="{{ Storage::url($partner->logo) }}" class="img-fluid rounded-3 mb-3" alt="Logo {{ $partner->name }}">
                                 @else
-                                    <div class="bg-light rounded d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
+                                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center mb-3" style="height: 200px;">
                                         <i class="fas fa-building fa-3x text-muted"></i>
                                     </div>
                                 @endif
@@ -42,7 +42,7 @@
                                 @endif
 
                                 <div class="mb-3">
-                                    <span class="badge badge-{{ $partner->status === 'active' ? 'success' : ($partner->status === 'pending' ? 'warning' : 'danger') }} p-2">
+                                    <span class="badge bg-{{ $partner->status === 'active' ? 'success' : ($partner->status === 'pending' ? 'warning' : 'danger') }} p-2">
                                         {{ $partner->status_label }}
                                     </span>
                                 </div>
@@ -53,7 +53,7 @@
                                         @for($i = 1; $i <= 5; $i++)
                                             <i class="fas fa-star {{ $i <= $partner->rating ? 'text-warning' : 'text-muted' }}"></i>
                                         @endfor
-                                        <span class="ml-1">{{ number_format($partner->rating, 1) }}/5</span>
+                                        <span class="ms-1">{{ number_format($partner->rating, 1) }}/5</span>
                                     </div>
                                 @endif
                             </div>
@@ -62,15 +62,17 @@
                 </div>
 
                 @if($partner->services && count($partner->services) > 0)
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Services proposés</h4>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h4 class="mb-0"><i class="fas fa-list-ul text-primary me-2"></i>Services proposés</h4>
                         </div>
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row g-2">
                                 @foreach($partner->services as $service)
                                     <div class="col-md-6 mb-2">
-                                        <span class="badge badge-outline-primary">{{ $service }}</span>
+                                        <span class="badge bg-primary text-white p-2">
+                                            <i class="fas fa-medical-kit me-1"></i>{{ $service }}
+                                        </span>
                                     </div>
                                 @endforeach
                             </div>
@@ -79,18 +81,16 @@
                 @endif
 
                 @if($partner->opening_hours && count($partner->opening_hours) > 0)
-                    <div class="card">
-                        <div class="card-header">
-                            <h4><i class="fas fa-clock text-primary"></i> Horaires d'ouverture</h4>
-                            <div class="card-header-action">
-                                @php $currentStatus = $partner->current_day_status @endphp
-                                <span class="badge badge-{{ $currentStatus['status'] === 'open' ? 'success' : ($currentStatus['status'] === 'break' ? 'warning' : 'secondary') }}">
-                                    {{ $currentStatus['message'] }}
-                                </span>
-                            </div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0"><i class="fas fa-clock text-primary me-2"></i>Horaires d'ouverture</h4>
+                            @php $currentStatus = $partner->current_day_status @endphp
+                            <span class="badge bg-{{ $currentStatus['status'] === 'open' ? 'success' : ($currentStatus['status'] === 'break' ? 'warning' : 'secondary') }}">
+                                {{ $currentStatus['message'] }}
+                            </span>
                         </div>
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row g-3">
                                 @php $formattedHours = $partner->formatted_opening_hours @endphp
                                 @foreach($formattedHours as $day => $dayInfo)
                                     @php
@@ -125,35 +125,37 @@
             </div>
 
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Informations de contact</h4>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h4 class="mb-0"><i class="fas fa-address-book text-primary me-2"></i>Informations de contact</h4>
                     </div>
                     <div class="card-body">
                         @if($partner->email)
                             <div class="mb-3">
-                                <strong>Email:</strong><br>
-                                <a href="mailto:{{ $partner->email }}">{{ $partner->email }}</a>
+                                <strong><i class="fas fa-envelope text-muted me-1"></i>Email:</strong><br>
+                                <a href="mailto:{{ $partner->email }}" class="text-decoration-none">{{ $partner->email }}</a>
                             </div>
                         @endif
 
                         @if($partner->phone)
                             <div class="mb-3">
-                                <strong>Téléphone:</strong><br>
-                                <a href="tel:{{ $partner->phone }}">{{ $partner->phone }}</a>
+                                <strong><i class="fas fa-phone text-muted me-1"></i>Téléphone:</strong><br>
+                                <a href="tel:{{ $partner->phone }}" class="text-decoration-none">{{ $partner->phone }}</a>
                             </div>
                         @endif
 
                         @if($partner->website)
                             <div class="mb-3">
-                                <strong>Site web:</strong><br>
-                                <a href="{{ $partner->website }}" target="_blank">{{ $partner->website }}</a>
+                                <strong><i class="fas fa-globe text-muted me-1"></i>Site web:</strong><br>
+                                <a href="{{ $partner->website }}" target="_blank" class="text-decoration-none">
+                                    {{ $partner->website }} <i class="fas fa-external-link-alt ms-1 small"></i>
+                                </a>
                             </div>
                         @endif
 
                         @if($partner->address)
                             <div class="mb-3">
-                                <strong>Adresse:</strong><br>
+                                <strong><i class="fas fa-map-marker-alt text-muted me-1"></i>Adresse:</strong><br>
                                 {{ $partner->address }}
                                 @if($partner->city)
                                     <br>{{ $partner->city }}
@@ -166,14 +168,14 @@
 
                         @if($partner->contact_person)
                             <div class="mb-3">
-                                <strong>Personne de contact:</strong><br>
+                                <strong><i class="fas fa-user text-muted me-1"></i>Personne de contact:</strong><br>
                                 {{ $partner->contact_person }}
                             </div>
                         @endif
 
                         @if($partner->license_number)
                             <div class="mb-3">
-                                <strong>Numéro de licence:</strong><br>
+                                <strong><i class="fas fa-id-card text-muted me-1"></i>Numéro de licence:</strong><br>
                                 {{ $partner->license_number }}
                             </div>
                         @endif
@@ -181,16 +183,16 @@
                 </div>
 
                 @if($partner->latitude && $partner->longitude)
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Localisation</h4>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h4 class="mb-0"><i class="fas fa-map text-primary me-2"></i>Localisation</h4>
                         </div>
                         <div class="card-body">
                             <p><strong>Coordonnées:</strong></p>
-                            <p>Latitude: {{ $partner->latitude }}</p>
-                            <p>Longitude: {{ $partner->longitude }}</p>
+                            <p class="small text-muted mb-1">Latitude: {{ $partner->latitude }}</p>
+                            <p class="small text-muted mb-3">Longitude: {{ $partner->longitude }}</p>
                             
-                            <div id="map" style="height: 200px; width: 100%;"></div>
+                            <div id="map" class="rounded" style="height: 200px; width: 100%;"></div>
                         </div>
                     </div>
                 @endif

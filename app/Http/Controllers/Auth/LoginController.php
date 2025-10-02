@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -22,10 +23,20 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
-     *
-     * @var string
+     * Redirection conditionnelle selon le rôle
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        $user = Auth::user();
+        
+        if (in_array($user->role, ['admin', 'superadmin'])) {
+            // Admin va vers le backoffice
+            return '/admin/dashboard';
+        } else {
+            // User va vers le frontend
+            return route('front.home');
+        }
+    }
 
     /**
      * Create a new controller instance.
