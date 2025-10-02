@@ -42,11 +42,26 @@
             <li class="{{ Request::is('admin/profile/edit') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('admin/profile/edit') }}"><i class="far fa-user"></i> <span>Profile</span></a>
             </li>
+
             <li class="{{ Request::is('admin/profile/change-password') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('admin/profile/change-password') }}"><i class="fas fa-key"></i> <span>Ganti Password</span></a>
             </li>
 
-            <li class="menu-header">Starter</li>
+            @if (in_array(Auth::user()->role, ['admin', 'superadmin']))
+            <!-- Gestion Maladies & Asymptomes Section - ADMIN SEULEMENT -->
+            <li class="menu-header">Gestion Santé</li>
+            <li class="{{ Request::is('maladies*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('maladies.index') }}"><i class="fas fa-virus"></i> <span>Maladies</span></a>
+            </li>
+            <li class="{{ Request::is('asymptomes*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('asymptomes.index') }}"><i class="fas fa-notes-medical"></i> <span>Asymptômes</span></a>
+            </li>
+            @endif
+
+
+            </li>
+
+           <!-- <li class="menu-header">Starter</li>
             <li class="{{ Request::is('blank-page') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('blank-page') }}"><i class="far fa-square"></i> <span>Blank Page</span></a>
             </li>
@@ -86,7 +101,8 @@
             </li>
             <li class="{{ Request::is('about-example') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('about-example') }}"><i class="fas fa-info-circle"></i> <span>About Example</span></a>
-            </li>
+            </li>-->
+
         </ul>
     </aside>
 </div>

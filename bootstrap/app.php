@@ -24,6 +24,28 @@ return Application::configure(basePath: dirname(__DIR__))
             'partner.status' => \App\Http\Middleware\Partner\CheckPartnerStatus::class,
             'partner.log' => \App\Http\Middleware\Partner\LogPartnerActivity::class,
             
+            // Asymptome Management Middlewares
+            'asymptome.check' => \App\Http\Middleware\Asymptome\AsymptomeCheck::class,
+            'asymptome.management' => \App\Http\Middleware\Asymptome\AsymptomeManagement::class,
+            'asymptome.validate' => \App\Http\Middleware\Asymptome\AsymptomeValidate::class,
+            'asymptome.data' => \App\Http\Middleware\Asymptome\AsymptomeValidateData::class,
+            'asymptome.log' => \App\Http\Middleware\Asymptome\AsymptomeLog::class,
+            
+            // Maladie Management Middlewares  
+            'maladie.check' => \App\Http\Middleware\Maladie\MaladieCheck::class,
+            'maladie.management' => \App\Http\Middleware\Maladie\MaladieManagement::class,
+            'maladie.validate' => \App\Http\Middleware\Maladie\MaladieValidate::class,
+            'maladie.data' => \App\Http\Middleware\Maladie\MaladieValidateData::class,
+            'maladie.log' => \App\Http\Middleware\Maladie\MaladieLog::class,
+            
+            // Activity Management Middlewares
+            'activity.management' => \App\Http\Middleware\Activity\ActivityManagement::class,
+            'activity.data' => \App\Http\Middleware\Activity\ActivityValidateData::class,
+            
+            // Category Management Middlewares
+            'category.management' => \App\Http\Middleware\Category\CategoryManagement::class,
+            'category.data' => \App\Http\Middleware\Category\CategoryValidateData::class,
+            
             // Frontend Access Control
             'no.admin.frontend' => \App\Http\Middleware\RestrictAdminFromFrontend::class,
         ]);
