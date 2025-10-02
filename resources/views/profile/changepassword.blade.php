@@ -10,7 +10,7 @@
                 <div class="card-header">{{ __('Ganti Password') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('profile.password') }}">
+                    <form method="POST" action="{{ route('admin.profile.password') }}">
                         @csrf
                         @method('PUT')
                         <div class="form-group row">
@@ -65,6 +65,9 @@
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Ganti Password') }}
                                 </button>
+                                <a href="{{ route('admin.profile.edit') }}" class="btn btn-outline-secondary ml-2">
+                                    {{ __('Retour au profil') }}
+                                </a>
                             </div>
                         </div>
                     </form>

@@ -198,33 +198,33 @@
                                 <!-- Services -->
                                 <div class="col-12">
                                     <div class="form-group">
-                                        <label>Services proposés</label>
-                                        <div id="services-container">
+                                        <label><i class="fas fa-list-ul text-primary me-2"></i>Services proposés</label>
+                                        <div id="services-container" class="mb-3">
                                             @if(old('services', $partner->services))
                                                 @foreach(old('services', $partner->services) as $index => $service)
                                                     <div class="input-group mb-2 service-input">
+                                                        <span class="input-group-text"><i class="fas fa-medical-kit text-success"></i></span>
                                                         <input type="text" name="services[]" class="form-control" value="{{ $service }}">
-                                                        <div class="input-group-append">
-                                                            <button class="btn btn-outline-danger remove-service" type="button">
-                                                                <i class="fas fa-minus"></i>
-                                                            </button>
-                                                        </div>
+                                                        <button class="btn btn-outline-danger remove-service" type="button">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
                                                     </div>
                                                 @endforeach
                                             @else
                                                 <div class="input-group mb-2 service-input">
+                                                    <span class="input-group-text"><i class="fas fa-medical-kit text-success"></i></span>
                                                     <input type="text" name="services[]" class="form-control" placeholder="Ex: Consultation générale">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-outline-danger remove-service" type="button">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                    </div>
+                                                    <button class="btn btn-outline-danger remove-service" type="button">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
                                                 </div>
                                             @endif
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" id="add-service">
-                                            <i class="fas fa-plus"></i> Ajouter un service
-                                        </button>
+                                        <div class="d-grid gap-2 d-md-block">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-service">
+                                                <i class="fas fa-plus me-1"></i>Ajouter un service
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -315,26 +315,26 @@
                                 @endphp                                                <div class="row">
                                                     @foreach($days as $dayKey => $dayLabel)
                                                         <div class="col-md-6 col-lg-4 mb-3">
-                                                            <div class="day-schedule border rounded p-3 bg-light">
+                                                            <div class="day-schedule border rounded-3 p-3 bg-light shadow-sm">
                                                                 <!-- Hidden inputs to ensure all data is sent -->
                                                                 <input type="hidden" name="opening_hours[{{ $dayKey }}][day]" value="{{ $dayKey }}">
                                                                 
                                                                 <div class="d-flex align-items-center mb-2">
-                                                                    <label class="form-check-label font-weight-bold mb-0 mr-2">
+                                                                    <span class="fw-bold mb-0 me-2">
                                                                         {{ $dayLabel }}
-                                                                    </label>
-                                                                    <div class="custom-control custom-switch">
-                                                                        <input type="checkbox" class="custom-control-input day-toggle" 
-                                                                               id="toggle-{{ $dayKey }}" name="opening_hours[{{ $dayKey }}][is_open]" 
+                                                                    </span>
+                                                                    <div class="form-check form-switch">
+                                                                        <input type="checkbox" class="form-check-input day-toggle"
+                                                                               id="toggle-{{ $dayKey }}" name="opening_hours[{{ $dayKey }}][is_open]"
                                                                                value="1" {{ isset($processedHours[$dayKey]['is_open']) && $processedHours[$dayKey]['is_open'] ? 'checked' : '' }}>
-                                                                        <label class="custom-control-label" for="toggle-{{ $dayKey }}">
+                                                                        <label class="form-check-label" for="toggle-{{ $dayKey }}">
                                                                             <small class="text-muted">Ouvert</small>
                                                                         </label>
                                                                     </div>
                                                                 </div>
                                                                 
                                                                 <div class="time-inputs" style="{{ isset($processedHours[$dayKey]['is_open']) && $processedHours[$dayKey]['is_open'] ? '' : 'display: none;' }}">
-                                                                    <div class="row">
+                                                                    <div class="row g-2">
                                                                         <div class="col-6">
                                                                             <label class="small text-muted">Ouverture</label>
                                                                             <input type="time" name="opening_hours[{{ $dayKey }}][open_time]" 
@@ -350,17 +350,17 @@
                                                                     </div>
                                                                     
                                                                     <div class="mt-2">
-                                                                        <div class="custom-control custom-checkbox">
-                                                                            <input type="checkbox" class="custom-control-input break-toggle" 
-                                                                                   id="break-{{ $dayKey }}" name="opening_hours[{{ $dayKey }}][has_break]" 
+                                                                        <div class="form-check">
+                                                                            <input type="checkbox" class="form-check-input break-toggle"
+                                                                                   id="break-{{ $dayKey }}" name="opening_hours[{{ $dayKey }}][has_break]"
                                                                                    value="1" {{ isset($processedHours[$dayKey]['has_break']) && $processedHours[$dayKey]['has_break'] ? 'checked' : '' }}>
-                                                                            <label class="custom-control-label small text-muted" for="break-{{ $dayKey }}">
+                                                                            <label class="form-check-label small text-muted" for="break-{{ $dayKey }}">
                                                                                 Pause déjeuner
                                                                             </label>
                                                                         </div>
                                                                         
                                                                         <div class="break-times mt-1" style="{{ isset($processedHours[$dayKey]['has_break']) && $processedHours[$dayKey]['has_break'] ? '' : 'display: none;' }}">
-                                                                            <div class="row">
+                                                                            <div class="row g-2">
                                                                                 <div class="col-6">
                                                                                     <input type="time" name="opening_hours[{{ $dayKey }}][break_start]" 
                                                                                            class="form-control form-control-sm" placeholder="Début pause"
@@ -381,11 +381,11 @@
                                                 </div>
                                                 
                                                 <div class="mt-3 text-center">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary" id="copy-hours">
-                                                        <i class="fas fa-copy"></i> Copier les horaires du lundi vers tous les jours
+                                                    <button type="button" class="btn btn-sm btn-outline-primary me-2" id="copy-hours">
+                                                        <i class="fas fa-copy me-1"></i> Copier les horaires du lundi vers tous les jours
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary ml-2" id="weekdays-only">
-                                                        <i class="fas fa-business-time"></i> Appliquer uniquement en semaine
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="weekdays-only">
+                                                        <i class="fas fa-business-time me-1"></i> Appliquer uniquement en semaine
                                                     </button>
                                                 </div>
                                             </div>
@@ -439,12 +439,11 @@ document.addEventListener('DOMContentLoaded', function() {
     addServiceBtn.addEventListener('click', function() {
         const newServiceInput = `
             <div class="input-group mb-2 service-input">
+                <span class="input-group-text"><i class="fas fa-medical-kit text-success"></i></span>
                 <input type="text" name="services[]" class="form-control" placeholder="Ex: Nouveau service">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-danger remove-service" type="button">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
+                <button class="btn btn-outline-danger remove-service" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         `;
         servicesContainer.insertAdjacentHTML('beforeend', newServiceInput);
@@ -632,62 +631,19 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 .day-schedule {
     transition: all 0.3s ease;
-    position: relative;
 }
 
 .day-schedule:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
 }
 
-.custom-switch .custom-control-label::before {
-    background-color: #dee2e6;
-}
-
-.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-
-.time-inputs {
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        max-height: 200px;
-    }
-}
-
-.break-times {
+.time-inputs, .break-times {
     animation: fadeIn 0.2s ease;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-
-.form-control-sm {
-    font-size: 0.875rem;
-}
-
-.alert {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border: none;
-}
-
-.day-schedule .custom-control-label {
-    cursor: pointer;
-}
-
-.btn-outline-primary:hover, .btn-outline-secondary:hover {
-    transform: translateY(-1px);
-    transition: all 0.2s ease;
 }
 </style>
 @endpush

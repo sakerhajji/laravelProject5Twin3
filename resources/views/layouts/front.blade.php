@@ -74,13 +74,6 @@
                                 <i class="fas fa-heartbeat text-danger me-1"></i>Santé & Bien-être
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="healthDropdown">
-                                <!--
-                                <li><h6 class="dropdown-header"><i class="fas fa-bullseye text-primary me-2"></i>Mes Objectifs</h6></li>
-                                <li><a class="dropdown-item" href="{{ route('back.goals.index') }}">
-                                    <i class="fas fa-bullseye me-2"></i>Mes objectifs
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                -->
                                 <li><h6 class="dropdown-header"><i class="fas fa-hospital text-success me-2"></i>Partenaires</h6></li>
                                 <li><a class="dropdown-item" href="{{ route('front.partners.index') }}">
                                     <i class="fas fa-hospital me-2"></i>Partenaires Santé
@@ -98,7 +91,7 @@
                             </ul>
                         </li>
                         
-                        <li class="nav-item"><a class="nav-link" href="{{ route('profile.edit') }}">Paramètres</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('front.profile.show') }}">Paramètres</a></li>
                     @else
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Mes données</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Partenaires</a></li>
@@ -114,8 +107,8 @@
                                 <i class="fa-regular fa-user me-1"></i>{{ Auth::user()->name }}
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{{ route('home') }}">Backoffice</a></li>
-                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profil</a></li>
+
+                                <li><a class="dropdown-item" href="{{ route('front.profile.show') }}">Profil</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>

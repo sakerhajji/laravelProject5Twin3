@@ -3,16 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index']);
+Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])->name('front.home');
 
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/change-password', [ProfileController::class, 'changepassword'])->name('profile.change-password');
-    Route::put('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
     Route::get('/blank-page', [App\Http\Controllers\HomeController::class, 'blank'])->name('blank');
 
     Route::get('/hakakses', [App\Http\Controllers\HakaksesController::class, 'index'])->name('hakakses.index')->middleware('superadmin');
@@ -33,9 +29,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/news-example', [App\Http\Controllers\ExampleController::class, 'news'])->name('news.example');
     Route::get('/about-example', [App\Http\Controllers\ExampleController::class, 'about'])->name('about.example');
 
-    // Admin routes
+    // Admin routes - BACKOFFICE UNIQUEMENT
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Profile admin dans le backoffice
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile/change-password', [ProfileController::class, 'changepassword'])->name('profile.change-password');
+        Route::put('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
+        
         // Objectives CRUD
         Route::get('/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'index'])->name('objectives.index');
         Route::get('/objectifs/create', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'create'])->name('objectives.create');
@@ -43,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/objectifs/{objective}/edit', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'edit'])->name('objectives.edit');
         Route::put('/objectifs/{objective}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'update'])->name('objectives.update');
         Route::delete('/objectifs/{objective}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'destroy'])->name('objectives.destroy');
+        
         // Assignments
         Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
@@ -62,18 +66,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::patch('/partenaires/{partner}/toggle-status', [App\Http\Controllers\Backoffice\PartnerController::class, 'toggleStatus'])->name('partners.toggle-status');
             });
         });
-        
-        // add more admin routes here
-    });
 
-    // Client routes
-    Route::middleware(['client'])->prefix('client')->name('client.')->group(function () {
-        Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
-        // add more client routes here
-    });
-
-    // Goals management (backoffice - accessible to any authenticated user)
-    Route::prefix('back')->name('back.')->group(function () {
+        // Goals management (backoffice)
         Route::get('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'index'])->name('goals.index');
         Route::get('/goals/create', [App\Http\Controllers\Backoffice\GoalController::class, 'create'])->name('goals.create');
         Route::post('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'store'])->name('goals.store');
@@ -86,32 +80,47 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/goals/{goal}/entries/{entry}', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'destroy'])->name('goal-entries.destroy');
     });
 
-    // Front user: browse objectives and record progress
-    Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
-    Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
-    Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
-    
-    // Partners frontend routes - avec validation
-    Route::prefix('partenaires')->name('front.partners.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
-        Route::get('/search', [App\Http\Controllers\Front\PartnerController::class, 'search'])->name('search'); // Route AJAX
-        Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
-        Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
+    // User routes - FRONTEND UNIQUEMENT
+    Route::middleware(['user'])->group(function () {
+        // Dashboard utilisateur
+        Route::get('/user/dashboard', [App\Http\Controllers\Front\DashboardController::class, 'index'])->name('user.dashboard');
         
-        Route::middleware(['partner.validate'])->group(function () {
-            Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
-            Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite')->middleware('auth');
+        // Profile utilisateur frontend
+        Route::prefix('profile')->name('front.profile.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Front\ProfileController::class, 'show'])->name('show');
+            Route::get('/edit', [App\Http\Controllers\Front\ProfileController::class, 'edit'])->name('edit');
+            Route::put('/update', [App\Http\Controllers\Front\ProfileController::class, 'update'])->name('update');
+            Route::get('/change-password', [App\Http\Controllers\Front\ProfileController::class, 'changePasswordForm'])->name('change-password');
+            Route::put('/password', [App\Http\Controllers\Front\ProfileController::class, 'updatePassword'])->name('update-password');
         });
-    });
-    
-    Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
-    Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');
-    
-    // Import CSV routes
-    Route::get('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'index'])->name('front.progress.import.index');
-    Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
-    Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
+        
+        // Front user: browse objectives and record progress
+        Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
+        Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
+        Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
+        
+        // Partners frontend routes - avec validation
+        Route::prefix('partenaires')->name('front.partners.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
+            Route::get('/search', [App\Http\Controllers\Front\PartnerController::class, 'search'])->name('search'); // Route AJAX
+            Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
+            Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
+            
+            Route::middleware(['partner.validate'])->group(function () {
+                Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
+                Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite');
+            });
+        });
+        
+        Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
+        Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');
+        
+        // Import CSV routes
+        Route::get('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'index'])->name('front.progress.import.index');
+        Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
+        Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
 
-    // Demo workout editor UI
-    Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+        // Demo workout editor UI
+        Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+    });
 });

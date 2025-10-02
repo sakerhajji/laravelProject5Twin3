@@ -31,7 +31,7 @@
                         <a href="{{ route('front.partners.index') }}" class="btn btn-outline-info btn-lg">
                             <i class="fa-solid fa-hospital me-2"></i>Nos partenaires
                         </a>
-                        <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary btn-lg">Paramètres</a>
+                        <a href="{{ route('front.profile.show') }}" class="btn btn-outline-secondary btn-lg">Paramètres</a>
                     @endguest
                 </div>
                 <div class="d-flex flex-wrap gap-4 mt-4 text-secondary small">
