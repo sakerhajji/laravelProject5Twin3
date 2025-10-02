@@ -38,10 +38,9 @@
             <!-- Asymptomes Section -->
             <div class="form-group mb-2">
                 <label>Asymptomes</label>
-                <input type="text" class="form-control mb-2" onkeydown="serachFunction()" id="asymptome-search" placeholder="Rechercher un asymptome...">
                 <div class="row" id="asymptomes-container">
                     @foreach($asymptomes as $asymptome)
-                        <div class="col-md-4 col-sm-6 col-12 mb-2 asymptome-item">
+                        <div class="col-md-4 col-sm-6 col-12 mb-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="asymptome_{{ $asymptome->id }}"
                                        name="asymptome_ids[]" value="{{ $asymptome->id }}"
@@ -65,23 +64,9 @@
             <button type="submit" class="btn btn-success">Ajouter</button>
             <a href="{{ route('maladies.index') }}" class="btn btn-secondary">Annuler</a>
         </form>
-        
     </div>
-      <script>
-        function serachFunction() {
-            let input = document.getElementById('asymptome-search').value.toLowerCase();
-            let items = document.getElementsByClassName('asymptome-item');
-
-            Array.from(items).forEach(function(item) {
-                let text = item.textContent.toLowerCase();
-                if (input === '' || text.includes(input)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-       
-    </script>
 @endsection
 
+@section('scripts')
+    <!-- No custom JS needed for asymptome selection -->
+@endsection

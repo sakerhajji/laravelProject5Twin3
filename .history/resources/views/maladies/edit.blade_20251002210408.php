@@ -44,7 +44,7 @@
                     @foreach($asymptomes as $asymptome)
                         <div class="col-md-4 col-sm-6 col-12 mb-2">
                             <div class="form-check">
-                                <input class="form-check-input"  onkeydown="serachFunction()" type="checkbox" id="asymptome_{{ $asymptome->id }}"
+                                <input class="form-check-input" type="checkbox" id="asymptome_{{ $asymptome->id }}"
                                        name="asymptome_ids[]" value="{{ $asymptome->id }}"
                                        {{ (is_array(old('asymptome_ids', $maladie->asymptomes->pluck('id')->toArray())) && in_array($asymptome->id, old('asymptome_ids', $maladie->asymptomes->pluck('id')->toArray()))) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="asymptome_{{ $asymptome->id }}">

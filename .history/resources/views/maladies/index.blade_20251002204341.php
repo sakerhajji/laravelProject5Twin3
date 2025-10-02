@@ -5,22 +5,24 @@
 @section('content')
     <div class="container">
         <h1>Liste des Maladies</h1>
-        <a href="{{ route('maladies.create') }}" class="btn btn-primary mb-3">Ajouter une Maladie</a>
+        <a href="{{ route('Undefined variable $maladie
+
+.create') }}" class="btn btn-primary mb-3">Ajouter une Maladie</a>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
         <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Asymptomes</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+                    <td>
+                        @if($maladie->asymptomes->count() > 0)
+                            @foreach($maladie->asymptomes as $asymptome)
+                                <span class="badge bg-info me-1 mb-1">{{ $asymptome->nom }}</span>
+                            @endforeach
+                        @else
+                            <span class="text-muted">Aucun asymptome</span>
+                        @endif
+                    </td>
             <tbody>
             @foreach($maladies as $maladie)
                 <tr>

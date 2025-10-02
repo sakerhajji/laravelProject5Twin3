@@ -86,6 +86,7 @@ class MaladieController extends Controller
         $data = $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'categorie' => 'nullable|string|max:100',
             'traitement' => 'nullable|string',
             'prevention' => 'nullable|string',
             'status' => 'required|in:active,inactive',

@@ -68,19 +68,7 @@
         
     </div>
       <script>
-        function serachFunction() {
-            let input = document.getElementById('asymptome-search').value.toLowerCase();
-            let items = document.getElementsByClassName('asymptome-item');
-
-            Array.from(items).forEach(function(item) {
-                let text = item.textContent.toLowerCase();
-                if (input === '' || text.includes(input)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
+        fun
        
     </script>
 @endsection
