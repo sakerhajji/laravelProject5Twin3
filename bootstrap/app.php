@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'partner.data' => \App\Http\Middleware\Partner\ValidatePartnerData::class,
             'partner.status' => \App\Http\Middleware\Partner\CheckPartnerStatus::class,
             'partner.log' => \App\Http\Middleware\Partner\LogPartnerActivity::class,
+            
+            // Frontend Access Control
+            'no.admin.frontend' => \App\Http\Middleware\RestrictAdminFromFrontend::class,
         ]);
 
     })
