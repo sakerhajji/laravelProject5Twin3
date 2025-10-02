@@ -82,7 +82,7 @@
                                
                             </ul>
                         </li>
-                        
+                        <li class="nav-item"><a class="nav-link" href="{{ route('repas.index') }}">Mes Repas</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('front.profile.show') }}">Paramètres</a></li>
 
                     @else

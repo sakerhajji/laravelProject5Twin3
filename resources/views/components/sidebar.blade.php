@@ -30,6 +30,11 @@
             </li>
             <li class="{{ Request::is('admin/partenaires*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.partners.index') }}"><i class="fas fa-handshake"></i> <span>Partenaires</span></a>
+            <li class="{{ Request::is('admin/aliments*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.aliments.index') }}"><i class="fas fa-utensils"></i> <span>Gestion des Aliments</span></a>
+            </li>
+            <li class="{{ Request::is('admin/repas*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.repas.index') }}"><i class="fas fa-drumstick-bite"></i> <span>Attribuer un repas à un utilisateur</span></a>
             </li>
             @endif
             <!-- profile ganti password -->
