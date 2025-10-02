@@ -38,6 +38,14 @@
             <li class="{{ Request::is('profile/change-password') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('profile/change-password') }}"><i class="fas fa-key"></i> <span>Ganti Password</span></a>
             </li>
+            <!-- Gestion Maladies & Asymptomes Section -->
+            <li class="menu-header">Gestion Santé</li>
+            <li class="{{ Request::is('maladies*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('maladies.index') }}"><i class="fas fa-virus"></i> <span>Maladies</span></a>
+            </li>
+            <li class="{{ Request::is('asymptomes*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('asymptomes.index') }}"><i class="fas fa-notes-medical"></i> <span>Asymptômes</span></a>
+            </li>
             <li class="menu-header">Health</li>
             <li class="{{ Request::is('back/goals*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('back.goals.index') }}"><i class="fas fa-bullseye"></i> <span>Mes objectifs</span></a>
@@ -89,6 +97,7 @@
             <li class="{{ Request::is('about-example') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('about-example') }}"><i class="fas fa-info-circle"></i> <span>About Example</span></a>
             </li>
+
         </ul>
     </aside>
 </div>

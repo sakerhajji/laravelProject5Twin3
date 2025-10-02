@@ -58,4 +58,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function maladies()
+    {
+        return $this->belongsToMany(Maladie::class, 'maladie_user')->withTimestamps();
+    }
 }
