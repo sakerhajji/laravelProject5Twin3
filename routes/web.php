@@ -101,18 +101,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
 
 
-    ///
-Route::middleware(['auth', 'superadmin'])->group(function () {
-    Route::resource('categories', App\Http\Controllers\CategoryController::class);
-});
+        ///
+    Route::middleware(['auth', 'superadmin'])->group(function () {
+        Route::resource('categories', App\Http\Controllers\CategoryController::class);
+    });
 
-Route::middleware(['auth', 'superadmin'])->group(function () {
-    Route::resource('activities', App\Http\Controllers\ActivityController::class);
-});
+    Route::middleware(['auth', 'superadmin'])->group(function () {
+        Route::resource('activities', App\Http\Controllers\ActivityController::class);
+    });
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::resource('activities', App\Http\Controllers\ActivityController::class);
-});
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::resource('activities', App\Http\Controllers\ActivityController::class);
+    });
 
 
 
