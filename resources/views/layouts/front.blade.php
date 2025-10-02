@@ -66,8 +66,6 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="{{ url('/') }}">Accueil</a></li>
                     @auth
-                        
-                        
                         <!-- Health Dropdown Menu -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -81,17 +79,12 @@
                                 <li><a class="dropdown-item" href="{{ route('front.partners.favorites') }}">
                                     <i class="fas fa-heart text-danger me-2"></i>Mes Favoris
                                 </a></li>
-                                <!--
-                                <li><hr class="dropdown-divider"></li>
-                                <li><h6 class="dropdown-header"><i class="fas fa-chart-line text-info me-2"></i>Suivi</h6></li>
-                                <li><a class="dropdown-item" href="{{ route('front.progress.index') }}">
-                                    <i class="fas fa-chart-line me-2"></i>Mes Progrès
-                                </a></li>
-                                -->
+                               
                             </ul>
                         </li>
                         
                         <li class="nav-item"><a class="nav-link" href="{{ route('front.profile.show') }}">Paramètres</a></li>
+
                     @else
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Mes données</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Partenaires</a></li>

@@ -4,10 +4,12 @@
 
 @section('content')
 <div class="main-content">
-    <div class="section-header">
+        <div class="section-header">
         <h1>Mes objectifs</h1>
         <div class="section-header-button">
-            <a href="{{ route('back.goals.create') }}" class="btn btn-primary">Nouvel objectif</a>
+            @if(auth()->check() && in_array(auth()->user()->role, ['admin','superadmin']))
+                <a href="{{ route('back.goals.create') }}" class="btn btn-primary">Nouvel objectif</a>
+            @endif
         </div>
     </div>
 
@@ -53,12 +55,14 @@
 
                         <div class="mt-3">
                             <a href="{{ route('back.goals.show', $goal) }}" class="btn btn-sm btn-primary">Voir</a>
-                            <a href="{{ route('back.goals.edit', $goal) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
-                            <form action="{{ route('back.goals.destroy', $goal) }}" method="post" class="d-inline" onsubmit="return confirm('Supprimer cet objectif ?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger">Supprimer</button>
-                            </form>
+                            @if(auth()->check() && in_array(auth()->user()->role, ['admin','superadmin']))
+                                <a href="{{ route('back.goals.edit', $goal) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                                <form action="{{ route('back.goals.destroy', $goal) }}" method="post" class="d-inline" onsubmit="return confirm('Supprimer cet objectif ?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
