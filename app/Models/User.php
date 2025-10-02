@@ -80,4 +80,9 @@ class User extends Authenticatable
             'birth_date' => 'date',
         ];
     }
+
+    public function maladies()
+    {
+        return $this->belongsToMany(Maladie::class, 'maladie_user')->withTimestamps();
+    }
 }

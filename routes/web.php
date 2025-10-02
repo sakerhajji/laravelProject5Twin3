@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AsymptomeController;
+use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -41,11 +43,15 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         
-            // Categories CRUD
-    Route::resource('categories', App\Http\Controllers\CategoryController::class);
+        // Categories CRUD - avec validation de données
+        Route::middleware(['category.management', 'category.data'])->group(function () {
+            Route::resource('categories', App\Http\Controllers\CategoryController::class);
+        });
 
-    // Activities CRUD
-    Route::resource('activities', App\Http\Controllers\ActivityController::class);
+        // Activities CRUD - avec validation de données
+        Route::middleware(['activity.management', 'activity.data'])->group(function () {
+            Route::resource('activities', App\Http\Controllers\ActivityController::class);
+        });
 
         // Profile admin dans le backoffice
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -65,17 +71,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
         Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
-        
-        // Categories CRUD
-
-
-
         // Partners CRUD - avec middlewares de validation et logging
         Route::middleware(['partner.management', 'partner.log'])->group(function () {
             Route::get('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'index'])->name('partners.index');
             Route::get('/partenaires/create', [App\Http\Controllers\Backoffice\PartnerController::class, 'create'])->name('partners.create');
             Route::post('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'store'])->name('partners.store')->middleware('partner.data');
-            
+
             Route::middleware(['partner.validate'])->group(function () {
                 Route::get('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'show'])->name('partners.show');
                 Route::get('/partenaires/{partner}/edit', [App\Http\Controllers\Backoffice\PartnerController::class, 'edit'])->name('partners.edit');
@@ -84,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::patch('/partenaires/{partner}/toggle-status', [App\Http\Controllers\Backoffice\PartnerController::class, 'toggleStatus'])->name('partners.toggle-status');
             });
         });
+
 
         // Progress admin listing/export/delete (front data managed in backoffice)
         Route::get('/progress', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'index'])->name('progress.index');
@@ -95,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('repas', RepasController::class);
         // User drilldown
         Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
+
         // add more admin routes here
     });
 
@@ -118,6 +121,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
         Route::get('/smart-dashboard/insights', [App\Http\Controllers\Front\SmartDashboardController::class, 'getInsights'])->name('front.smart-dashboard.insights');
         Route::get('/smart-dashboard/predictions', [App\Http\Controllers\Front\SmartDashboardController::class, 'getPredictions'])->name('front.smart-dashboard.predictions');
+
 
         // Profile utilisateur frontend
         Route::prefix('profile')->name('front.profile.')->group(function () {
@@ -163,6 +167,60 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+
+});
+
+
+
+// Maladie routes - ADMIN SEULEMENT
+Route::middleware(['auth', 'maladie.check'])->prefix('maladies')->name('maladies.')->group(function () {
+
+    Route::get('/', [MaladieController::class, 'index'])
+        ->name('index');
+
+    Route::get('/create', [MaladieController::class, 'create'])
+        ->name('create');
+
+    Route::post('/', [MaladieController::class, 'store'])
+        ->name('store');
+
+    Route::get('/{maladie}', [MaladieController::class, 'show'])
+        ->name('show');
+
+    Route::get('/{maladie}/edit', [MaladieController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{maladie}', [MaladieController::class, 'update'])
+        ->name('update');
+
+    Route::delete('/{maladie}', [MaladieController::class, 'destroy'])
+        ->name('destroy');
+
+});
+
+// Asymptome routes - ADMIN SEULEMENT
+Route::middleware(['auth', 'asymptome.check'])->prefix('asymptomes')->name('asymptomes.')->group(function () {
+
+    Route::get('/', [AsymptomeController::class, 'index'])
+        ->name('index');
+
+    Route::get('/create', [AsymptomeController::class, 'create'])
+        ->name('create');
+
+    Route::post('/', [AsymptomeController::class, 'store'])
+        ->name('store');
+
+    Route::get('/{asymptome}', [AsymptomeController::class, 'show'])
+        ->name('show');
+
+    Route::get('/{asymptome}/edit', [AsymptomeController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{asymptome}', [AsymptomeController::class, 'update'])
+        ->name('update');
+
+    Route::delete('/{asymptome}', [AsymptomeController::class, 'destroy'])
+        ->name('destroy');
 
 });
 

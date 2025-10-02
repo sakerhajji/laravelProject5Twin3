@@ -36,6 +36,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ObjectiveSeeder::class,
+            CategorySeeder::class,
+            ActivitySeeder::class,
+            AlimentRepasSeeder::class,
+            PartnerSeeder::class
         ]);
     }
 }
