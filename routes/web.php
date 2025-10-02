@@ -82,9 +82,6 @@ Route::middleware(['auth'])->group(function () {
 
     // User routes - FRONTEND UNIQUEMENT
     Route::middleware(['user'])->group(function () {
-        // Dashboard utilisateur
-        Route::get('/user/dashboard', [App\Http\Controllers\Front\DashboardController::class, 'index'])->name('user.dashboard');
-        
         // Profile utilisateur frontend
         Route::prefix('profile')->name('front.profile.')->group(function () {
             Route::get('/', [App\Http\Controllers\Front\ProfileController::class, 'show'])->name('show');
