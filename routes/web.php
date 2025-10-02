@@ -1,9 +1,17 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])->name('front.home');
+use App\Http\Controllers\Backoffice\AlimentController;
+use App\Http\Controllers\Backoffice\RepasController;
+use App\Http\Controllers\Front\RepasController as FrontRepasController;
+
+// Route frontend protégée contre l'accès admin
+Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])
+    ->name('front.home')
+    ->middleware('no.admin.frontend');
 
 Auth::routes();
 
@@ -33,6 +41,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         
+            // Categories CRUD
+    Route::resource('categories', App\Http\Controllers\CategoryController::class);
+
+    // Activities CRUD
+    Route::resource('activities', App\Http\Controllers\ActivityController::class);
+
         // Profile admin dans le backoffice
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -52,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
         Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
         
+        // Categories CRUD
+
+
+
         // Partners CRUD - avec middlewares de validation et logging
         Route::middleware(['partner.management', 'partner.log'])->group(function () {
             Route::get('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'index'])->name('partners.index');
@@ -72,6 +90,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/progress/export', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'export'])->name('progress.export');
         Route::delete('/progress/{progress}', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'destroy'])->name('progress.destroy');
 
+        //aliment + repas
+        Route::resource('aliments', AlimentController::class);
+        Route::resource('repas', RepasController::class);
         // User drilldown
         Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
         // add more admin routes here
@@ -90,8 +111,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/goals/{goal}/entries/{entry}', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'destroy'])->name('goal-entries.destroy');
     });
 
-    // User routes - FRONTEND UNIQUEMENT
-    Route::middleware(['user'])->group(function () {
+    // User routes - FRONTEND UNIQUEMENT (Protection contre accès admin)
+    Route::middleware(['user', 'no.admin.frontend'])->group(function () {
         // Smart Dashboard
         Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
         Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
@@ -133,6 +154,26 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
         Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
 
-        // Demo workout editor UI
-        Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+        //front repas
+        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');    // Demo workout editor UI
+    Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+
+
+        ///
+  /*  Route::middleware(['auth', 'superadmin'])->group(function () {
+      
     });
+
+    Route::middleware(['auth', 'superadmin'])->group(function () {
+        Route::resource('activities', App\Http\Controllers\ActivityController::class);
+    });
+
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::resource('activities', App\Http\Controllers\ActivityController::class);
+    });*/
+
+
+
+
+});
+
