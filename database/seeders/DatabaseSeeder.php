@@ -39,7 +39,9 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ActivitySeeder::class,
             AlimentRepasSeeder::class,
-            PartnerSeeder::class
+            PartnerSeeder::class,
+            MaladieSeeder::class,
+            AsymptomeSeeder::class,
         ]);
     }
 }
