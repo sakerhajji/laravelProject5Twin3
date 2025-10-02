@@ -40,7 +40,7 @@ class ActivityController extends Controller
 
         Activity::create($validated);
 
-        return redirect()->route('activities.index')->with('success', 'Activity created successfully!');
+        return redirect()->route('admin.activities.index')->with('success', 'Activity created successfully!');
     }
 
     public function show(Activity $activity)
@@ -73,7 +73,7 @@ class ActivityController extends Controller
 
         $activity->update($validated);
 
-        return redirect()->route('activities.index')->with('success', 'Activity updated successfully!');
+        return redirect()->route('admin.activities.index')->with('success', 'Activity updated successfully!');
     }
 
     public function destroy(Activity $activity)
@@ -84,6 +84,6 @@ class ActivityController extends Controller
 
         $activity->delete();
 
-        return redirect()->route('activities.index')->with('success', 'Activity deleted successfully!');
+        return redirect()->route('admin.activities.index')->with('success', 'Activity deleted successfully!');
     }
 }

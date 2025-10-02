@@ -25,7 +25,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Title --}}
@@ -48,7 +48,7 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn btn-primary">Save</button>
-                <a href="{{ route('categories.index') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </section>

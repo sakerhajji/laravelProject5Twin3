@@ -30,8 +30,8 @@
             </div>
 
             <div class="mt-3">
-                <a href="{{ route('categories.index') }}" class="btn btn-secondary">Back to List</a>
-                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Back to List</a>
+                <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Edit</a>
             </div>
         </div>
     </section>

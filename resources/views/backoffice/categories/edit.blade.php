@@ -27,7 +27,7 @@
                 </div>
             @endif
 
-            <form action="{{ isset($category) ? route('categories.update', $category->id) : route('categories.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ isset($category) ? route('admin.categories.update', $category->id) : route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($category))
                     @method('PUT')
@@ -57,7 +57,7 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn btn-primary">{{ isset($category) ? 'Update' : 'Save' }}</button>
-                <a href="{{ route('categories.index') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </section>
