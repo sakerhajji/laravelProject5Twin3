@@ -44,6 +44,7 @@
       </div>
 
       <div class="col-lg-8">
+        @if(auth()->check() && in_array(auth()->user()->role, ['admin','superadmin']))
         <div class="card">
           <div class="card-header"><h5 class="mb-0">Objectifs attribués</h5></div>
           <div class="card-body p-0">
@@ -85,6 +86,7 @@
             </div>
           </div>
         </div>
+        @endif
 
         <div class="card">
           <div class="card-header"><h5 class="mb-0">Historique des progrès</h5></div>
