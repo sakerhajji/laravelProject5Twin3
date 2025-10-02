@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ActivityController extends Controller
 {
@@ -23,22 +24,21 @@ class ActivityController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'time' => 'nullable',
+            'description' => 'required|string',
+            'time' => 'required|string|max:50',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['user_id'] = Auth::id();
+        $validated['user_id'] = Auth::id();
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('activities', 'public');
+            $validated['image'] = $request->file('image')->store('activities', 'public');
         }
 
-        Activity::create($data);
+        Activity::create($validated);
 
         return redirect()->route('activities.index')->with('success', 'Activity created successfully!');
     }
@@ -56,28 +56,34 @@ class ActivityController extends Controller
 
     public function update(Request $request, Activity $activity)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'time' => 'nullable',
+            'description' => 'required|string',
+            'time' => 'required|string|max:50',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        $data = $request->all();
-
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('activities', 'public');
+            if ($activity->image) {
+                Storage::disk('public')->delete($activity->image);
+            }
+            $validated['image'] = $request->file('image')->store('activities', 'public');
         }
 
-        $activity->update($data);
+        $activity->update($validated);
 
         return redirect()->route('activities.index')->with('success', 'Activity updated successfully!');
     }
 
     public function destroy(Activity $activity)
     {
+        if ($activity->image) {
+            Storage::disk('public')->delete($activity->image);
+        }
+
         $activity->delete();
+
         return redirect()->route('activities.index')->with('success', 'Activity deleted successfully!');
     }
 }
