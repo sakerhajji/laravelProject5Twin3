@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Objective;
 
 class User extends Authenticatable
 {
@@ -38,6 +40,16 @@ class User extends Authenticatable
     public function favoritedPartners()
     {
         return $this->belongsToMany(Partner::class, 'partner_favorites')->withTimestamps();
+    }
+
+    /**
+     * Objectives assigned to the user (many-to-many through user_objectives pivot).
+     */
+    public function objectives(): BelongsToMany
+    {
+        return $this->belongsToMany(Objective::class, 'user_objectives')
+            ->withPivot(['status'])
+            ->withTimestamps();
     }
 
     /**

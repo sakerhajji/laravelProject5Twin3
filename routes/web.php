@@ -67,6 +67,16 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
+        // Progress admin listing/export/delete (front data managed in backoffice)
+        Route::get('/progress', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'index'])->name('progress.index');
+        Route::get('/progress/export', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'export'])->name('progress.export');
+        Route::delete('/progress/{progress}', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'destroy'])->name('progress.destroy');
+
+        // User drilldown
+        Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
+        // add more admin routes here
+    });
+
         // Goals management (backoffice)
         Route::get('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'index'])->name('goals.index');
         Route::get('/goals/create', [App\Http\Controllers\Backoffice\GoalController::class, 'create'])->name('goals.create');
@@ -82,6 +92,12 @@ Route::middleware(['auth'])->group(function () {
 
     // User routes - FRONTEND UNIQUEMENT
     Route::middleware(['user'])->group(function () {
+        // Smart Dashboard
+        Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
+        Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
+        Route::get('/smart-dashboard/insights', [App\Http\Controllers\Front\SmartDashboardController::class, 'getInsights'])->name('front.smart-dashboard.insights');
+        Route::get('/smart-dashboard/predictions', [App\Http\Controllers\Front\SmartDashboardController::class, 'getPredictions'])->name('front.smart-dashboard.predictions');
+
         // Profile utilisateur frontend
         Route::prefix('profile')->name('front.profile.')->group(function () {
             Route::get('/', [App\Http\Controllers\Front\ProfileController::class, 'show'])->name('show');
@@ -120,4 +136,3 @@ Route::middleware(['auth'])->group(function () {
         // Demo workout editor UI
         Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
     });
-});

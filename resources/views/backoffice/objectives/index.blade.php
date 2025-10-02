@@ -17,6 +17,9 @@
         @foreach($objectives as $o)
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
+                    @if($o->cover_url)
+                        <img src="{{ $o->cover_url }}" class="card-img-top" alt="{{ $o->title }}" style="height: 200px; object-fit: cover;">
+                    @endif
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h5>{{ $o->title }}</h5>
