@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AsymptomeController;
+use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,13 +49,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
         Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
-        
+
         // Partners CRUD - avec middlewares de validation et logging
         Route::middleware(['partner.management', 'partner.log'])->group(function () {
             Route::get('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'index'])->name('partners.index');
             Route::get('/partenaires/create', [App\Http\Controllers\Backoffice\PartnerController::class, 'create'])->name('partners.create');
             Route::post('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'store'])->name('partners.store')->middleware('partner.data');
-            
+
             Route::middleware(['partner.validate'])->group(function () {
                 Route::get('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'show'])->name('partners.show');
                 Route::get('/partenaires/{partner}/edit', [App\Http\Controllers\Backoffice\PartnerController::class, 'edit'])->name('partners.edit');
@@ -62,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::patch('/partenaires/{partner}/toggle-status', [App\Http\Controllers\Backoffice\PartnerController::class, 'toggleStatus'])->name('partners.toggle-status');
             });
         });
-        
+
         // add more admin routes here
     });
 
@@ -90,23 +92,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
     Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
     Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
-    
+
     // Partners frontend routes - avec validation
     Route::prefix('partenaires')->name('front.partners.')->group(function () {
         Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
         Route::get('/search', [App\Http\Controllers\Front\PartnerController::class, 'search'])->name('search'); // Route AJAX
         Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
         Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
-        
+
         Route::middleware(['partner.validate'])->group(function () {
             Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
             Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite')->middleware('auth');
         });
     });
-    
+
     Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
     Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');
-    
+
     // Import CSV routes
     Route::get('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'index'])->name('front.progress.import.index');
     Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
@@ -114,4 +116,65 @@ Route::middleware(['auth'])->group(function () {
 
     // Demo workout editor UI
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+});
+
+
+// Maladie routes
+Route::middleware(['auth'])->prefix('maladies')->name('maladies.')->group(function () {
+
+    Route::get('/', [MaladieController::class, 'index'])
+        ->name('index');
+
+    Route::get('/create', [MaladieController::class, 'create'])
+        ->name('create');
+
+    Route::post('/', [MaladieController::class, 'store'])
+        ->name('store');
+
+
+    Route::get('/{maladie}', [MaladieController::class, 'show'])
+        ->name('show');
+
+
+    Route::get('/{maladie}/edit', [MaladieController::class, 'edit'])
+        ->name('edit');
+
+
+    Route::put('/{maladie}', [MaladieController::class, 'update'])
+        ->name('update');
+
+    Route::delete('/{maladie}', [MaladieController::class, 'destroy'])
+        ->name('destroy');
+
+});
+
+// Asymptome routes
+Route::middleware(['auth'])->prefix('asymptomes')->name('asymptomes.')->group(function () {
+
+    Route::get('/', [AsymptomeController::class, 'index'])
+        ->name('index');
+
+
+    Route::get('/create', [AsymptomeController::class, 'create'])
+        ->name('create');
+
+
+    Route::post('/', [AsymptomeController::class, 'store'])
+        ->name('store');
+
+
+    Route::get('/{asymptome}', [AsymptomeController::class, 'show'])
+        ->name('show');
+
+
+    Route::get('/{asymptome}/edit', [AsymptomeController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{asymptome}', [AsymptomeController::class, 'update'])
+        ->name('update');
+
+
+    Route::delete('/{asymptome}', [AsymptomeController::class, 'destroy'])
+        ->name('destroy');
+
 });
