@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Backoffice\AlimentController;
+use App\Http\Controllers\Backoffice\RepasController;
+use App\Http\Controllers\Front\RepasController as FrontRepasController;
+
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])->name('front.home');
 
 Auth::routes();
@@ -83,6 +87,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/progress/export', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'export'])->name('progress.export');
         Route::delete('/progress/{progress}', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'destroy'])->name('progress.destroy');
 
+        //aliment + repas
+        Route::resource('aliments', AlimentController::class);
+        Route::resource('repas', RepasController::class);
         // User drilldown
         Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
         // add more admin routes here
@@ -144,7 +151,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
         Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
 
-    // Demo workout editor UI
+        //front repas
+        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');    // Demo workout editor UI
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
 
 

@@ -29,6 +29,11 @@ class User extends Authenticatable
         'birth_date',
     ];
 
+    public function repas()
+    {
+        return $this->hasMany(Repas::class);
+    }
+
     public function badges()
     {
         return $this->hasMany(UserBadge::class);

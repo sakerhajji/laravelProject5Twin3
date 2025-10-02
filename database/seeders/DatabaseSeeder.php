@@ -20,6 +20,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
+        User::factory()->create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
+            'password' => bcrypt('password'), // You can change 'password' to a more secure password
+        ]);
+
+        User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'role' => 'user',
+            'password' => bcrypt('password'),
+        ]);
+
         $this->call([
             ObjectiveSeeder::class,
         ]);
