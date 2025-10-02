@@ -37,7 +37,7 @@ public function store(Request $request)
     // Save the category
     Category::create($validated);
 
-    return redirect()->route('categories.index')->with('success', 'Category created successfully.');
+    return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
 }
 
 
@@ -71,7 +71,7 @@ public function update(Request $request, Category $category)
     // Update category
     $category->update($validated);
 
-    return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+    return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
 }
 
 
@@ -79,6 +79,6 @@ public function update(Request $request, Category $category)
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
 }

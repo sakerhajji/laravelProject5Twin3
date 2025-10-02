@@ -27,7 +27,7 @@
                 </div>
             @endif
 
-            <form action="{{ isset($activity) ? route('activities.update', $activity->id) : route('activities.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ isset($activity) ? route('admin.activities.update', $activity->id) : route('admin.activities.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if(isset($activity))
                     @method('PUT')
@@ -76,7 +76,7 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn btn-primary">{{ isset($activity) ? 'Update' : 'Save' }}</button>
-                <a href="{{ route('activities.index') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.activities.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </section>

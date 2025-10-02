@@ -25,7 +25,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('activities.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.activities.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Title --}}
@@ -67,7 +67,7 @@
 
                 {{-- Submit --}}
                 <button type="submit" class="btn btn-primary">Save</button>
-                <a href="{{ route('activities.index') }}" class="btn btn-secondary">Cancel</a>
+                <a href="{{ route('admin.activities.index') }}" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </section>

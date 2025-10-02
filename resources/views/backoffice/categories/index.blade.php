@@ -15,7 +15,7 @@
         </div>
 
         <div class="section-body">
-            <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">+ Add Category</a>
+            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">+ Add Category</a>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -39,8 +39,8 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('categories.show', $category->id) }}" class="btn btn-info btn-sm">View</a>
-                                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('admin.categories.show', $category->id) }}" class="btn btn-info btn-sm">View</a>
+                                <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
                                 <!-- Delete Button -->
                                 <button type="button" class="btn btn-danger btn-sm delete-btn" 
@@ -98,7 +98,7 @@
                 var id = $(this).data('id');
                 var title = $(this).data('title');
                 $('#categoryName').text(title);
-                $('#deleteForm').attr('action', '/categories/' + id);
+                $('#deleteForm').attr('action', '/admin/categories/' + id);
                 $('#deleteModal').modal('show');
             });
         });
