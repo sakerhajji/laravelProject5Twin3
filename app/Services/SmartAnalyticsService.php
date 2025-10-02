@@ -475,10 +475,20 @@ class SmartAnalyticsService
         if ($recentProgress->count() < 3) {
             return 0.3;
         }
-        
-        $values = $recentProgress->pluck('value');
-        $variance = $values->variance();
-        $mean = $values->avg();
+        $values = $recentProgress->pluck('value')->map(function ($v) {
+            return (float) $v;
+        });
+
+        $count = $values->count();
+        $mean = $values->avg() ?: 0.0;
+
+        // Manual population variance (safe fallback if Collection::variance is unavailable)
+        $variance = 0.0;
+        if ($count > 0) {
+            $variance = $values->map(function ($v) use ($mean) {
+                return pow($v - $mean, 2);
+            })->sum() / $count;
+        }
         
         if ($mean == 0) {
             return 0.3;
