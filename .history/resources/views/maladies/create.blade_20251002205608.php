@@ -38,7 +38,7 @@
             <!-- Asymptomes Section -->
             <div class="form-group mb-2">
                 <label>Asymptomes</label>
-                <input type="text" class="form-control mb-2" onkeydown="serachFunction()" id="asymptome-search" placeholder="Rechercher un asymptome...">
+                <input type="text" class="form-control mb-2" id="asymptome-search" placeholder="Rechercher un asymptome...">
                 <div class="row" id="asymptomes-container">
                     @foreach($asymptomes as $asymptome)
                         <div class="col-md-4 col-sm-6 col-12 mb-2 asymptome-item">
@@ -65,23 +65,28 @@
             <button type="submit" class="btn btn-success">Ajouter</button>
             <a href="{{ route('maladies.index') }}" class="btn btn-secondary">Annuler</a>
         </form>
-        
+        <button onclick="printheloo">hello</button>
     </div>
       <script>
-        function serachFunction() {
-            let input = document.getElementById('asymptome-search').value.toLowerCase();
-            let items = document.getElementsByClassName('asymptome-item');
-
-            Array.from(items).forEach(function(item) {
-                let text = item.textContent.toLowerCase();
-                if (input === '' || text.includes(input)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('asymptome-search');
+            searchInput.addEventListener('keydown', function() {
+                // Use setTimeout to get the updated value after keydown
+                setTimeout(() => {
+                    const val = this.value.toLowerCase();
+                    console.log('Search value:', val);
+                    document.querySelectorAll('.asymptome-item').forEach(function(item) {
+                        const label = item.querySelector('.form-check-label').textContent.toLowerCase();
+                        console.log('Checking label:', label);
+                        if(label.includes(val)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }, 0);
             });
-        }
-       
+        });
     </script>
 @endsection
 
