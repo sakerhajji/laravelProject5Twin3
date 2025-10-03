@@ -1,107 +1,143 @@
-# laravel 12 with Stisla Template
+# Health Tracker System
 
-Welcome to the repository for laravel 12 integrated with Stisla Bootstrap 5 template!
+## 🏥 Project Overview
+Health Tracker is an innovative healthcare management system that helps users monitor their health status and achieve their wellness objectives. The system features an intelligent diagnostic tool that can identify potential maladies based on entered asymptômes and create personalized health programs.
 
-## Overview
-This repository contains a laravel 12 template that comes pre-configured with authentication from Breeze and utilizes the Stisla Bootstrap 5 template for the UI. It includes various features to help you quickly set up a robust web application.
+## 👥 Team Members
+- Saker Hajji
+- Sofienne Mrabt
+- Anas Jraidi
+- Hachem Dhawadi
+- Oussema Mejri
 
-## Features
-- laravel 12
-- Stisla Bootstrap 5 Template
-- Authentication with Laravel Breeze
-- User Profile Management
-- Responsive Design
-- Pre-configured Dashboard
-- Example Pages (Register, Login, Dashboard, Blank Page, Edit User Profile)
+## 🌟 Key Features
+- Intelligent maladie diagnostic system based on asymptômes
+- Personal health objective setting and tracking
+- Health history management
+- Customized wellness programs
+- Real-time diagnostic results
+- Partner healthcare provider integration
+- Smart analytics dashboard with AI insights
 
-## Installation Guide
+## 🛠 Technologies Used
+- **Backend Framework:** Laravel 10.x
+- **Frontend:** 
+  - Bootstrap 5.3
+  - JavaScript (ES6+)
+  - AJAX for real-time interactions
+- **Database:** MySQL
+- **Authentication:** Laravel Breeze
+- **Icons:** Font Awesome 6.5
+- **Additional Libraries:**
+  - AOS (Animate On Scroll)
+  - Laravel Collective
+
+## 📁 Project Structure
+```
+project/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   ├── Middleware/
+│   │   └── Requests/
+│   ├── Models/
+│   └── Services/
+├── config/
+├── database/
+│   ├── migrations/
+│   ├── factories/
+│   └── seeders/
+├── resources/
+│   ├── views/
+│   ├── css/
+│   └── js/
+├── routes/
+└── public/
+```
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- PHP >= 8.2
+- PHP >= 8.1
 - Composer
-- Node.js
-- npm
+- MySQL
+- Node.js & NPM
 
 ### Installation Steps
+
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/vickymaulana/laravel11-stisla.git
-    ```
+```bash
+git clone https://github.com/sakerhajji/laravelProject5Twin3.git
+cd laravelProject5Twin3
+```
 
-2. Navigate into the project directory:
-    ```bash
-    cd laravel11-stisla
-    ```
+2. Install PHP dependencies:
+```bash
+composer install
+```
 
-3. Install PHP dependencies:
-    ```bash
-    composer install
-    ```
+3. Install JavaScript dependencies:
+```bash
+npm install && npm run dev
+```
 
-4. Install JavaScript dependencies:
-    ```bash
-    npm install && npm run dev
-    ```
+4. Create environment file:
+```bash
+cp .env.example .env
+```
 
-5. Copy the `.env.example` file and rename it to `.env`:
-    ```bash
-    cp .env.example .env
-    ```
+5. Generate application key:
+```bash
+php artisan key:generate
+```
 
-6. Generate application key:
-    ```bash
-    php artisan key:generate
-    ```
+6. Configure your database in .env file:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
 
-7. Run database migrations:
-    ```bash
-    php artisan migrate
-    ```
+7. Run migrations and seeders:
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
 8. Start the development server:
-    ```bash
-    php artisan serve
-    ```
+```bash
+php artisan serve
+```
 
-### Register a New User
-To register a new user, follow these steps:
+## 🔧 Usage
+1. Access the application at `http://localhost:8000`
+2. Register a new account or login
+3. Start by setting up your health objectives
+4. Use the diagnostic tool by entering your asymptômes
+5. View your health history and track your progress
+6. Follow your personalized wellness program
 
-1. Visit the registration page at `http://localhost:8000/register`.
-2. Fill in the required fields: Name, Email, Password, and Confirm Password.
-3. Click the "Register" button to create a new account.
+## 📱 Features in Detail
 
-After registration, you will be redirected to the dashboard.
+### Diagnostic System
+- Real-time asymptôme matching
+- Percentage-based maladie identification
+- Comprehensive health history tracking
 
-If you encounter any issues during registration, please check the browser console for errors or refer to the Laravel logs for more details.
+### Objectives & Progress
+- Set personal health goals
+- Track progress over time
+- Get AI-powered recommendations
 
-## Contributors
-- **Vicky Maulana** - [GitHub](https://github.com/vickymaulana)
+### Partner Integration
+- Find healthcare providers
+- Save favorite medical facilities
+- Direct appointment scheduling
 
-### Special Thanks
-I extend my gratitude to all the interns at LLDIKTI 2 Division of Information System Development for their contributions and support.
-
-- [Ahmad Dimas Aldian Al-furqon](https://github.com/anqois)
-- [Abdillah Khalid](https://github.com/KhalidUnsri)
-- [Haikal Tirta Albanna](https://github.com/HaikalAlbanna)
-- [Meta Berliana](https://github.com/Metabrln)
-- [Imelda Triadmajaya](https://github.com/imeldatriajaya)
-- [Hilwa Izzatinnafisah](https://github.com/ksnwaa)
-- [Triyana Sugiyarti](https://github.com/TriyanaSgi)
-- [Adelia Isni Hendrawan Putri](https://github.com/lilisky07)
-- [Siti Nur Azizah](https://github.com/sukasukajija)
-- [M. Husaini Hasyim](https://github.com/son-alone)
-- [Andre Satriawan](https://github.com/andresa11satriawan)
-- [Lathifah Putri Aresti](https://github.com/lathifahputri)
-- [Sisca Amelia](https://github.com/siscaamelia)
-- [M. Denny Tri Lisandi](https://github.com/Koutsura)
-
-Feel free to explore their repositories as well.
-
----
-
-If you encounter any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request. Thank you for your interest and support!
-
-## Screenshots
+## 📸 Screenshots
 
 ### Register Page
 ![Register Page](img/register.png "Register Page")
@@ -111,6 +147,11 @@ If you encounter any issues or have suggestions for improvements, please feel fr
 
 ### Dashboard Page
 ![Dashboard Page](img/dashboard.png "Dashboard Page")
+
+
+
+## 🙏 Acknowledgments
+Special thanks to all team members for their dedication and hard work in developing this healthcare management system.
 
 ### Blank Page
 ![Blank Page](img/blank.png "Blank Page")
