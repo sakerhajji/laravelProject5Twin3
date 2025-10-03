@@ -1,84 +1,126 @@
 @extends('layouts.app')
 
-@section('title', isset($activity) ? 'Edit Activity' : 'Create Activity')
+@section('title', isset($activity) ? 'Modifier Activité' : 'Nouvelle Activité')
 
 @section('content')
-<div class="main-content">
-    <section class="section">
-        <div class="section-header">
-            <h1>{{ isset($activity) ? 'Edit Activity' : 'Create Activity' }}</h1>
+<div class="section-header" style="margin-top: 40px;">
+    <div class="section-header-back">
+        <a href="{{ route('admin.activities.index') }}" class="btn btn-icon">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    <h1>{{ isset($activity) ? 'Modifier Activité' : 'Nouvelle Activité' }}</h1>
+</div>
+
+<div class="section-body">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form action="{{ isset($activity) ? route('admin.activities.update', $activity->id) : route('admin.activities.store') }}" 
+                          method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @if(isset($activity))
+                            @method('PUT')
+                        @endif
+
+                        <div class="row">
+                            <!-- Title -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Titre <span class="text-danger">*</span></label>
+                                    <input type="text" name="title"
+                                           class="form-control @error('title') is-invalid @enderror"
+                                           value="{{ old('title', $activity->title ?? '') }}" 
+                                           placeholder="Entrer le titre">
+                                    @error('title')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Time -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Durée (minutes) <span class="text-danger">*</span></label>
+                                    <input type="number" name="time"
+                                           class="form-control @error('time') is-invalid @enderror"
+                                           value="{{ old('time', $activity->time ?? '') }}"
+                                           placeholder="Ex: 30">
+                                    @error('time')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Description <span class="text-danger">*</span></label>
+                                    <textarea name="description"
+                                              class="form-control @error('description') is-invalid @enderror"
+                                              rows="3"
+                                              placeholder="Entrer une description">{{ old('description', $activity->description ?? '') }}</textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Catégorie <span class="text-danger">*</span></label>
+                                    <select name="category_id"
+                                            class="form-control @error('category_id') is-invalid @enderror">
+                                        <option value="">-- Sélectionner une catégorie --</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category_id', $activity->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Image -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Image (jpg, jpeg, png, gif)</label>
+                                    <input type="file" name="image"
+                                           class="form-control @error('image') is-invalid @enderror"
+                                           accept="image/*">
+                                    @error('image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+
+                                    @if(isset($activity) && $activity->image)
+                                        <div class="mt-2">
+                                            <img src="{{ asset('storage/'.$activity->image) }}" 
+                                                 width="120" class="rounded shadow-sm">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {{ isset($activity) ? 'Mettre à jour' : 'Enregistrer' }}
+                            </button>
+                            <a href="{{ route('admin.activities.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="section-body">
-            <h2 class="section-title">{{ isset($activity) ? 'Edit Activity' : 'Create Activity' }}</h2>
-            <p class="section-lead">
-                {{ isset($activity) ? 'Edit the activity details below.' : 'Fill the form to create a new activity.' }}
-            </p>
-
-            {{-- Display all errors at the top --}}
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <strong>Whoops! There were some problems with your input:</strong>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ isset($activity) ? route('admin.activities.update', $activity->id) : route('admin.activities.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @if(isset($activity))
-                    @method('PUT')
-                @endif
-
-                {{-- Title --}}
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" class="form-control" id="title" placeholder="Enter title" value="{{ old('title', $activity->title ?? '') }}">
-                </div>
-
-                {{-- Description --}}
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea name="description" class="form-control" id="description" placeholder="Enter description">{{ old('description', $activity->description ?? '') }}</textarea>
-                </div>
-
-                {{-- Time --}}
-                <div class="form-group">
-                    <label for="time">Time</label>
-                    <input type="number" name="time" class="form-control" id="time" placeholder="Enter time" value="{{ old('time', $activity->time ?? '') }}">
-                </div>
-
-                {{-- Category --}}
-                <div class="form-group">
-                    <label for="category_id">Category</label>
-                    <select name="category_id" class="form-control" id="category_id">
-                        <option value="">-- Select Category --</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ (old('category_id', $activity->category_id ?? '') == $category->id) ? 'selected' : '' }}>
-                                {{ $category->title }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                {{-- Image --}}
-                <div class="form-group">
-                    <label for="image">Image (jpg, jpeg, png, gif)</label>
-                    <input type="file" name="image" class="form-control" id="image">
-                    @if(isset($activity) && $activity->image)
-                        <br>
-                        <img src="{{ asset('storage/'.$activity->image) }}" width="100">
-                    @endif
-                </div>
-
-                {{-- Submit --}}
-                <button type="submit" class="btn btn-primary">{{ isset($activity) ? 'Update' : 'Save' }}</button>
-                <a href="{{ route('admin.activities.index') }}" class="btn btn-secondary">Cancel</a>
-            </form>
-        </div>
-    </section>
+    </div>
 </div>
 @endsection
