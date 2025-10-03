@@ -103,7 +103,7 @@ class CategoryValidateData
                 'image',
                 'mimes:jpg,jpeg,png,gif,webp,svg',
                 'max:2048', // 2MB max
-                'dimensions:min_width=50,min_height=50,max_width=1500,max_height=1500'
+                //'dimensions:min_width=50,min_height=50,max_width=1500,max_height=1500'
             ]
         ];
 
@@ -138,7 +138,7 @@ class CategoryValidateData
             'image.image' => 'Le fichier doit être une image.',
             'image.mimes' => 'L\'image doit être au format JPG, JPEG, PNG, GIF, WebP ou SVG.',
             'image.max' => 'L\'image ne peut pas dépasser 2MB.',
-            'image.dimensions' => 'L\'image doit avoir une taille comprise entre 50x50 et 1500x1500 pixels.'
+            //'image.dimensions' => 'L\'image doit avoir une taille comprise entre 50x50 et 1500x1500 pixels.'
         ];
     }
 }

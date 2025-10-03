@@ -36,6 +36,19 @@
             <li class="{{ Request::is('admin/repas*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.repas.index') }}"><i class="fas fa-drumstick-bite"></i> <span>Attribuer un repas à un utilisateur</span></a>
             </li>
+                  <!-- Categories -->
+            <li class="{{ Request::is('admin/categories*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.categories.index') }}">
+                    <i class="fas fa-tags"></i> <span>Categories</span>
+                </a>
+            </li>
+
+            <!-- Activities -->
+            <li class="{{ Request::is('admin/activities*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.activities.index') }}">
+                    <i class="fas fa-running"></i> <span>Activities</span>
+                </a>
+            </li>
             @endif
             <!-- profile ganti password -->
             <li class="menu-header">Profile</li>

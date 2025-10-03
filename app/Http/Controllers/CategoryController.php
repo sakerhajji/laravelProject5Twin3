@@ -9,11 +9,21 @@ use Illuminate\Support\Facades\Storage; // add this at top
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::all();
-        return view('backoffice.categories.index', compact('categories'));
+public function index(Request $request)
+{
+    $query = Category::query();
+
+    // Optional: filter by search
+    if ($request->has('search') && $request->search != '') {
+        $query->where('title', 'like', '%' . $request->search . '%');
     }
+
+    // Paginate results, e.g., 10 per page
+    $categories = $query->orderBy('id', 'desc')->paginate(10);
+
+    return view('backoffice.categories.index', compact('categories'));
+}
+
 
     public function create()
     {

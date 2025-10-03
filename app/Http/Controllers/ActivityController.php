@@ -10,11 +10,28 @@ use Illuminate\Support\Facades\Storage;
 
 class ActivityController extends Controller
 {
-    public function index()
-    {
-        $activities = Activity::with('category', 'user')->latest()->paginate(10);
-        return view('backoffice.activities.index', compact('activities'));
+public function index(Request $request)
+{
+    $query = Activity::with('category', 'user');
+
+    // Filter by category
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
     }
+
+    // Search by title
+    if ($request->filled('search')) {
+        $query->where('title', 'like', '%' . $request->search . '%');
+    }
+
+    $activities = $query->latest()->paginate(10);
+
+    $categories = Category::all();
+
+    return view('backoffice.activities.index', compact('activities', 'categories'));
+}
+
+
 
     public function create()
     {
@@ -86,4 +103,5 @@ class ActivityController extends Controller
 
         return redirect()->route('admin.activities.index')->with('success', 'Activity deleted successfully!');
     }
+    
 }
