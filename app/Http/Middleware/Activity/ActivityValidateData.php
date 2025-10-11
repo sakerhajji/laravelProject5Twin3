@@ -112,13 +112,13 @@ class ActivityValidateData
                 'integer',
                 'exists:categories,id'
             ],
-            'image' => [
+            'media' => [
                 $isUpdate ? 'nullable' : 'required',
-                'image',
-                'mimes:jpg,jpeg,png,gif,webp',
-                'max:2048', // 2MB max
-                'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000'
+                'file', // Use 'file' instead of 'image' to allow videos too
+                'mimes:jpg,jpeg,png,gif,webp,mp4,mov,avi',
+                'max:20480', // 20MB
             ]
+
         ];
     }
 
@@ -144,11 +144,11 @@ class ActivityValidateData
             'category_id.required' => 'Vous devez sélectionner une catégorie.',
             'category_id.exists' => 'La catégorie sélectionnée n\'existe pas.',
             
-            'image.required' => 'Une image est obligatoire.',
-            'image.image' => 'Le fichier doit être une image.',
-            'image.mimes' => 'L\'image doit être au format JPG, JPEG, PNG, GIF ou WebP.',
-            'image.max' => 'L\'image ne peut pas dépasser 2MB.',
-            'image.dimensions' => 'L\'image doit avoir une taille comprise entre 100x100 et 2000x2000 pixels.'
+            'media.required' => 'Le fichier média est obligatoire.',
+            'media.file' => 'Le fichier doit être valide.',
+            'media.mimes' => 'Le fichier doit être une image ou une vidéo valide (jpg, png, gif, mp4, mov, avi).',
+            'media.max' => 'Le fichier ne peut pas dépasser 20MB.',
+
         ];
     }
 }

@@ -87,25 +87,32 @@
                                 </div>
                             </div>
 
-                            <!-- Image -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Image (jpg, jpeg, png, gif)</label>
-                                    <input type="file" name="image"
-                                           class="form-control @error('image') is-invalid @enderror"
-                                           accept="image/*">
-                                    @error('image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                            <!-- Media Upload -->
+                            <div class="col-12 mb-3">
+                                <label for="media" class="form-label fw-bold">Upload Image or Video</label>
+                                <input type="file" name="media" id="media"
+                                       class="form-control @error('media') is-invalid @enderror"
+                                       accept="image/*,video/*">
+                                @error('media')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-                                    @if(isset($activity) && $activity->image)
-                                        <div class="mt-2">
-                                            <img src="{{ asset('storage/'.$activity->image) }}" 
-                                                 width="120" class="rounded shadow-sm">
-                                        </div>
+                            <!-- Current Media (if editing) -->
+                            @if(isset($activity) && $activity->media_url)
+                            <div class="col-12 mb-3">
+                                <label class="fw-bold">Current Media:</label>
+                                <div class="border rounded p-2" style="width: 300px; background: #f8f9fa;">
+                                    @if($activity->media_type === 'image')
+                                        <img src="{{ $activity->media_url }}" alt="Current Image" style="width: 100%; border-radius: 8px;">
+                                    @elseif($activity->media_type === 'video')
+                                        <video src="{{ $activity->media_url }}" controls style="width: 100%; border-radius: 8px;"></video>
                                     @endif
                                 </div>
                             </div>
+                            @endif
+
+                      
                         </div>
 
                         <!-- Buttons -->
@@ -123,4 +130,46 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mediaInput = document.getElementById('media');
+    const previewContainer = document.getElementById('preview-container');
+
+    mediaInput.addEventListener('change', function(event) {
+        previewContainer.innerHTML = ''; // Clear preview
+        const file = event.target.files[0];
+
+        if (!file) {
+            previewContainer.textContent = 'No file selected';
+            return;
+        }
+
+        const url = URL.createObjectURL(file);
+        const fileType = file.type;
+
+        if (fileType.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = url;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
+            previewContainer.appendChild(img);
+        } else if (fileType.startsWith('video/')) {
+            const video = document.createElement('video');
+            video.src = url;
+            video.controls = true;
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'contain';
+            previewContainer.appendChild(video);
+        } else {
+            previewContainer.textContent = 'Unsupported file type';
+            previewContainer.style.color = 'red';
+        }
+    });
+});
+</script>
 @endsection

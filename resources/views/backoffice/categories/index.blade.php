@@ -39,16 +39,18 @@
     <!-- Filters -->
     <div class="row mb-4">
         <div class="col-12">
-            <form method="GET" action="{{ route('admin.categories.index') }}" class="row g-2 align-items-end">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Title</label>
-                    <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="Search by title...">
+            <div class="card shadow-sm border-0 p-3 mb-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Search by Title</label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Type to search...">
+                    </div>
+                    <div class="col-md-6 d-flex gap-2">
+                        <button type="button" id="filterBtn" class="btn btn-primary flex-grow-1"><i class="fas fa-search"></i> Filter</button>
+                        <button type="button" id="resetBtn" class="btn btn-secondary flex-grow-1"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
                 </div>
-                <div class="col-md-6 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
-                    <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -56,7 +58,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" id="categoriesTable">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
@@ -72,12 +74,12 @@
                             <td>{{ $category->id }}</td>
                             <td>
                                 @if($category->image)
-                                    <img src="{{ asset('storage/'.$category->image) }}" class="rounded" width="60" height="60" style="object-fit:cover;">
+                                    <img src="{{ asset('storage/'.$category->image) }}" class="rounded" width="50" height="50" style="object-fit:cover;">
                                 @else
                                     <span class="badge bg-secondary">No Image</span>
                                 @endif
                             </td>
-                            <td>{{ $category->title }}</td>
+                            <td class="category-title">{{ $category->title }}</td>
                             <td>{{ $category->description }}</td>
                             <td class="text-end">
                                 <a href="{{ route('admin.categories.show', $category->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
@@ -100,7 +102,7 @@
 
             <!-- Pagination -->
             <div class="d-flex justify-content-center mt-3">
-                {{ $categories->withQueryString()->links() }}
+                {{ $categories->links() }}
             </div>
         </div>
     </div>
@@ -133,6 +135,7 @@
 @push('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    // Delete modal
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const deleteForm = document.getElementById("deleteForm");
     const categoryTitle = document.getElementById("categoryTitle");
@@ -146,6 +149,31 @@ document.addEventListener("DOMContentLoaded", function () {
             const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
             modal.show();
         });
+    });
+
+    // Live search
+    const searchInput = document.getElementById("searchInput");
+    const tableRows = document.querySelectorAll("#categoriesTable tbody tr");
+    searchInput.addEventListener("keyup", function () {
+        const query = this.value.toLowerCase();
+        tableRows.forEach(row => {
+            const title = row.querySelector(".category-title").textContent.toLowerCase();
+            row.style.display = title.includes(query) ? "" : "none";
+        });
+    });
+
+    // Reset button
+    const resetBtn = document.getElementById("resetBtn");
+    resetBtn.addEventListener("click", function () {
+        searchInput.value = '';
+        tableRows.forEach(row => row.style.display = '');
+    });
+
+    // Optional: Filter button triggers live search too
+    const filterBtn = document.getElementById("filterBtn");
+    filterBtn.addEventListener("click", function () {
+        const event = new Event('keyup');
+        searchInput.dispatchEvent(event);
     });
 });
 </script>

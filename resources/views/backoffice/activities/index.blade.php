@@ -37,41 +37,39 @@
     </div>
 
     <!-- Filters -->
-<!-- Filters -->
-<div class="row mb-4">
-    <div class="col-12">
-        <form method="GET" action="{{ route('admin.activities.index') }}" class="row g-2 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label fw-bold">Title</label>
-                <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="Search by title...">
-            </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 p-3 mb-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Search by Title</label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Type to search...">
+                    </div>
 
-            <div class="col-md-4">
-                <label class="form-label fw-bold">Category</label>
-                <select name="category_id" class="form-select">
-                    <option value="">All Categories</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
-                            {{ $cat->title }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Filter by Category</label>
+                        <select id="categoryFilter" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ strtolower($cat->title) }}">{{ $cat->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <div class="col-md-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Filter</button>
-                <a href="{{ route('admin.activities.index') }}" class="btn btn-secondary"><i class="fas fa-undo"></i> Reset</a>
+                    <div class="col-md-4 d-flex gap-2">
+                        <button type="button" id="filterBtn" class="btn btn-primary flex-grow-1"><i class="fas fa-search"></i> Filter</button>
+                        <button type="button" id="resetBtn" class="btn btn-secondary flex-grow-1"><i class="fas fa-undo"></i> Reset</button>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
 
     <!-- Activities Table -->
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle" id="activitiesTable">
                     <thead class="table-light">
                         <tr>
                             <th>#</th>
@@ -88,14 +86,18 @@
                         <tr>
                             <td>{{ $activity->id }}</td>
                             <td>
-                                @if($activity->image)
-                                    <img src="{{ asset('storage/'.$activity->image) }}" class="rounded" width="60" height="60" style="object-fit:cover;">
-                                @else
-                                    <span class="badge bg-secondary">No Image</span>
-                                @endif
+@if($activity->media_type === 'image')
+    <img src="{{ $activity->media_url }}" class="img-fluid rounded">
+@elseif($activity->media_type === 'video')
+    <video controls width="400" class="rounded">
+        <source src="{{ $activity->media_url }}" type="video/mp4">
+        Your browser does not support video playback.
+    </video>
+@endif
+
                             </td>
-                            <td class="fw-bold">{{ $activity->title }}</td>
-                            <td>{{ $activity->category->title ?? '-' }}</td>
+                            <td class="activity-title">{{ $activity->title }}</td>
+                            <td class="activity-category">{{ $activity->category->title ?? '-' }}</td>
                             <td>{{ $activity->user->name ?? '-' }}</td>
                             <td>{{ $activity->time }}</td>
                             <td class="text-end">
@@ -119,7 +121,7 @@
 
             <!-- Pagination -->
             <div class="d-flex justify-content-center mt-3">
-                {{ $activities->withQueryString()->links() }}
+                {{ $activities->links() }}
             </div>
         </div>
     </div>
@@ -152,6 +154,7 @@
 @push('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    // Delete modal
     const deleteButtons = document.querySelectorAll(".delete-btn");
     const deleteForm = document.getElementById("deleteForm");
     const activityTitle = document.getElementById("activityTitle");
@@ -166,6 +169,40 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.show();
         });
     });
+
+    // Live Search + Category Filter
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const tableRows = document.querySelectorAll("#activitiesTable tbody tr");
+
+    function filterTable() {
+        const searchQuery = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value.toLowerCase();
+
+        tableRows.forEach(row => {
+            const title = row.querySelector(".activity-title").textContent.toLowerCase();
+            const category = row.querySelector(".activity-category").textContent.toLowerCase();
+
+            const matchesSearch = title.includes(searchQuery);
+            const matchesCategory = !selectedCategory || category.includes(selectedCategory);
+
+            row.style.display = (matchesSearch && matchesCategory) ? "" : "none";
+        });
+    }
+
+    // Live filtering
+    searchInput.addEventListener("keyup", filterTable);
+    categoryFilter.addEventListener("change", filterTable);
+
+    // Reset button
+    document.getElementById("resetBtn").addEventListener("click", function () {
+        searchInput.value = '';
+        categoryFilter.value = '';
+        filterTable();
+    });
+
+    // Filter button triggers filtering manually
+    document.getElementById("filterBtn").addEventListener("click", filterTable);
 });
 </script>
 @endpush

@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Factories\HasFactory; 
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
@@ -9,8 +10,15 @@ class Activity extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'image', 'time',
-        'category_id', 'user_id', 'likes_count', 'saves_count'
+        'title',
+        'description',
+        'media_url',
+        'media_type',
+        'time',
+        'category_id',
+        'user_id',
+        'likes_count',
+        'saves_count'
     ];
 
     public function category()
@@ -30,4 +38,3 @@ class Activity extends Model
                     ->withTimestamps();
     }
 }
-

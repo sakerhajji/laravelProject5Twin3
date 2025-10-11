@@ -81,16 +81,19 @@
                                 </div>
                             </div>
 
-                            <!-- Image -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Image (jpg, jpeg, png, gif)</label>
-                                    <input type="file" name="image"
-                                           class="form-control @error('image') is-invalid @enderror" accept="image/*">
-                                    @error('image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                            <!-- Media Upload -->
+                            <div class="col-12 mb-3">
+                                <label for="media" class="form-label fw-bold">Upload Image or Video</label>
+                                <input type="file" name="media" id="media" class="form-control @error('media') is-invalid @enderror" accept="image/*,video/*" required>
+                                @error('media')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Preview -->
+                            <div class="col-12 mb-3">
+                                <label class="fw-bold">Preview:</label>
+                                <div id="preview-container" style="margin-top: 10px;"></div>
                             </div>
                         </div>
 
@@ -109,4 +112,43 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const mediaInput = document.getElementById('media');
+    const previewContainer = document.getElementById('preview-container');
+
+    if (!mediaInput || !previewContainer) return;
+
+    mediaInput.addEventListener('change', function(event) {
+        previewContainer.innerHTML = ''; // Clear previous preview
+
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const fileType = file.type;
+
+        if (fileType.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.maxWidth = '300px';
+            img.style.marginTop = '10px';
+            img.classList.add('img-fluid', 'rounded');
+            previewContainer.appendChild(img);
+        } else if (fileType.startsWith('video/')) {
+            const video = document.createElement('video');
+            video.src = URL.createObjectURL(file);
+            video.controls = true;
+            video.style.maxWidth = '300px';
+            video.style.marginTop = '10px';
+            video.classList.add('rounded');
+            previewContainer.appendChild(video);
+        } else {
+            previewContainer.innerHTML = '<p class="text-danger">Unsupported file type.</p>';
+        }
+    });
+});
+</script>
 @endsection
