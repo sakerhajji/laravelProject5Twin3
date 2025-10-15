@@ -4,6 +4,7 @@ use App\Http\Controllers\AsymptomeController;
 use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backoffice\AlimentController;
@@ -230,3 +231,6 @@ Route::middleware(['auth', 'asymptome.check'])->prefix('asymptomes')->name('asym
 
 });
 
+
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::post('/chat/message', [ChatController::class, 'sendMessage'])->name('chat.send');
