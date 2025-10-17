@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'status',
         'phone',
         'address',
         'city',
@@ -84,5 +85,13 @@ class User extends Authenticatable
     public function maladies()
     {
         return $this->belongsToMany(Maladie::class, 'maladie_user')->withTimestamps();
+    }
+
+    /**
+     * Ratings the user gave to partners
+     */
+    public function partnerRatings()
+    {
+        return $this->hasMany(\App\Models\PartnerRating::class);
     }
 }

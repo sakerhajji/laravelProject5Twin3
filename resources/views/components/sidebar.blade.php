@@ -22,6 +22,9 @@
             @endif
             @if (in_array(Auth::user()->role, ['admin','superadmin']))
             <li class="menu-header">Administration</li>
+            <li class="{{ Request::is('admin/users*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.users.index') }}"><i class="fas fa-users"></i> <span>Gestion Utilisateurs</span></a>
+            </li>
             <li class="{{ Request::is('admin/objectifs*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.objectives.index') }}"><i class="fas fa-bullseye"></i> <span>Objectifs types</span></a>
             </li>

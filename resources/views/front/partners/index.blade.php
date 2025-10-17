@@ -33,8 +33,13 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <h4><i class="fas fa-th-large"></i> Catégories de Partenaires</h4>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-th-large"></i> Catégories de Partenaires</h4>
+                    @auth
+                    <a href="{{ route('front.partners.recommendations') }}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-magic me-1"></i>Recommandations pour vous
+                    </a>
+                    @endauth
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
@@ -56,7 +61,7 @@
                                             <i class="fas fa-brain fa-2x text-purple"></i>
                                         @endif
                                     </div>
-                                    <div class="category-name text-center">
+                    <div class="category-name text-center">
                                         <small class="fw-bold">{{ $value }}</small>
                                     </div>
                                 </a>
