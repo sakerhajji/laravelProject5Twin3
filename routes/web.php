@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backoffice\AlimentController;
 use App\Http\Controllers\Backoffice\RepasController;
+use App\Http\Controllers\Backoffice\UserManagementController;
 use App\Http\Controllers\Front\RepasController as FrontRepasController;
 
 // Route frontend protégée contre l'accès admin
@@ -101,8 +102,10 @@ Route::middleware(['auth'])->group(function () {
         //aliment + repas
         Route::resource('aliments', AlimentController::class);
         Route::resource('repas', RepasController::class);
-        // User drilldown
-        Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
+        
+        // User Management - Gestion complète des utilisateurs
+        Route::resource('users', App\Http\Controllers\Backoffice\UserManagementController::class);
+        Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Backoffice\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
 
         // add more admin routes here
     });
@@ -147,12 +150,16 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('partenaires')->name('front.partners.')->group(function () {
             Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
             Route::get('/search', [App\Http\Controllers\Front\PartnerController::class, 'search'])->name('search'); // Route AJAX
+            Route::get('/recommendations', [App\Http\Controllers\Front\PartnerController::class, 'recommendations'])->name('recommendations')->middleware('auth');
+            Route::post('/intelligent-search', [App\Http\Controllers\Front\PartnerController::class, 'intelligentSearch'])->name('intelligent-search');
             Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
             Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
             
             Route::middleware(['partner.validate'])->group(function () {
                 Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
                 Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite');
+                // Ratings
+                Route::post('/{partner}/rating', [App\Http\Controllers\Front\PartnerController::class, 'rate'])->name('rate')->middleware('auth');
             });
         });
         

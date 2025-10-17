@@ -55,7 +55,15 @@
                             @for($i = 1; $i <= 5; $i++)
                                 <i class="fas fa-star {{ $i <= $partner->rating ? 'text-warning' : 'text-muted' }}"></i>
                             @endfor
-                            <span class="rating-text ml-1 text-muted">{{ number_format($partner->rating, 1) }}</span>
+                           
+                           
+                        </div>
+                    @else
+                        <div class="rating">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fas fa-star text-muted"></i>
+                            @endfor
+                            <small class="text-muted">Pas d'avis</small>
                         </div>
                     @endif
                 </div>
