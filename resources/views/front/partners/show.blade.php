@@ -73,13 +73,44 @@
 
                                 @if($partner->rating > 0)
                                     <div class="mb-3">
-                                        <strong>Note:</strong>
+                                        <strong>Note moyenne:</strong>
                                         @for($i = 1; $i <= 5; $i++)
                                             <i class="fas fa-star {{ $i <= $partner->rating ? 'text-warning' : 'text-muted' }}"></i>
                                         @endfor
-                                        <span class="ml-1">{{ number_format($partner->rating, 1) }}/5</span>
+                                        
+                                       
+                                    </div>
+                                @else
+                                    <div class="mb-3">
+                                        <strong>Note:</strong>
+                                        <span class="text-muted">Pas encore d'avis</span>
                                     </div>
                                 @endif
+                                
+                                @auth
+                                    <div class="mb-3">
+                                        <strong>Votre note:</strong>
+                                        <div class="rating-stars" id="rating-stars" data-partner-id="{{ $partner->id }}">
+                                            @php
+                                                $userRating = $partner->ratings()->where('user_id', Auth::id())->first();
+                                                $currentRating = $userRating ? $userRating->rating : 0;
+                                            @endphp
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="fas fa-star rating-star {{ $i <= $currentRating ? 'text-warning' : 'text-muted' }}" 
+                                                   data-rating="{{ $i }}" 
+                                                   style="cursor: pointer; font-size: 1.5rem;"
+                                                   title="Noter {{ $i }} étoile(s)"></i>
+                                            @endfor
+                                        </div>
+                                        <small class="text-muted d-block mt-1">Cliquez sur les étoiles pour noter ce partenaire</small>
+                                    </div>
+                                @else
+                                    <div class="mb-3">
+                                        <small class="text-muted">
+                                            <a href="{{ route('login') }}">Connectez-vous</a> pour noter ce partenaire
+                                        </small>
+                                    </div>
+                                @endauth
                             </div>
                         </div>
                     </div>
@@ -251,6 +282,18 @@
     font-weight: 600;
     font-size: 1.1rem;
 }
+
+.rating-star {
+    transition: all 0.2s ease;
+}
+
+.rating-star:hover {
+    transform: scale(1.2);
+}
+
+.rating-stars {
+    display: inline-block;
+}
 </style>
 @endpush
 
@@ -273,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success') {
+                if (data.success) {
                     if (data.action === 'added') {
                         this.classList.remove('btn-outline-danger');
                         this.classList.add('btn-danger');
@@ -295,6 +338,103 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast('Une erreur est survenue.', 'error');
             });
         });
+    }
+    
+    // Rating functionality
+    const ratingStars = document.querySelectorAll('.rating-star');
+    const ratingContainer = document.getElementById('rating-stars');
+    
+    if (ratingStars.length > 0 && ratingContainer) {
+        const partnerId = ratingContainer.dataset.partnerId;
+        
+        // Hover effect
+        ratingStars.forEach((star, index) => {
+            star.addEventListener('mouseenter', function() {
+                highlightStars(index + 1);
+            });
+            
+            star.addEventListener('mouseleave', function() {
+                const currentRating = getCurrentRating();
+                highlightStars(currentRating);
+            });
+            
+            star.addEventListener('click', function() {
+                const rating = this.dataset.rating;
+                submitRating(partnerId, rating);
+            });
+        });
+        
+        function highlightStars(count) {
+            ratingStars.forEach((star, index) => {
+                if (index < count) {
+                    star.classList.remove('text-muted');
+                    star.classList.add('text-warning');
+                } else {
+                    star.classList.remove('text-warning');
+                    star.classList.add('text-muted');
+                }
+            });
+        }
+        
+        function getCurrentRating() {
+            let rating = 0;
+            ratingStars.forEach((star) => {
+                if (star.classList.contains('text-warning')) {
+                    rating++;
+                }
+            });
+            return rating;
+        }
+        
+        function submitRating(partnerId, rating) {
+            fetch(`/partenaires/${partnerId}/rating`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ rating: parseInt(rating) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    highlightStars(data.user_rating);
+                    
+                    // Update average rating display
+                    updateAverageRating(data.average);
+                } else {
+                    showToast(data.message || 'Une erreur est survenue.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Une erreur est survenue lors de l\'envoi de votre note.', 'error');
+            });
+        }
+        
+        function updateAverageRating(average) {
+            // Find the average rating display and update it
+            const ratingDisplay = document.querySelector('.mb-3 strong');
+            if (ratingDisplay && ratingDisplay.textContent === 'Note moyenne:') {
+                const parent = ratingDisplay.parentElement;
+                const stars = parent.querySelectorAll('i.fa-star:not(.rating-star)');
+                stars.forEach((star, index) => {
+                    if (index < Math.round(average)) {
+                        star.classList.remove('text-muted');
+                        star.classList.add('text-warning');
+                    } else {
+                        star.classList.remove('text-warning');
+                        star.classList.add('text-muted');
+                    }
+                });
+                
+                const ratingText = parent.querySelector('span');
+                if (ratingText) {
+                    ratingText.textContent = `${average}/5`;
+                }
+            }
+        }
     }
 });
 

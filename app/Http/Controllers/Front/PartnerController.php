@@ -5,11 +5,18 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Partner;
 use App\Models\User;
+use App\Services\PartnerRecommendationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PartnerController extends Controller
 {
+    protected $recommendationService;
+
+    public function __construct(PartnerRecommendationService $recommendationService)
+    {
+        $this->recommendationService = $recommendationService;
+    }
     public function index(Request $request)
     {
         $query = Partner::active();
@@ -233,6 +240,38 @@ class PartnerController extends Controller
         return view('front.partners.favorites', compact('favoritePartners'));
     }
 
+    /**
+     * Submit or update a rating for a partner by authenticated user.
+     */
+    public function rate(Request $request, Partner $partner)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Vous devez être connecté.'], 401);
+        }
+
+        $data = $request->validate([
+            'rating' => 'required|integer|min:1|max:5'
+        ]);
+
+        $user = Auth::user();
+
+        // Update or create rating
+        $rating = \App\Models\PartnerRating::updateOrCreate(
+            ['user_id' => $user->id, 'partner_id' => $partner->id],
+            ['rating' => $data['rating']]
+        );
+
+        // Recalculate average and save to partner
+        $avg = $partner->recalcAndSaveAverageRating();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Merci pour votre note.',
+            'average' => $avg,
+            'user_rating' => (int) $data['rating']
+        ]);
+    }
+
     public function byType($type)
     {
         $types = Partner::getTypes();
@@ -249,5 +288,59 @@ class PartnerController extends Controller
         $typeName = $types[$type];
 
         return view('front.partners.by-type', compact('partners', 'type', 'typeName'));
+    }
+
+    /**
+     * Afficher les recommandations personnalisées pour l'utilisateur
+     */
+    public function recommendations()
+    {
+        $user = Auth::user();
+        $recommendations = $this->recommendationService->getRecommendationsForUser($user, 12);
+        
+        // Get user's favorite partner IDs
+        $userFavorites = [];
+        if ($user) {
+            $userFavorites = $user->favoritedPartners()->pluck('partners.id')->toArray();
+        }
+
+        // Statistiques de recommandation
+        $stats = $user ? $this->recommendationService->getRecommendationStats($user) : null;
+
+        return view('front.partners.recommendations', compact('recommendations', 'userFavorites', 'stats'));
+    }
+
+    /**
+     * Recherche intelligente avec API AJAX
+     */
+    public function intelligentSearch(Request $request)
+    {
+        $criteria = [
+            'type' => $request->input('type'),
+            'city' => $request->input('city'),
+            'min_rating' => $request->input('min_rating'),
+            'services' => $request->input('services', []),
+            'keyword' => $request->input('keyword'),
+            'sort_by' => $request->input('sort_by', 'rating'),
+            'sort_order' => $request->input('sort_order', 'desc'),
+        ];
+
+        $partners = $this->recommendationService->intelligentSearch($criteria);
+
+        // Get user's favorite partner IDs if authenticated
+        $userFavorites = [];
+        if (Auth::check()) {
+            $userFavorites = Auth::user()->favoritedPartners()->pluck('partners.id')->toArray();
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'partners' => $partners,
+                'count' => $partners->count(),
+            ]);
+        }
+
+        return view('front.partners.search-results', compact('partners', 'userFavorites', 'criteria'));
     }
 }

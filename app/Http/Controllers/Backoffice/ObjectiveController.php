@@ -29,7 +29,18 @@ class ObjectiveController extends Controller
             'unit' => 'required|string|max:20',
             'target_value' => 'required|numeric|min:0.01',
             'category' => 'required|in:activite,nutrition,sommeil,sante',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover_url' => 'nullable|url',
         ]);
+
+        // Gérer l'upload d'image
+        if ($request->hasFile('cover_image')) {
+            $image = $request->file('cover_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/objectives'), $imageName);
+            $data['cover_url'] = '/images/objectives/' . $imageName;
+        }
+
         Objective::create($data);
         return redirect()->route('admin.objectives.index')->with('status', 'Objectif type créé');
     }
@@ -47,7 +58,23 @@ class ObjectiveController extends Controller
             'unit' => 'required|string|max:20',
             'target_value' => 'required|numeric|min:0.01',
             'category' => 'required|in:activite,nutrition,sommeil,sante',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover_url' => 'nullable|url',
         ]);
+
+        // Gérer l'upload d'image
+        if ($request->hasFile('cover_image')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($objective->cover_url && file_exists(public_path($objective->cover_url))) {
+                unlink(public_path($objective->cover_url));
+            }
+            
+            $image = $request->file('cover_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/objectives'), $imageName);
+            $data['cover_url'] = '/images/objectives/' . $imageName;
+        }
+
         $objective->update($data);
         return redirect()->route('admin.objectives.index')->with('status', 'Objectif type mis à jour');
     }

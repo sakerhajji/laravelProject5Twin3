@@ -1,15 +1,32 @@
 <?php
 
+use App\Http\Controllers\AsymptomeController;
+use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])->name('front.home');
+use App\Http\Controllers\Backoffice\AlimentController;
+use App\Http\Controllers\Backoffice\RepasController;
+use App\Http\Controllers\Backoffice\UserManagementController;
+use App\Http\Controllers\Front\RepasController as FrontRepasController;
+
+// Route frontend protégée contre l'accès admin
+Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])
+    ->name('front.home')
+    ->middleware('no.admin.frontend');
 
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/blank-page', [App\Http\Controllers\HomeController::class, 'blank'])->name('blank');
+    // Maladie diagnosis routes (front office)
+    Route::get('/maladie/diagnose', [App\Http\Controllers\Front\MaladieDiagnoseController::class, 'showForm'])->name('front.maladie.diagnose');
+    Route::post('/maladie/match', [App\Http\Controllers\Front\MaladieDiagnoseController::class, 'matchMaladies'])->name('front.maladie.match');
+    Route::post('/maladie/api-match', [App\Http\Controllers\Front\MaladieDiagnoseController::class, 'apiMatch'])->name('front.maladie.apiMatch');
+    Route::post('/maladie/save', [App\Http\Controllers\Front\MaladieDiagnoseController::class, 'saveMaladie'])->name('front.maladie.save');
+    Route::get('/maladie/history', [App\Http\Controllers\Front\MaladieDiagnoseController::class, 'history'])->name('front.maladie.history');
 
     Route::get('/hakakses', [App\Http\Controllers\HakaksesController::class, 'index'])->name('hakakses.index')->middleware('superadmin');
     Route::get('/hakakses/edit/{id}', [App\Http\Controllers\HakaksesController::class, 'edit'])->name('hakakses.edit')->middleware('superadmin');
@@ -33,6 +50,16 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         
+        // Categories CRUD - avec validation de données
+        Route::middleware(['category.management', 'category.data'])->group(function () {
+            Route::resource('categories', App\Http\Controllers\CategoryController::class);
+        });
+
+        // Activities CRUD - avec validation de données
+        Route::middleware(['activity.management', 'activity.data'])->group(function () {
+            Route::resource('activities', App\Http\Controllers\ActivityController::class);
+        });
+
         // Profile admin dans le backoffice
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -51,13 +78,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
         Route::delete('/users/objectifs/{link}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'unassign'])->name('objectives.unassign');
-        
         // Partners CRUD - avec middlewares de validation et logging
         Route::middleware(['partner.management', 'partner.log'])->group(function () {
             Route::get('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'index'])->name('partners.index');
             Route::get('/partenaires/create', [App\Http\Controllers\Backoffice\PartnerController::class, 'create'])->name('partners.create');
             Route::post('/partenaires', [App\Http\Controllers\Backoffice\PartnerController::class, 'store'])->name('partners.store')->middleware('partner.data');
-            
+
             Route::middleware(['partner.validate'])->group(function () {
                 Route::get('/partenaires/{partner}', [App\Http\Controllers\Backoffice\PartnerController::class, 'show'])->name('partners.show');
                 Route::get('/partenaires/{partner}/edit', [App\Http\Controllers\Backoffice\PartnerController::class, 'edit'])->name('partners.edit');
@@ -66,6 +92,23 @@ Route::middleware(['auth'])->group(function () {
                 Route::patch('/partenaires/{partner}/toggle-status', [App\Http\Controllers\Backoffice\PartnerController::class, 'toggleStatus'])->name('partners.toggle-status');
             });
         });
+
+
+        // Progress admin listing/export/delete (front data managed in backoffice)
+        Route::get('/progress', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'index'])->name('progress.index');
+        Route::get('/progress/export', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'export'])->name('progress.export');
+        Route::delete('/progress/{progress}', [App\Http\Controllers\Backoffice\ProgressAdminController::class, 'destroy'])->name('progress.destroy');
+
+        //aliment + repas
+        Route::resource('aliments', AlimentController::class);
+        Route::resource('repas', RepasController::class);
+        
+        // User Management - Gestion complète des utilisateurs
+        Route::resource('users', App\Http\Controllers\Backoffice\UserManagementController::class);
+        Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Backoffice\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
+
+        // add more admin routes here
+    });
 
         // Goals management (backoffice)
         Route::get('/goals', [App\Http\Controllers\Backoffice\GoalController::class, 'index'])->name('goals.index');
@@ -80,8 +123,15 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/goals/{goal}/entries/{entry}', [App\Http\Controllers\Backoffice\GoalEntryController::class, 'destroy'])->name('goal-entries.destroy');
     });
 
-    // User routes - FRONTEND UNIQUEMENT
-    Route::middleware(['user'])->group(function () {
+    // User routes - FRONTEND UNIQUEMENT (Protection contre accès admin)
+    Route::middleware(['user', 'no.admin.frontend'])->group(function () {
+        // Smart Dashboard
+        Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
+        Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
+        Route::get('/smart-dashboard/insights', [App\Http\Controllers\Front\SmartDashboardController::class, 'getInsights'])->name('front.smart-dashboard.insights');
+        Route::get('/smart-dashboard/predictions', [App\Http\Controllers\Front\SmartDashboardController::class, 'getPredictions'])->name('front.smart-dashboard.predictions');
+
+
         // Profile utilisateur frontend
         Route::prefix('profile')->name('front.profile.')->group(function () {
             Route::get('/', [App\Http\Controllers\Front\ProfileController::class, 'show'])->name('show');
@@ -100,12 +150,16 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('partenaires')->name('front.partners.')->group(function () {
             Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
             Route::get('/search', [App\Http\Controllers\Front\PartnerController::class, 'search'])->name('search'); // Route AJAX
+            Route::get('/recommendations', [App\Http\Controllers\Front\PartnerController::class, 'recommendations'])->name('recommendations')->middleware('auth');
+            Route::post('/intelligent-search', [App\Http\Controllers\Front\PartnerController::class, 'intelligentSearch'])->name('intelligent-search');
             Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
             Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
             
             Route::middleware(['partner.validate'])->group(function () {
                 Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
                 Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite');
+                // Ratings
+                Route::post('/{partner}/rating', [App\Http\Controllers\Front\PartnerController::class, 'rate'])->name('rate')->middleware('auth');
             });
         });
         
@@ -117,7 +171,69 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
         Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
 
-        // Demo workout editor UI
-        Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
-    });
+        //front repas
+        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');    // Demo workout editor UI
+    Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
+
+
+  
+
+
+
+
 });
+
+
+
+// Maladie routes - ADMIN SEULEMENT
+Route::middleware(['auth', 'maladie.check'])->prefix('maladies')->name('maladies.')->group(function () {
+
+    Route::get('/', [MaladieController::class, 'index'])
+        ->name('index');
+
+    Route::get('/create', [MaladieController::class, 'create'])
+        ->name('create');
+
+    Route::post('/', [MaladieController::class, 'store'])
+        ->name('store');
+
+    Route::get('/{maladie}', [MaladieController::class, 'show'])
+        ->name('show');
+
+    Route::get('/{maladie}/edit', [MaladieController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{maladie}', [MaladieController::class, 'update'])
+        ->name('update');
+
+    Route::delete('/{maladie}', [MaladieController::class, 'destroy'])
+        ->name('destroy');
+
+});
+
+// Asymptome routes - ADMIN SEULEMENT
+Route::middleware(['auth', 'asymptome.check'])->prefix('asymptomes')->name('asymptomes.')->group(function () {
+
+    Route::get('/', [AsymptomeController::class, 'index'])
+        ->name('index');
+
+    Route::get('/create', [AsymptomeController::class, 'create'])
+        ->name('create');
+
+    Route::post('/', [AsymptomeController::class, 'store'])
+        ->name('store');
+
+    Route::get('/{asymptome}', [AsymptomeController::class, 'show'])
+        ->name('show');
+
+    Route::get('/{asymptome}/edit', [AsymptomeController::class, 'edit'])
+        ->name('edit');
+
+    Route::put('/{asymptome}', [AsymptomeController::class, 'update'])
+        ->name('update');
+
+    Route::delete('/{asymptome}', [AsymptomeController::class, 'destroy'])
+        ->name('destroy');
+
+});
+

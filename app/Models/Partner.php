@@ -121,6 +121,26 @@ class Partner extends Model
     }
 
     /**
+     * Ratings given by users
+     */
+    public function ratings()
+    {
+        return $this->hasMany(PartnerRating::class);
+    }
+
+    /**
+     * Recalculate and save average rating (one decimal) based on all user ratings
+     */
+    public function recalcAndSaveAverageRating()
+    {
+        $avg = $this->ratings()->avg('rating');
+        $avg = $avg ? round($avg, 1) : null;
+        $this->rating = $avg;
+        $this->save();
+        return $avg;
+    }
+
+    /**
      * Check if partner is active
      */
     public function isActive(): bool
