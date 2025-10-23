@@ -9,6 +9,7 @@ use App\Http\Controllers\FrontCategoryController;
 use App\Http\Controllers\Front\FrontActivityController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backoffice\AlimentController;
@@ -153,6 +154,8 @@ Route::get('/objectives/get-schedule', [SmartDashboardController::class, 'getSch
             // Check Exercise Routes
     Route::get('/checkexercice', [ActivityController::class, 'checkExercisePage'])->name('checkexercice');
     Route::post('/checkexercice', [ActivityController::class, 'checkExercise'])->name('checkexercice.post');
+        Route::get('/upload', [UploadController::class, 'index']);
+        Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 
 
 
