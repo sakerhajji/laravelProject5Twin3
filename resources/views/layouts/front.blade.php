@@ -88,6 +88,24 @@
                                
                             </ul>
                         </li>
+                         <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-running text-primary me-1"></i> Activities
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="healthDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('front.activities.index') }}">
+                                        <i class="fas fa-bicycle me-2 text-success"></i> Activities
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('front.categories.index') }}">
+                                        <i class="fas fa-layer-group me-2 text-warning"></i> Categories
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item"><a class="nav-link" href="{{ route('front.maladie.diagnose') }}">
                             <i class="fa-solid fa-stethoscope text-primary me-1"></i>Diagnostic Maladies
                         </a></li>
@@ -95,7 +113,6 @@
                             <i class="fa-solid fa-clock-rotate-left text-info me-1"></i>Historique Maladies
                         </a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('repas.index') }}"><i class="fa-solid fa-utensils me-1 text-warning"></i>Mes Repas</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('front.profile.show') }}"><i class="fa-solid fa-gear me-1 text-secondary"></i>Paramètres</a></li>
 
                     @else
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}"><i class="fa-solid fa-database me-1 text-secondary"></i>Mes données</a></li>
@@ -115,7 +132,8 @@
 
                                 <li><a class="dropdown-item" href="{{ route('front.profile.show') }}">Profil</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li>
+                                <li><a class="dropdown-item" href="{{ route('front.profile.show') }}">Paramètres</a></li> 
+                                <li><hr class="dropdown-divider"></li>                              
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Déconnexion</a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                                 </li>
