@@ -10,6 +10,9 @@ use App\Http\Controllers\Backoffice\AlimentController;
 use App\Http\Controllers\Backoffice\RepasController;
 use App\Http\Controllers\Backoffice\UserManagementController;
 use App\Http\Controllers\Front\RepasController as FrontRepasController;
+use App\Http\Controllers\Front\SmartDashboardController;
+
+Route::post('/chatbot/send', [SmartDashboardController::class, 'chatbotMessage'])->name('chatbot.send');
 
 // Route frontend protégée contre l'accès admin
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])
@@ -46,6 +49,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/news-example', [App\Http\Controllers\ExampleController::class, 'news'])->name('news.example');
     Route::get('/about-example', [App\Http\Controllers\ExampleController::class, 'about'])->name('about.example');
 
+    // Dans le groupe Route::middleware(['auth'])
+Route::post('/objectives/schedule', [SmartDashboardController::class, 'saveSchedule'])->name('front.objectives.schedule');
+Route::get('/objectives/get-schedule', [SmartDashboardController::class, 'getSchedule'])->name('front.objectives.get-schedule');
     // Admin routes - BACKOFFICE UNIQUEMENT
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
@@ -106,6 +112,8 @@ Route::middleware(['auth'])->group(function () {
         // User Management - Gestion complète des utilisateurs
         Route::resource('users', App\Http\Controllers\Backoffice\UserManagementController::class);
         Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Backoffice\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
+        // User drilldown
+        Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
 
         // add more admin routes here
     });
