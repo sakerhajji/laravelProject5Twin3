@@ -30,13 +30,11 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
     // OpenRouter (for models like qwen-vl-plus) - set in your .env
     'openrouter' => [
         'key' => env('OPENROUTER_API_KEY'),
         'base_url' => env('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1'),
-    ],
-    'gemini' => [
-        'api_key' => env('GEMINI_API_KEY'),
     ],
 
 ];
