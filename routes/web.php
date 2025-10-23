@@ -1,16 +1,23 @@
 <?php
 
 use App\Http\Controllers\AsymptomeController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\UploadController;
+use App\Http\Controllers\FrontCategoryController;
+use App\Http\Controllers\Front\FrontActivityController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MeetingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backoffice\AlimentController;
 use App\Http\Controllers\Backoffice\RepasController;
 use App\Http\Controllers\Backoffice\UserManagementController;
 use App\Http\Controllers\Front\RepasController as FrontRepasController;
+use App\Http\Controllers\Front\SmartDashboardController;
+
+Route::post('/chatbot/send', [SmartDashboardController::class, 'chatbotMessage'])->name('chatbot.send');
 
 // Route frontend protégée contre l'accès admin
 Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])
@@ -20,6 +27,12 @@ Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
+
+
+    // Activities
+Route::get('/activities', [FrontActivityController::class, 'index'])->name('front.activities.index');
+Route::get('/activites/category/{category}', [FrontActivityController::class, 'byCategory'])->name('front.activities.byCategory');
+    Route::get('/categories', [App\Http\Controllers\Front\FrontCategoryController::class, 'index'])->name('front.categories.index');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/blank-page', [App\Http\Controllers\HomeController::class, 'blank'])->name('blank');
     // Maladie diagnosis routes (front office)
@@ -47,8 +60,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/news-example', [App\Http\Controllers\ExampleController::class, 'news'])->name('news.example');
     Route::get('/about-example', [App\Http\Controllers\ExampleController::class, 'about'])->name('about.example');
 
+    // Dans le groupe Route::middleware(['auth'])
+Route::post('/objectives/schedule', [SmartDashboardController::class, 'saveSchedule'])->name('front.objectives.schedule');
+Route::get('/objectives/get-schedule', [SmartDashboardController::class, 'getSchedule'])->name('front.objectives.get-schedule');
     // Admin routes - BACKOFFICE UNIQUEMENT
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
+                 // Route::get('/create-meet', [MeetingController::class, 'create'])->name('create.meet');
+                     // Show the form
+        Route::get('/create-meet', [MeetingController::class, 'showForm'])->name('create.meet');
+        Route::post('/create-meet', [MeetingController::class, 'start'])->name('start.meet');
+
+
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
 
         // Categories CRUD - avec validation de données
@@ -107,6 +129,8 @@ Route::middleware(['auth'])->group(function () {
         // User Management - Gestion complète des utilisateurs
         Route::resource('users', App\Http\Controllers\Backoffice\UserManagementController::class);
         Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Backoffice\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
+        // User drilldown
+        Route::get('/users/{user}', [App\Http\Controllers\Backoffice\UserAdminController::class, 'show'])->name('users.show');
 
         // add more admin routes here
     });
@@ -126,13 +150,18 @@ Route::middleware(['auth'])->group(function () {
 
     // User routes - FRONTEND UNIQUEMENT (Protection contre accès admin)
     Route::middleware(['user', 'no.admin.frontend'])->group(function () {
+            // Check Exercise Routes
+    Route::get('/checkexercice', [ActivityController::class, 'checkExercisePage'])->name('checkexercice');
+    Route::post('/checkexercice', [ActivityController::class, 'checkExercise'])->name('checkexercice.post');
+
+
+
         // Smart Dashboard
         Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
         Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
         Route::get('/smart-dashboard/insights', [App\Http\Controllers\Front\SmartDashboardController::class, 'getInsights'])->name('front.smart-dashboard.insights');
         Route::get('/smart-dashboard/predictions', [App\Http\Controllers\Front\SmartDashboardController::class, 'getPredictions'])->name('front.smart-dashboard.predictions');
-        Route::get('/upload', [UploadController::class, 'index']);
-        Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
+
 
         // Profile utilisateur frontend
         Route::prefix('profile')->name('front.profile.')->group(function () {
@@ -174,7 +203,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
 
         //front repas
-        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');    // Demo workout editor UI
+        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');
+        Route::post('/repas/analyze', [FrontRepasController::class, 'analyzeImage'])->name('repas.analyze.image');    // Demo workout editor UI
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
 
 
@@ -237,7 +267,8 @@ Route::middleware(['auth', 'asymptome.check'])->prefix('asymptomes')->name('asym
     Route::delete('/{asymptome}', [AsymptomeController::class, 'destroy'])
         ->name('destroy');
 
-
-
 });
 
+
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::post('/chat/message', [ChatController::class, 'sendMessage'])->name('chat.send');

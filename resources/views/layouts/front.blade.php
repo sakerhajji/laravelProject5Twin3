@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ auth()->id() }}">
 
     <title>@yield('title', 'Front Office') — Laravel - Stisla</title>
 
@@ -49,7 +50,12 @@
       background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
       animation: shimmer 1.6s infinite; }
     @keyframes shimmer { 100% { transform: translateX(100%); } }
+    <!-- Dans votre fichier layouts/front.blade.php, après <body> -->
+<div data-user-id="{{ auth()->id() }}" style="display: none;"></div>
     </style>
+    @stack('styles')
+
+
 </head>
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm fixed-top w-100" style="left:0;right:0;">
