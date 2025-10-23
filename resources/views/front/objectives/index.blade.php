@@ -14,7 +14,7 @@
                 <div class="carousel-item {{ $idx===0?'active':'' }}">
                     <div class="card border-0 shadow-sm overflow-hidden">
                         @if($r->cover_url)
-                            <img src="{{ $r->cover_url }}" class="w-100" style="height: 200px; object-fit: cover;" alt="rec">
+                            <img src="{{ $r->cover_url }}" class="w-100" style="max-height:240px;object-fit:cover" alt="rec">
                         @endif
                         <div class="card-body d-flex justify-content-between align-items-start">
                             <div>
@@ -46,7 +46,7 @@
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-sm overflow-hidden">
                     @if($o->cover_url)
-                        <img src="{{ $o->cover_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ $o->title }}">
+                        <img src="{{ $o->cover_url }}" class="card-img-top" alt="{{ $o->title }}">
                     @endif
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">

@@ -10,6 +10,8 @@ use App\Models\Progress;
 use App\Models\UserBadge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ChatbotService;
+
 
 class SmartDashboardController extends Controller
 {
@@ -128,63 +130,85 @@ class SmartDashboardController extends Controller
     private function getChartData($user)
     {
         // Données des 30 derniers jours
-        $last30Days = Progress::where('user_id', $user->id)
+        $progress = Progress::where('user_id', $user->id)
             ->where('entry_date', '>=', now()->subDays(30))
-            ->with('objective')
             ->get()
-            ->groupBy('entry_date');
-        
-        $labels = [];
-        $dailyValues = [];
-        $cumulativeValues = [];
-        $cumulative = 0;
-        
-        for ($i = 29; $i >= 0; $i--) {
-            $date = now()->subDays($i)->format('Y-m-d');
-            $labels[] = now()->subDays($i)->format('M j');
-            
-            $dayValue = $last30Days->get($date, collect())->sum('value');
-            $dailyValues[] = $dayValue;
-            
-            $cumulative += $dayValue;
-            $cumulativeValues[] = $cumulative;
-        }
-        
-        // Données par catégorie
-        $categoryData = $user->objectives->groupBy('category')->map(function ($objectives) use ($user) {
-            return [
-                'name' => $objectives->first()->category,
-                'progress' => $objectives->avg(function ($obj) use ($user) {
-                    return $obj->computeProgressPercent($user->id);
-                }),
-                'count' => $objectives->count()
-            ];
-        })->values();
-        
-        // Données de performance hebdomadaire
-        $weeklyData = [];
-        for ($i = 3; $i >= 0; $i--) {
-            $weekStart = now()->subWeeks($i)->startOfWeek();
-            $weekEnd = now()->subWeeks($i)->endOfWeek();
-            
-            $weekProgress = Progress::where('user_id', $user->id)
-                ->whereBetween('entry_date', [$weekStart, $weekEnd])
-                ->sum('value');
-            
-            $weeklyData[] = [
-                'week' => $weekStart->format('M j'),
-                'value' => $weekProgress
-            ];
-        }
-        
-        return [
-            'daily' => [
-                'labels' => $labels,
-                'daily' => $dailyValues,
-                'cumulative' => $cumulativeValues
-            ],
-            'categories' => $categoryData,
-            'weekly' => $weeklyData
-        ];
+            ->groupBy(function ($date) {
+                return \Carbon\Carbon::parse($date->entry_date)->format('Y-m-d');
+            })
+            ->map(function ($day) {
+                return $day->sum('value');
+            });
+
+        return $progress;
     }
+
+    public function chatbotMessage(Request $request, ChatbotService $chatbotService)
+{
+    $userMessage = $request->input('message');
+
+    if (!$userMessage) {
+        return response()->json(['error' => 'Message vide.'], 400);
+    }
+
+    $botReply = $chatbotService->sendMessage($userMessage);
+
+    return response()->json([
+        'reply' => $botReply
+    ]);
+}
+public function saveSchedule(Request $request)
+{
+    try {
+        $schedule = $request->input('schedule', []);
+        $userId = auth()->id();
+        
+        // Sauvegarder dans la session
+        session(['objective_schedule_' . $userId => $schedule]);
+        
+        // OU sauvegarder en base de données si vous avez une table
+        // DB::table('objective_schedules')->updateOrInsert(
+        //     ['user_id' => $userId],
+        //     ['schedule' => json_encode($schedule), 'updated_at' => now()]
+        // );
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Planning enregistré avec succès'
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Erreur saveSchedule: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+
+public function getSchedule()
+{
+    try {
+        $userId = auth()->id();
+        
+        // Récupérer depuis la session
+        $schedule = session('objective_schedule_' . $userId, []);
+        
+        // OU récupérer depuis la base de données
+        // $scheduleData = DB::table('objective_schedules')
+        //     ->where('user_id', $userId)
+        //     ->first();
+        // $schedule = $scheduleData ? json_decode($scheduleData->schedule, true) : [];
+        
+        return response()->json([
+            'success' => true,
+            'schedule' => $schedule
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Erreur getSchedule: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
 }
