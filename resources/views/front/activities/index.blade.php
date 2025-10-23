@@ -189,6 +189,10 @@ body {
                         <a href="#" class="btn btn-primary w-100 mt-3">
                             <i class="fas fa-eye me-2"></i>Voir Détails
                         </a>
+                        <a href="{{ route('checkexercice') }}" class="btn btn-success w-100 mt-2">
+    <i class="fas fa-dumbbell me-2"></i>Vérifier l'Exercice
+</a>
+
                     </div>
                 </div>
             </div>
