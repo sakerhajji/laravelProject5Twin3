@@ -172,7 +172,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/progres/import/template', [App\Http\Controllers\Front\ProgressImportController::class, 'downloadTemplate'])->name('front.progress.import.template');
 
         //front repas
-        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');    // Demo workout editor UI
+        Route::get('/repas', [FrontRepasController::class, 'index'])->name('repas.index');
+        Route::post('/repas/analyze', [FrontRepasController::class, 'analyzeImage'])->name('repas.analyze.image');    // Demo workout editor UI
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
 
 

@@ -6,7 +6,7 @@
         <div class="col-md-10">
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">Analyze Your Meal</h4>
+                <h4 class="mb-0" style="color: white ;">Analyze Your Meal</h4>
                 </div>
 
                 <div class="card-body p-4">
@@ -54,54 +54,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-10">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">My Meals</h4>
-                </div>
-                <div class="card-body">
-                    @if($repas->isEmpty())
-                        <p class="text-center text-muted">You have not saved any meals yet.</p>
-                    @else
-                        <div class="row">
-                            @foreach($repas as $rep)
-                                <div class="col-md-6 mb-4">
-                                    <div class="card h-100 shadow-sm">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ $rep->nom }}</h5>
-                                            <p class="card-text">{{ $rep->description }}</p>
-                                            
-                                            <h6 class="mt-4">Meal Content:</h6>
-                                            @if($rep->aliments->count() > 0)
-                                                <ul class="list-group list-group-flush">
-                                                    @foreach($rep->aliments as $aliment)
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                            {{ $aliment->nom }}
-                                                            <span class="badge badge-primary badge-pill">{{ $aliment->pivot->quantite }} g</span>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            @else
-                                                <p class="text-muted">No food items listed for this meal.</p>
-                                            @endif
-                                        </div>
-                                        <div class="card-footer text-muted">
-                                            Saved on: {{ $rep->created_at->format('d/m/Y') }}
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <div class="d-flex justify-content-center mt-4">
-                            {{ $repas->links() }}
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
