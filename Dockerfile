@@ -57,14 +57,18 @@ RUN apk add --no-cache \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
+    libzip-dev \
     zip \
     unzip \
     git \
     curl \
     oniguruma-dev \
     libxml2-dev \
+    autoconf \
+    g++ \
+    make \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install \
+    && docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         pdo_pgsql \
         mysqli \
@@ -74,7 +78,8 @@ RUN apk add --no-cache \
         opcache \
         pcntl \
         mbstring \
-        xml
+        xml \
+    && apk del autoconf g++ make
 
 # Configuration PHP pour production
 RUN { \
