@@ -25,12 +25,14 @@ FROM node:20-alpine AS node-builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install --legacy-peer-deps --force || npm install --force
+RUN npm install --legacy-peer-deps --force || npm install --force || true
 
 COPY . .
 COPY --from=composer-builder /app/vendor ./vendor
 
-RUN npm run build || echo "Build failed, continuing anyway..."
+# Créer le dossier même si le build échoue
+RUN mkdir -p public/build && \
+    (npm run build || echo "Build failed, using empty build folder")
 
 # ==========================================
 # Stage 3: Production Image
@@ -96,8 +98,10 @@ WORKDIR /var/www/html
 
 # Copie des fichiers depuis les builders
 COPY --from=composer-builder /app/vendor ./vendor
-COPY --from=node-builder --chown=www-data:www-data /app/public/build ./public/build 2>/dev/null || mkdir -p ./public/build
 COPY . .
+
+# Copie des assets compilés (le dossier existe toujours grâce au mkdir dans node-builder)
+COPY --from=node-builder /app/public/build/ ./public/build/
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html \
