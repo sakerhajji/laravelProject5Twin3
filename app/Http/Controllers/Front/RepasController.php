@@ -52,6 +52,8 @@ class RepasController extends Controller
 
         try {
             $response = Http::post($url, $payload);
+            // Retry the request 3 times with a 200ms delay if it fails with a server error (like 503)
+            $response = Http::retry(3, 200)->post($url, $payload);
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -78,8 +80,15 @@ class RepasController extends Controller
             }
 
             return response()->json(['error' => 'Failed to analyze image.', 'details' => $response->body()], $response->status());
+            // Provide a more user-friendly error for temporary issues
+            if ($response->serverError()) {
+                return response()->json(['error' => 'The image analysis service is currently busy. Please try again in a moment.'], $response->status());
+            }
+
+            return response()->json(['error' => 'Failed to communicate with the image analysis service.', 'details' => $response->body()], $response->status());
         } catch (\Exception $e) {
             Log::error(' API request failed: ' . $e->getMessage());
+            Log::error('Gemini API request failed: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred.'], 500);
         }
     }
