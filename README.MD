@@ -148,11 +148,14 @@ php artisan serve
 ### Dashboard Page
 ![Dashboard Page](img/dashboard.png "Dashboard Page")
 
+<<<<<<< HEAD
 
 
 ## 🙏 Acknowledgments
 Special thanks to all team members for their dedication and hard work in developing this healthcare management system.
 
+=======
+>>>>>>> 172741b665b689bda2fdd9a48fb880ef602e07e0
 ### Blank Page
 ![Blank Page](img/blank.png "Blank Page")
 
