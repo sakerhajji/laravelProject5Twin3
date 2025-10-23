@@ -4,7 +4,10 @@ use App\Http\Controllers\AsymptomeController;
 use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FrontCategoryController;
+use App\Http\Controllers\Front\FrontActivityController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MeetingController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backoffice\AlimentController;
@@ -19,6 +22,12 @@ Route::get('/', [App\Http\Controllers\Front\HomeController::class, 'index'])
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
+  
+
+    // Activities
+Route::get('/activities', [FrontActivityController::class, 'index'])->name('front.activities.index');
+Route::get('/activites/category/{category}', [FrontActivityController::class, 'byCategory'])->name('front.activities.byCategory');
+    Route::get('/categories', [App\Http\Controllers\Front\FrontCategoryController::class, 'index'])->name('front.categories.index');
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/blank-page', [App\Http\Controllers\HomeController::class, 'blank'])->name('blank');
     // Maladie diagnosis routes (front office)
@@ -48,6 +57,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Admin routes - BACKOFFICE UNIQUEMENT
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
+                 // Route::get('/create-meet', [MeetingController::class, 'create'])->name('create.meet');
+                     // Show the form
+Route::get('/create-meet', [MeetingController::class, 'showForm'])->name('create.meet');
+Route::post('/create-meet', [MeetingController::class, 'start'])->name('start.meet');
+
+                 
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
         
         // Categories CRUD - avec validation de données
@@ -123,6 +138,7 @@ Route::middleware(['auth'])->group(function () {
 
     // User routes - FRONTEND UNIQUEMENT (Protection contre accès admin)
     Route::middleware(['user', 'no.admin.frontend'])->group(function () {
+
         // Smart Dashboard
         Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
         Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');

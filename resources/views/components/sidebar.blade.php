@@ -49,6 +49,14 @@
                     <i class="fas fa-running"></i> <span>Activities</span>
                 </a>
             </li>
+                        <!-- Meeet -->
+<li class="{{ Request::is('admin/create-meet*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('admin.create.meet') }}">
+        <i class="fas fa-video"></i> <span>Meet</span>
+    </a>
+</li>
+
+
             @endif
             <!-- profile ganti password -->
             <li class="menu-header">Profile</li>
