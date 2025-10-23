@@ -4,6 +4,7 @@ use App\Http\Controllers\AsymptomeController;
 use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backoffice\AlimentController;
@@ -49,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin routes - BACKOFFICE UNIQUEMENT
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
-        
+
         // Categories CRUD - avec validation de données
         Route::middleware(['category.management', 'category.data'])->group(function () {
             Route::resource('categories', App\Http\Controllers\CategoryController::class);
@@ -65,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/profile/change-password', [ProfileController::class, 'changepassword'])->name('profile.change-password');
         Route::put('/profile/password', [ProfileController::class, 'password'])->name('profile.password');
-        
+
         // Objectives CRUD
         Route::get('/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'index'])->name('objectives.index');
         Route::get('/objectifs/create', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'create'])->name('objectives.create');
@@ -73,7 +74,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/objectifs/{objective}/edit', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'edit'])->name('objectives.edit');
         Route::put('/objectifs/{objective}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'update'])->name('objectives.update');
         Route::delete('/objectifs/{objective}', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'destroy'])->name('objectives.destroy');
-        
+
         // Assignments
         Route::get('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assignments'])->name('objectives.assignments');
         Route::post('/users/objectifs', [App\Http\Controllers\Backoffice\ObjectiveController::class, 'assign'])->name('objectives.assign');
@@ -102,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
         //aliment + repas
         Route::resource('aliments', AlimentController::class);
         Route::resource('repas', RepasController::class);
-        
+
         // User Management - Gestion complète des utilisateurs
         Route::resource('users', App\Http\Controllers\Backoffice\UserManagementController::class);
         Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Backoffice\UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
@@ -130,7 +131,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/smart-dashboard/recommendations', [App\Http\Controllers\Front\SmartDashboardController::class, 'getRecommendations'])->name('front.smart-dashboard.recommendations');
         Route::get('/smart-dashboard/insights', [App\Http\Controllers\Front\SmartDashboardController::class, 'getInsights'])->name('front.smart-dashboard.insights');
         Route::get('/smart-dashboard/predictions', [App\Http\Controllers\Front\SmartDashboardController::class, 'getPredictions'])->name('front.smart-dashboard.predictions');
-
+        Route::get('/upload', [UploadController::class, 'index']);
+        Route::post('/upload', [UploadController::class, 'store'])->name('upload.store');
 
         // Profile utilisateur frontend
         Route::prefix('profile')->name('front.profile.')->group(function () {
@@ -140,12 +142,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/change-password', [App\Http\Controllers\Front\ProfileController::class, 'changePasswordForm'])->name('change-password');
             Route::put('/password', [App\Http\Controllers\Front\ProfileController::class, 'updatePassword'])->name('update-password');
         });
-        
+
         // Front user: browse objectives and record progress
         Route::get('/objectifs', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'index'])->name('front.objectives.index');
         Route::get('/objectifs/{objective}', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'show'])->name('front.objectives.show');
         Route::post('/objectifs/{objective}/activate', [App\Http\Controllers\Front\ObjectiveBrowseController::class, 'activate'])->name('front.objectives.activate');
-        
+
         // Partners frontend routes - avec validation
         Route::prefix('partenaires')->name('front.partners.')->group(function () {
             Route::get('/', [App\Http\Controllers\Front\PartnerController::class, 'index'])->name('index');
@@ -154,7 +156,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/intelligent-search', [App\Http\Controllers\Front\PartnerController::class, 'intelligentSearch'])->name('intelligent-search');
             Route::get('/type/{type}', [App\Http\Controllers\Front\PartnerController::class, 'byType'])->name('by-type');
             Route::get('/mes-favoris', [App\Http\Controllers\Front\PartnerController::class, 'favorites'])->name('favorites');
-            
+
             Route::middleware(['partner.validate'])->group(function () {
                 Route::get('/{partner}', [App\Http\Controllers\Front\PartnerController::class, 'show'])->name('show')->middleware('partner.status:active');
                 Route::post('/{partner}/toggle-favorite', [App\Http\Controllers\Front\PartnerController::class, 'toggleFavorite'])->name('toggle-favorite');
@@ -162,10 +164,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/{partner}/rating', [App\Http\Controllers\Front\PartnerController::class, 'rate'])->name('rate')->middleware('auth');
             });
         });
-        
+
         Route::get('/progres', [App\Http\Controllers\Front\ProgressController::class, 'index'])->name('front.progress.index');
         Route::post('/progres', [App\Http\Controllers\Front\ProgressController::class, 'store'])->name('front.progress.store');
-        
+
         // Import CSV routes
         Route::get('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'index'])->name('front.progress.import.index');
         Route::post('/progres/import', [App\Http\Controllers\Front\ProgressImportController::class, 'store'])->name('front.progress.import.store');
@@ -176,7 +178,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/workout/editor', function () { return view('front.workout.editor'); })->name('front.workout.editor');
 
 
-  
+
 
 
 
@@ -234,6 +236,8 @@ Route::middleware(['auth', 'asymptome.check'])->prefix('asymptomes')->name('asym
 
     Route::delete('/{asymptome}', [AsymptomeController::class, 'destroy'])
         ->name('destroy');
+
+
 
 });
 
