@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AsymptomeController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\MaladieController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
@@ -59,8 +60,8 @@ Route::get('/activites/category/{category}', [FrontActivityController::class, 'b
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
                  // Route::get('/create-meet', [MeetingController::class, 'create'])->name('create.meet');
                      // Show the form
-Route::get('/create-meet', [MeetingController::class, 'showForm'])->name('create.meet');
-Route::post('/create-meet', [MeetingController::class, 'start'])->name('start.meet');
+        Route::get('/create-meet', [MeetingController::class, 'showForm'])->name('create.meet');
+        Route::post('/create-meet', [MeetingController::class, 'start'])->name('start.meet');
 
                  
         Route::get('/dashboard', [App\Http\Controllers\Backoffice\DashboardController::class, 'index'])->name('dashboard');
@@ -138,6 +139,11 @@ Route::post('/create-meet', [MeetingController::class, 'start'])->name('start.me
 
     // User routes - FRONTEND UNIQUEMENT (Protection contre accès admin)
     Route::middleware(['user', 'no.admin.frontend'])->group(function () {
+            // Check Exercise Routes
+    Route::get('/checkexercice', [ActivityController::class, 'checkExercisePage'])->name('checkexercice');
+    Route::post('/checkexercice', [ActivityController::class, 'checkExercise'])->name('checkexercice.post');
+
+
 
         // Smart Dashboard
         Route::get('/smart-dashboard', [App\Http\Controllers\Front\SmartDashboardController::class, 'index'])->name('front.smart-dashboard.index');
