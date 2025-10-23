@@ -75,10 +75,9 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('front.smart-dashboard.index') }}"><i class="fa-solid fa-gauge-high me-1 text-primary"></i>Dashboard IA</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-heartbeat text-danger me-1"></i>Santé & Bien-être
+                                <i <i class="fas fa-handshake text-primary me-1"></i>Partenaires
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="healthDropdown">
-                                <li><h6 class="dropdown-header"><i class="fas fa-hospital text-success me-2"></i>Partenaires</h6></li>
                                 <li><a class="dropdown-item" href="{{ route('front.partners.index') }}">
                                     <i class="fas fa-hospital me-2 text-success"></i>Partenaires Santé
                                 </a></li>
@@ -106,9 +105,25 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link" href="{{ route('front.maladie.diagnose') }}">
-                            <i class="fa-solid fa-stethoscope text-primary me-1"></i>Diagnostic Maladies
-                        </a></li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="healthDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-stethoscope text-primary me-1"></i> Diagnostic Maladies
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="healthDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('front.maladie.diagnose') }}">
+                                        <i class="fas fa-microscope me-2 text-success"></i> Diagnostic Maladies
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url('/upload') }}">
+                                        <i class="fas fa-brain me-2 text-info"></i> IA Analytics
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li class="nav-item"><a class="nav-link" href="{{ route('front.maladie.history') }}">
                             <i class="fa-solid fa-clock-rotate-left text-info me-1"></i>Historique Maladies
                         </a></li>
