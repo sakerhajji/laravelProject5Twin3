@@ -3,7 +3,7 @@
 @section('title', 'Modifier objectif type')
 
 @section('content')
-<div class="main-content">
+<div class="section-body">
     <div class="section-header"><h1>Modifier objectif type</h1></div>
     <div class="card">
         <div class="card-body">
@@ -27,7 +27,7 @@
                     <div class="form-group col-md-4">
                         <label>Catégorie</label>
                         <select name="category" class="form-control" required>
-                            @foreach(['activite'=>'Activité','nutrition'=>'Nutrition','sommeil'=>'Sommeil','sante'=>'Santé générale'] as $val=>$label)
+                            @foreach(['activite'=>'Activité','nutrition'=>'Nutrition','sommeil'=>'Sommeil','sante'=>'Santé générale','sport'=>'Sport'] as $val=>$label)
                                 <option value="{{ $val }}" {{ $objective->category===$val?'selected':'' }}>{{ $label }}</option>
                             @endforeach
                         </select>
@@ -40,9 +40,10 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label>Image de couverture</label>
-                        @if($objective->cover_url)
+                        @php $src = $objective->cover_url; @endphp
+                        @if($src)
                             <div class="mb-2">
-                                <img src="{{ $objective->cover_url }}" alt="Image actuelle" style="max-width: 200px; max-height: 150px; object-fit: cover;" class="img-thumbnail">
+                                <img src="{{ Str::startsWith($src, ['http://','https://']) ? $src : asset(ltrim($src,'/')) }}" alt="Image actuelle" style="max-width: 200px; max-height: 150px; object-fit: cover;" class="img-thumbnail">
                                 <div class="small text-muted">Image actuelle</div>
                             </div>
                         @endif
@@ -55,7 +56,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label>URL d'image (alternative)</label>
-                        <input type="url" name="cover_url" class="form-control" value="{{ $objective->cover_url }}" placeholder="https://example.com/image.jpg">
+                        <input type="url" name="cover_url" class="form-control" value="{{ $objective->cover_url }}" placeholder="https://e...content-available-to-author-only...e.com/image.jpg">
                         <small class="form-text text-muted">Ou utilisez une URL d'image externe</small>
                     </div>
                 </div>

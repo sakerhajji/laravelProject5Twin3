@@ -121,12 +121,15 @@
                                         <i class="fas fa-brain me-2 text-info"></i> IA Analytics
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('front.maladie.history') }}">
+                                        <i class="fa-solid fa-clock-rotate-left text-info me-1"></i> Historique Maladies
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link" href="{{ route('front.maladie.history') }}">
-                            <i class="fa-solid fa-clock-rotate-left text-info me-1"></i>Historique Maladies
-                        </a></li>
+                       
                         <li class="nav-item"><a class="nav-link" href="{{ route('repas.index') }}"><i class="fa-solid fa-utensils me-1 text-warning"></i>Mes Repas</a></li>
 
                     @else

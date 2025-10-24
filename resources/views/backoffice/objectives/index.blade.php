@@ -3,7 +3,7 @@
 @section('title', 'Objectifs types')
 
 @section('content')
-<div class="main-content">
+<div class="section-body">
     <div class="section-header">
         <h1>Objectifs types</h1>
         <div class="section-header-button">
@@ -17,8 +17,11 @@
         @foreach($objectives as $o)
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
-                    @if($o->cover_url)
-                        <img src="{{ $o->cover_url }}" class="card-img-top" alt="{{ $o->title }}" style="height: 200px; object-fit: cover;">
+                    @php $src = $o->cover_url; @endphp
+                    @if($src)
+                        <img src="{{ Str::startsWith($src, ['http://','https://']) ? $src : asset(ltrim($src,'/')) }}" class="card-img-top" alt="{{ $o->title }}" style="height: 200px; object-fit: cover;">
+                    @else
+                        <img src="{{ asset('img/blank.png') }}" class="card-img-top" alt="Aucune image" style="height: 200px; object-fit: cover;">
                     @endif
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
@@ -42,5 +45,3 @@
     {{ $objectives->links() }}
 </div>
 @endsection
-
-

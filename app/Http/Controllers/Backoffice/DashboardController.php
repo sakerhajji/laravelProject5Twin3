@@ -13,6 +13,7 @@ use App\Models\Maladie;
 use App\Models\Aliment;
 use App\Models\Repas;
 use App\Models\Goal;
+use App\Models\Playlist;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -30,16 +31,29 @@ class DashboardController extends Controller
         $totalAliments = Aliment::count();
         $totalRepas = Repas::count();
         $totalGoals = Goal::count();
+        $totalPlaylists = Playlist::count();
 
         // Utilisateurs récents (7 derniers jours)
         $newUsersThisWeek = User::where('role', '!=', 'admin')
             ->where('created_at', '>=', Carbon::now()->subWeek())
             ->count();
 
+        // Calcul du pourcentage de croissance par rapport à la semaine précédente
+        $previousWeekUsers = User::where('role', '!=', 'admin')
+            ->whereBetween('created_at', [Carbon::now()->subWeeks(2), Carbon::now()->subWeek()])
+            ->count();
+        
+        $userGrowthPercentage = $previousWeekUsers > 0 ? 
+            round((($newUsersThisWeek - $previousWeekUsers) / $previousWeekUsers) * 100) : 0;
+
         // Utilisateurs actifs (connectés dans les 30 derniers jours)
         $activeUsers = User::where('role', '!=', 'admin')
             ->where('updated_at', '>=', Carbon::now()->subMonth())
             ->count();
+
+        // Partenaires actifs/vérifiés
+        $activePartners = Partner::where('status', 'active')->count();
+        $verifiedPartners = Partner::whereNotNull('license_number')->count();
 
         // Statistiques mensuelles des utilisateurs
         $monthlyUsers = User::where('role', '!=', 'admin')
@@ -109,8 +123,12 @@ class DashboardController extends Controller
             'totalAliments',
             'totalRepas',
             'totalGoals',
+            'totalPlaylists',
             'newUsersThisWeek',
+            'userGrowthPercentage',
             'activeUsers',
+            'activePartners',
+            'verifiedPartners',
             'monthlyUsers',
             'popularActivities',
             'usersByRole',

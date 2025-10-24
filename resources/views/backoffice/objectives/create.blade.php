@@ -3,7 +3,7 @@
 @section('title', 'Nouvel objectif type')
 
 @section('content')
-<div class="main-content">
+<div class="section-body">
     <div class="section-header"><h1>Nouvel objectif type</h1></div>
     <div class="card">
         <div class="card-body">
@@ -31,6 +31,7 @@
                             <option value="nutrition">Nutrition</option>
                             <option value="sommeil">Sommeil</option>
                             <option value="sante">Santé générale</option>
+                            <option value="sport">Sport</option>
                         </select>
                     </div>
                     <div class="form-group col-md-8">
@@ -49,7 +50,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label>URL d'image (alternative)</label>
-                        <input type="url" name="cover_url" class="form-control" placeholder="https://example.com/image.jpg">
+                        <input type="url" name="cover_url" class="form-control" placeholder="https://e...content-available-to-author-only...e.com/image.jpg">
                         <small class="form-text text-muted">Ou utilisez une URL d'image externe</small>
                     </div>
                 </div>

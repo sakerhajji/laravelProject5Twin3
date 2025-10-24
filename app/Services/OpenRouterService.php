@@ -58,8 +58,7 @@ Pour chaque maladie, inclure la liste des symptômes associés avec tous leurs c
 Ajoute également le pourcentage de confiance pour chaque maladie sous le champ :
 - confiance: int
 
-IMPORTANT : Si l'image ou le texte **ne contient aucune information** sur des maladies ou des symptômes, retourne **uniquement** le JSON suivant :
-{"maladies": []}
+
 
 Retourne **uniquement** les données en JSON, sans aucune explication, en français.
 PROMPT

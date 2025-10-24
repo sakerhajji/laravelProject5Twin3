@@ -3,7 +3,7 @@
 @section('title', 'Attributions objectifs')
 
 @section('content')
-<div class="main-content">
+<div class="section-body">
     <div class="section-header"><h1>Attribuer un objectif à un utilisateur</h1></div>
     @if(session('status'))<div class="alert alert-success">{{ session('status') }}</div>@endif
     <div class="card">

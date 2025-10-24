@@ -428,13 +428,17 @@ body::before {
                 <h3 class="stat-num">{{ number_format($totalUsers ?? 1) }}</h3>
                 <p class="stat-text mb-3">Utilisateurs Total</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge bg-success text-white px-3 py-2">
-                        <i class="bi bi-arrow-up"></i> +15%
+                    <span class="badge {{ $userGrowthPercentage >= 0 ? 'bg-success' : 'bg-danger' }} text-white px-3 py-2">
+                        <i class="bi bi-arrow-{{ $userGrowthPercentage >= 0 ? 'up' : 'down' }}"></i> 
+                        {{ $userGrowthPercentage >= 0 ? '+' : '' }}{{ $userGrowthPercentage ?? 0 }}%
                     </span>
                     <small class="text-muted fw-semibold">Cette semaine</small>
                 </div>
                 <div class="progress-line">
-                    <div class="progress-fill bg-primary" style="width: 75%"></div>
+                    @php
+                        $userProgress = $totalUsers > 0 ? min(($newUsersThisWeek / max($totalUsers, 1)) * 100, 100) : 0;
+                    @endphp
+                    <div class="progress-fill bg-primary" style="width: {{ $userProgress }}%"></div>
                 </div>
             </div>
         </div>
@@ -448,12 +452,15 @@ body::before {
                 <p class="stat-text mb-3">Utilisateurs Actifs</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="badge bg-info text-white px-3 py-2">
-                        <i class="bi bi-calendar-check"></i> Ce mois
+                        <i class="bi bi-calendar-check"></i> {{ $activeUsers ?? 0 }} actifs
                     </span>
-                    <small class="text-muted fw-semibold">En ligne</small>
+                    <small class="text-muted fw-semibold">Ce mois</small>
                 </div>
                 <div class="progress-line">
-                    <div class="progress-fill bg-success" style="width: 85%"></div>
+                    @php
+                        $activeProgress = $totalUsers > 0 ? min(($activeUsers / $totalUsers) * 100, 100) : 0;
+                    @endphp
+                    <div class="progress-fill bg-success" style="width: {{ $activeProgress }}%"></div>
                 </div>
             </div>
         </div>
@@ -467,12 +474,15 @@ body::before {
                 <p class="stat-text mb-3">Activités</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="badge bg-warning text-dark px-3 py-2">
-                        <i class="bi bi-collection"></i> 8 types
+                        <i class="bi bi-collection"></i> {{ $totalCategories ?? 0 }} types
                     </span>
                     <small class="text-muted fw-semibold">Catégories</small>
                 </div>
                 <div class="progress-line">
-                    <div class="progress-fill bg-info" style="width: 65%"></div>
+                    @php
+                        $categoryProgress = $totalCategories > 0 ? min(($totalCategories / 10) * 100, 100) : 0;
+                    @endphp
+                    <div class="progress-fill bg-info" style="width: {{ $categoryProgress }}%"></div>
                 </div>
             </div>
         </div>
@@ -486,12 +496,15 @@ body::before {
                 <p class="stat-text mb-3">Partenaires</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="badge bg-primary text-white px-3 py-2">
-                        <i class="bi bi-check-circle"></i> Actifs
+                        <i class="bi bi-check-circle"></i> {{ $activePartners ?? 0 }} actifs
                     </span>
-                    <small class="text-muted fw-semibold">Vérifiés</small>
+                    <small class="text-muted fw-semibold">{{ $verifiedPartners ?? 0 }} vérifiés</small>
                 </div>
                 <div class="progress-line">
-                    <div class="progress-fill bg-warning" style="width: 90%"></div>
+                    @php
+                        $partnerProgress = $totalPartners > 0 ? min(($activePartners / $totalPartners) * 100, 100) : 0;
+                    @endphp
+                    <div class="progress-fill bg-warning" style="width: {{ $partnerProgress }}%"></div>
                 </div>
             </div>
         </div>
@@ -680,7 +693,7 @@ body::before {
                 <div class="mini-stat-icon mx-auto" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
                     <i class="bi bi-bullseye fs-3 text-white"></i>
                 </div>
-                <h3 class="stat-num" style="font-size: 2rem;">24</h3>
+                <h3 class="stat-num" style="font-size: 2rem;">{{ $totalObjectives ?? 0 }}</h3>
                 <p class="stat-text mb-0">Objectifs Définis</p>
             </div>
         </div>
@@ -690,7 +703,7 @@ body::before {
                 <div class="mini-stat-icon mx-auto" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
                     <i class="bi bi-heart-pulse-fill fs-3 text-white"></i>
                 </div>
-                <h3 class="stat-num" style="font-size: 2rem;">15</h3>
+                <h3 class="stat-num" style="font-size: 2rem;">{{ $totalMaladies ?? 0 }}</h3>
                 <p class="stat-text mb-0">Maladies Répertoriées</p>
             </div>
         </div>
@@ -700,7 +713,7 @@ body::before {
                 <div class="mini-stat-icon mx-auto" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                     <i class="bi bi-flag-fill fs-3 text-white"></i>
                 </div>
-                <h3 class="stat-num" style="font-size: 2rem;">89</h3>
+                <h3 class="stat-num" style="font-size: 2rem;">{{ $assignedObjectives ?? 0 }}</h3>
                 <p class="stat-text mb-0">Objectifs Utilisateurs</p>
             </div>
         </div>
@@ -710,7 +723,7 @@ body::before {
                 <div class="mini-stat-icon mx-auto" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
                     <i class="bi bi-bookmark-star-fill fs-3 text-white"></i>
                 </div>
-                <h3 class="stat-num" style="font-size: 2rem;">42</h3>
+                <h3 class="stat-num" style="font-size: 2rem;">{{ $totalPlaylists ?? 0 }}</h3>
                 <p class="stat-text mb-0">Playlists Créées</p>
             </div>
         </div>
