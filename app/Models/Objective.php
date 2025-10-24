@@ -16,6 +16,35 @@ class Objective extends Model
 
     protected $fillable = ['title','description','unit','target_value','category','cover_url','mode','period'];
 
+    // Mappe les alias de catégorie côté écriture pour respecter l'ENUM DB
+    public function setCategoryAttribute($value)
+    {
+        $s = mb_strtolower(trim((string) $value));
+        $s = strtr($s, [
+            'é' => 'e', 'è' => 'e', 'ê' => 'e',
+            'à' => 'a', 'â' => 'a',
+            'û' => 'u', 'ù' => 'u',
+            'î' => 'i', 'ï' => 'i',
+            'ô' => 'o', 'ö' => 'o',
+        ]);
+
+        $map = [
+            'sport' => 'sport',
+            'sports' => 'sport',
+            'activite' => 'activite',
+            'activity' => 'activite',
+            'sante' => 'sante',
+            'health' => 'sante',
+            'sommeil' => 'sommeil',
+            'sleep' => 'sommeil',
+            'nutrition' => 'nutrition',
+            'alimentation' => 'nutrition',
+            'diet' => 'nutrition',
+        ];
+
+        $this->attributes['category'] = $map[$s] ?? $s;
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_objectives')

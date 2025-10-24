@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('unit');
             $table->string('cover_url')->nullable();
             $table->decimal('target_value', 10, 2);
-            $table->enum('category', ['activite','nutrition','sommeil','sante']);
+            $table->enum('category', ['activite','nutrition','sommeil','sante','sport']);
             $table->timestamps();
         });
     }

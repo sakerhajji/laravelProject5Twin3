@@ -91,42 +91,104 @@
     <div class="row">
         <!-- Colonne gauche - Insights et recommandations -->
         <div class="col-lg-8">
-            <!-- Graphiques -->
+            <!-- ✨ NOUVEAUX CHARTS MODERNES -->
             <div class="row mb-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
+                <!-- Chart 1: Progression par catégorie (Donut) -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-gradient-primary text-white">
                             <h5 class="mb-0">
-                                <i class="fas fa-chart-area me-2"></i>
-                                Évolution des progrès (30 derniers jours)
+                                <i class="fas fa-chart-pie me-2"></i>
+                                Répartition par Catégorie
+                            </h5>
+                        </div>
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <canvas id="categoryDonutChart" style="max-height: 280px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Taux de complétion mensuel (Gauges) -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-gradient-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Taux de Complétion
                             </h5>
                         </div>
                         <div class="card-body">
-                            <canvas id="progressChart" height="100"></canvas>
+                            <div class="row g-3">
+                                @foreach(['sport' => 'Sport', 'education' => 'Éducation', 'health' => 'Santé', 'other' => 'Autre'] as $key => $label)
+                                    <div class="col-6">
+                                        <div class="text-center">
+                                            <canvas id="gauge{{ ucfirst($key) }}" style="max-height: 120px;"></canvas>
+                                            <small class="text-muted mt-2 d-block">{{ $label }}</small>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Progression mensuelle (Barres horizontales) -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-gradient-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Progression Mensuelle par Objectif
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="monthlyProgressChart" height="80"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Évolution temporelle (Ligne + Aire) -->
+                <div class="col-12 mb-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-area me-2"></i>
+                                Évolution des Progrès (30 derniers jours)
+                            </h5>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-light active" data-period="30">30j</button>
+                                <button class="btn btn-light" data-period="60">60j</button>
+                                <button class="btn btn-light" data-period="90">90j</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="timelineChart" height="80"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
-<!-- 💬 Chatbot -->
-    <div id="chatbot-container"
-     class="fixed bottom-5 right-5 bg-white shadow-2xl rounded-2xl w-80 overflow-hidden border border-gray-200">
-    <div class="bg-blue-600 text-white p-3 text-center font-semibold">
-        🤖 Smart Assistant
-    </div>
 
-    <div id="chat-window" class="p-3 h-80 overflow-y-auto space-y-2 bg-gray-50"></div>
+            <!-- 💬 Chatbot -->
+            <div id="chatbot-container"
+                class="fixed bottom-5 right-5 bg-white shadow-2xl rounded-2xl w-80 overflow-hidden border border-gray-200">
+                <div class="bg-blue-600 text-white p-3 text-center font-semibold">
+                    🤖 Smart Assistant
+                </div>
 
-    <div class="p-2 flex items-center border-t border-gray-300">
-        <input id="user-input"
-               type="text"
-               placeholder="Écris un message..."
-               class="flex-1 p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        <button id="send-btn"
-                class="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition">
-            Envoyer
-        </button>
-    </div>
-</div>
+                <div id="chat-window" class="p-3 h-80 overflow-y-auto space-y-2 bg-gray-50"></div>
+
+                <div class="p-2 flex items-center border-t border-gray-300">
+                    <input id="user-input"
+                        type="text"
+                        placeholder="Écris un message..."
+                        class="flex-1 p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                    <button id="send-btn"
+                            class="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition">
+                        Envoyer
+                    </button>
+                </div>
+            </div>
+
             <!-- Recommandations IA -->
             <div class="row mb-4" data-aos="fade-up" data-aos-delay="300">
                 <div class="col-12">
@@ -336,163 +398,165 @@
             </div>
         </div>
     </div>
-<!-- Section Calendrier Intelligent - À ajouter après les cartes de performance -->
-<div class="row mb-4" data-aos="fade-up" data-aos-delay="150">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-brain me-2"></i>
-                    Calendrier Intelligent IA
-                </h5>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-light" id="prevMonth">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span id="currentMonth" class="px-3 py-1 text-white"></span>
-                    <button class="btn btn-sm btn-light" id="nextMonth">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body p-4">
-                <div class="row mb-4">
-                    <div class="col-md-8">
-                        <label class="form-label fw-bold">
-                            <i class="fas fa-bullseye text-primary me-2"></i>
-                            Sélectionner un objectif :
-                        </label>
-                        <select id="objectiveSelect" class="form-select form-select-lg">
-                            <option value="">-- Choisir un objectif --</option>
-                            @foreach($myObjectives as $obj)
-                                <option value="{{ $obj->id }}" 
-                                        data-color="{{ $obj->category === 'sport' ? '#28a745' : ($obj->category === 'education' ? '#007bff' : '#ffc107') }}"
-                                        data-difficulty="{{ $obj->difficulty ?? 'medium' }}"
-                                        data-frequency="{{ $obj->frequency ?? 'daily' }}">
-                                    {{ $obj->title }} ({{ ucfirst($obj->category) }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">
-                            <i class="fas fa-magic text-warning me-2"></i>
-                            Actions intelligentes :
-                        </label>
-                        <div class="d-flex gap-2 flex-wrap">
-                            <button class="btn btn-warning flex-fill" id="aiSuggest" title="L'IA suggère les meilleurs jours">
-                                <i class="fas fa-wand-magic-sparkles me-1"></i>Suggérer IA
-                            </button>
-                            <button class="btn btn-success" id="saveSchedule">
-                                <i class="fas fa-save"></i>
-                            </button>
-                            <button class="btn btn-danger" id="clearSelection">
-                                <i class="fas fa-eraser"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Insights IA -->
-                <div id="aiInsights" class="alert alert-info border-0 shadow-sm mb-4" style="display: none;">
-                    <div class="d-flex align-items-start">
-                        <i class="fas fa-lightbulb fa-2x text-warning me-3"></i>
-                        <div class="flex-grow-1">
-                            <h6 class="alert-heading mb-2">💡 Suggestions intelligentes</h6>
-                            <div id="aiInsightsContent"></div>
-                        </div>
+    <!-- Section Calendrier Intelligent -->
+    <div class="row mb-4" data-aos="fade-up" data-aos-delay="150">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-brain me-2"></i>
+                        Calendrier Intelligent IA
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-light" id="prevMonth">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span id="currentMonth" class="px-3 py-1 text-white"></span>
+                        <button class="btn btn-sm btn-light" id="nextMonth">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-bullseye text-primary me-2"></i>
+                                Sélectionner un objectif :
+                            </label>
+                            <select id="objectiveSelect" class="form-select form-select-lg">
+                                <option value="">-- Choisir un objectif --</option>
+                                @foreach($myObjectives as $obj)
+                                    <option value="{{ $obj->id }}" 
+                                            data-color="{{ $obj->category === 'sport' ? '#28a745' : ($obj->category === 'education' ? '#007bff' : '#ffc107') }}"
+                                            data-difficulty="{{ $obj->difficulty ?? 'medium' }}"
+                                            data-frequency="{{ $obj->frequency ?? 'daily' }}">
+                                        {{ $obj->title }} ({{ ucfirst($obj->category) }})
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-magic text-warning me-2"></i>
+                                Actions intelligentes :
+                            </label>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button class="btn btn-warning flex-fill" id="aiSuggest" title="L'IA suggère les meilleurs jours">
+                                    <i class="fas fa-wand-magic-sparkles me-1"></i>Suggérer IA
+                                </button>
+                                <button class="btn btn-success" id="saveSchedule">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="btn btn-danger" id="clearSelection">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Statistiques rapides -->
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <div class="stat-card bg-primary text-white p-3 rounded">
-                            <i class="fas fa-calendar-check mb-2"></i>
-                            <h4 class="mb-0" id="totalScheduled">0</h4>
-                            <small>Jours planifiés</small>
+                    <!-- Insights IA -->
+                    <div id="aiInsights" class="alert alert-info border-0 shadow-sm mb-4" style="display: none;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-lightbulb fa-2x text-warning me-3"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="alert-heading mb-2">💡 Suggestions intelligentes</h6>
+                                <div id="aiInsightsContent"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="stat-card bg-success text-white p-3 rounded">
-                            <i class="fas fa-fire mb-2"></i>
-                            <h4 class="mb-0" id="streakDays">0</h4>
-                            <small>Jours consécutifs</small>
+
+                    <!-- Statistiques rapides -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="stat-card bg-primary text-white p-3 rounded">
+                                <i class="fas fa-calendar-check mb-2"></i>
+                                <h4 class="mb-0" id="totalScheduled">0</h4>
+                                <small>Jours planifiés</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card bg-success text-white p-3 rounded">
+                                <i class="fas fa-fire mb-2"></i>
+                                <h4 class="mb-0" id="streakDays">0</h4>
+                                <small>Jours consécutifs</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card bg-warning text-white p-3 rounded">
+                                <i class="fas fa-chart-line mb-2"></i>
+                                <h4 class="mb-0" id="aiScore">0%</h4>
+                                <small>Score optimal IA</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card bg-info text-white p-3 rounded">
+                                <i class="fas fa-battery-three-quarters mb-2"></i>
+                                <h4 class="mb-0" id="workloadScore">Moyen</h4>
+                                <small>Charge de travail</small>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="stat-card bg-warning text-white p-3 rounded">
-                            <i class="fas fa-chart-line mb-2"></i>
-                            <h4 class="mb-0" id="aiScore">0%</h4>
-                            <small>Score optimal IA</small>
+                    
+                    <div id="calendar" class="calendar-grid"></div>
+                    
+                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-primary me-2"><i class="fas fa-circle"></i> Sport</span>
+                            <span class="badge bg-info me-2"><i class="fas fa-circle"></i> Éducation</span>
+                            <span class="badge bg-warning me-2"><i class="fas fa-circle"></i> Autre</span>
+                            <span class="badge bg-success me-2"><i class="fas fa-star"></i> Suggéré IA</span>
                         </div>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Cliquez pour planifier • Double-clic pour détails
+                        </small>
                     </div>
-                    <div class="col-md-3">
-                        <div class="stat-card bg-info text-white p-3 rounded">
-                            <i class="fas fa-battery-three-quarters mb-2"></i>
-                            <h4 class="mb-0" id="workloadScore">Moyen</h4>
-                            <small>Charge de travail</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="calendar" class="calendar-grid"></div>
-                
-                <div class="mt-4 d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="badge bg-primary me-2"><i class="fas fa-circle"></i> Sport</span>
-                        <span class="badge bg-info me-2"><i class="fas fa-circle"></i> Éducation</span>
-                        <span class="badge bg-warning me-2"><i class="fas fa-circle"></i> Autre</span>
-                        <span class="badge bg-success me-2"><i class="fas fa-star"></i> Suggéré IA</span>
-                    </div>
-                    <small class="text-muted">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Cliquez pour planifier • Double-clic pour détails
-                    </small>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal pour détails du jour -->
-<div class="modal fade" id="dayDetailsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-gradient-primary text-white">
-                <h5 class="modal-title">
-                    <i class="fas fa-calendar-day me-2"></i>
-                    <span id="modalDate"></span>
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Analyse IA du jour -->
-                <div class="alert alert-light border mb-3">
-                    <h6 class="mb-2"><i class="fas fa-brain text-primary me-2"></i>Analyse IA du jour</h6>
-                    <div id="dayAiAnalysis" class="small"></div>
+    <!-- Modal pour détails du jour -->
+    <div class="modal fade" id="dayDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calendar-day me-2"></i>
+                        <span id="modalDate"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                
-                <h6 class="mb-3">📋 Objectifs planifiés :</h6>
-                <div id="dayObjectivesList"></div>
-                
-                <!-- Suggestions IA pour ce jour -->
-                <div id="daySuggestions" class="mt-3"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="optimizeDay">
-                    <i class="fas fa-wand-magic-sparkles me-1"></i>Optimiser ce jour
-                </button>
+                <div class="modal-body">
+                    <!-- Analyse IA du jour -->
+                    <div class="alert alert-light border mb-3">
+                        <h6 class="mb-2"><i class="fas fa-brain text-primary me-2"></i>Analyse IA du jour</h6>
+                        <div id="dayAiAnalysis" class="small"></div>
+                    </div>
+                    
+                    <h6 class="mb-3">📋 Objectifs planifiés :</h6>
+                    <div id="dayObjectivesList"></div>
+                    
+                    <!-- Suggestions IA pour ce jour -->
+                    <div id="daySuggestions" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="optimizeDay">
+                        <i class="fas fa-wand-magic-sparkles me-1"></i>Optimiser ce jour
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 @endsection
 
 @push('styles')
 <style>
+/* Styles existants */
 .recommendation-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -529,12 +593,12 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
 }
-</style>
-<style>
+
+/* Chatbot styles */
 #chatbot-container {
     font-family: 'Inter', sans-serif;
     z-index: 9999;
-    position: fixed;!important;
+    position: fixed !important;
     bottom: 20px;
     right: 20px;
     width: 360px;
@@ -548,7 +612,6 @@
     transition: all 0.3s ease-in-out;
 }
 
-/* --- HEADER --- */
 #chatbot-container .header {
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
@@ -558,16 +621,7 @@
     align-items: center;
     justify-content: space-between;
 }
-#chatbot-container .header i {
-    cursor: pointer;
-    font-size: 18px;
-    transition: transform 0.2s ease;
-}
-#chatbot-container .header i:hover {
-    transform: rotate(90deg);
-}
 
-/* --- CHAT AREA --- */
 #chat-window {
     flex: 1;
     padding: 15px;
@@ -578,7 +632,6 @@
     gap: 8px;
 }
 
-/* --- MESSAGES --- */
 .message {
     max-width: 80%;
     padding: 8px 12px;
@@ -588,6 +641,7 @@
     animation: fadeIn 0.3s ease;
     font-size: 0.9rem;
 }
+
 .user-message {
     background: #2563eb;
     color: white;
@@ -595,6 +649,7 @@
     border-bottom-right-radius: 4px;
     box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
 }
+
 .bot-message {
     background: #e5e7eb;
     color: #111827;
@@ -603,14 +658,6 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* --- INPUT AREA --- */
-#chatbot-container .input-area {
-    display: flex;
-    align-items: center;
-    border-top: 1px solid #e5e7eb;
-    background: #ffffff;
-    padding: 8px;
-}
 #chatbot-container input {
     flex: 1;
     padding: 10px;
@@ -621,9 +668,11 @@
     outline: none;
     transition: background 0.2s;
 }
+
 #chatbot-container input:focus {
     background: #e0e7ff;
 }
+
 #chatbot-container button {
     background: #2563eb;
     color: white;
@@ -634,16 +683,17 @@
     cursor: pointer;
     transition: all 0.2s;
 }
+
 #chatbot-container button:hover {
     background: #1e40af;
 }
 
-/* --- TYPING INDICATOR --- */
 .typing {
     display: inline-flex;
     gap: 4px;
     align-items: center;
 }
+
 .typing span {
     width: 6px;
     height: 6px;
@@ -651,6 +701,7 @@
     border-radius: 50%;
     animation: blink 1.4s infinite both;
 }
+
 .typing span:nth-child(2) { animation-delay: 0.2s; }
 .typing span:nth-child(3) { animation-delay: 0.4s; }
 
@@ -664,22 +715,32 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- RESPONSIVE --- */
-@media (max-width: 600px) {
-    #chatbot-container {
-        width: 90%;
-        right: 5%;
-        bottom: 10px;
-    }
-}
-</style>
-<style>
 /* Gradient background */
 .bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
 
-/* Styles pour le calendrier */
+/* Animation smooth pour les charts */
+canvas {
+    transition: all 0.3s ease;
+}
+
+canvas:hover {
+    transform: scale(1.02);
+}
+
+/* Boutons de période */
+.btn-group-sm .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.btn-group-sm .btn.active {
+    background-color: rgba(255,255,255,0.3) !important;
+    border-color: rgba(255,255,255,0.5) !important;
+}
+
+/* Calendrier styles */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -829,7 +890,6 @@
     font-weight: 600;
 }
 
-/* Statistiques */
 .stat-card {
     text-align: center;
     transition: all 0.3s ease;
@@ -851,7 +911,6 @@
     font-weight: 700;
 }
 
-/* Modal styles */
 .objective-item-modal {
     padding: 15px;
     border-left: 4px solid;
@@ -866,7 +925,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Loading animation */
 @keyframes shimmer {
     0% { background-position: -1000px 0; }
     100% { background-position: 1000px 0; }
@@ -876,6 +934,28 @@
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100px);
+        opacity: 0;
+    }
 }
 
 /* Responsive */
@@ -899,174 +979,471 @@
     }
 }
 
-/* Animations pour mini notification */
-@keyframes slideIn {
-    from {
-        transform: translateX(100px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100px);
-        opacity: 0;
+@media (max-width: 600px) {
+    #chatbot-container {
+        width: 90%;
+        right: 5%;
+        bottom: 10px;
     }
 }
 </style>
-
 @endpush
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser le graphique
-    initProgressChart();
+   initCategoryDonut();
+    initCompletionGauges();
+    initMonthlyProgress();
+    initTimelineChart();
+    initSmartCalendar();
     
-    // Actualiser les insights toutes les 5 minutes
     setInterval(refreshInsights, 300000);
 });
 
-function initProgressChart() {
-    const ctx = document.getElementById('progressChart').getContext('2d');
-    let chartData = @json($chartData);
-
-    if (!chartData || typeof chartData !== 'object') {
-        chartData = {};
-    }
-
-    const dates = [];
-    const dailyData = [];
-    const cumulativeData = [];
-    let runningTotal = 0;
-
-    for (let i = 29; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
-        dates.push(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
-        
-        const value = chartData[dateStr] || 0;
-        dailyData.push(value);
-        runningTotal += value;
-        cumulativeData.push(runningTotal);
-    }
-
-    // Create gradients
-    const gradientDaily = ctx.createLinearGradient(0, 0, 0, 150);
-    gradientDaily.addColorStop(0, 'rgba(105, 108, 255, 0.3)');
-    gradientDaily.addColorStop(1, 'rgba(105, 108, 255, 0)');
-
-    const gradientCumulative = ctx.createLinearGradient(0, 0, 0, 150);
-    gradientCumulative.addColorStop(0, 'rgba(3, 195, 236, 0.3)');
-    gradientCumulative.addColorStop(1, 'rgba(3, 195, 236, 0)');
-
+// 🍩 Chart 1: Donut AMÉLIORÉ avec animations et meilleur design
+function initCategoryDonut() {
+    const ctx = document.getElementById('categoryDonutChart');
+    if (!ctx) return;
+    
+    const categoryData = {
+        sport: {{ $insights['performance_summary']['category_breakdown']['sport'] ?? 35 }},
+        education: {{ $insights['performance_summary']['category_breakdown']['education'] ?? 25 }},
+        health: {{ $insights['performance_summary']['category_breakdown']['health'] ?? 20 }},
+        other: {{ $insights['performance_summary']['category_breakdown']['other'] ?? 20 }}
+    };
+    
     new Chart(ctx, {
-        type: 'line',
+        type: 'doughnut',
         data: {
-            labels: dates,
+            labels: ['💪 Sport', '📚 Éducation', '❤️ Santé', '🎯 Autre'],
             datasets: [{
-                label: 'Progrès quotidiens',
-                data: dailyData,
-                borderColor: '#696cff',
-                backgroundColor: gradientDaily,
-                borderWidth: 2.5,
-                tension: 0.4,
-                fill: true,
-                pointRadius: 0,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: '#696cff',
-                pointHoverBorderColor: '#fff'
-            }, {
-                label: 'Progrès cumulé',
-                data: cumulativeData,
-                borderColor: '#03c3ec',
-                backgroundColor: gradientCumulative,
-                borderWidth: 2.5,
-                tension: 0.4,
-                fill: true,
-                pointRadius: 0,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: '#03c3ec',
-                pointHoverBorderColor: '#fff'
+                data: Object.values(categoryData),
+                backgroundColor: [
+                    'rgba(147, 51, 234, 0.9)',   // Violet profond
+                    'rgba(236, 72, 153, 0.9)',   // Rose vif
+                    'rgba(6, 182, 212, 0.9)',    // Cyan brillant
+                    'rgba(139, 92, 246, 0.9)'    // Violet clair
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 3,
+                hoverOffset: 20,
+                hoverBorderWidth: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            animation: {
+                animateRotate: true,
+                animateScale: true,
+                duration: 2000,
+                easing: 'easeOutBounce'
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: { size: 13, weight: '700', family: 'Inter' },
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            return data.labels.map((label, i) => {
+                                const value = Number(data.datasets[0].data[i]) || 0;
+                                const total = data.datasets[0].data.reduce((a, b) => Number(a) + Number(b), 0);
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                                return {
+                                    text: `${label} (${percentage}%)`,
+                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                    hidden: false,
+                                    index: i
+                                };
+                            });
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.9)',
+                    padding: 16,
+                    titleFont: { size: 15, weight: 'bold' },
+                    bodyFont: { size: 14 },
+                    borderColor: 'rgba(255,255,255,0.2)',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return [
+                                `Objectifs: ${value}`,
+                                `Pourcentage: ${percentage}%`
+                            ];
+                        }
+                    }
+                }
+            },
+            cutout: '65%',
+            radius: '90%'
+        },
+        plugins: [{
+            id: 'centerText',
+            afterDraw: (chart) => {
+                const { ctx, width, height } = chart;
+                ctx.save();
+                
+                const total = {{ $insights['performance_summary']['total_objectives'] ?? 0 }};
+                
+                ctx.font = 'bold 32px Inter';
+                ctx.fillStyle = '#1f2937';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(total, width / 2, height / 2 - 10);
+                
+                ctx.font = '14px Inter';
+                ctx.fillStyle = '#6b7280';
+                ctx.fillText('Total Objectifs', width / 2, height / 2 + 20);
+                
+                ctx.restore();
+            }
+        }]
+    });
+}
+
+// 🎯 Chart 2: Gauges MODERNES avec dégradés
+function initCompletionGauges() {
+    const categories = [
+        { key: 'sport', label: 'Sport', icon: '💪' },
+        { key: 'education', label: 'Éducation', icon: '📚' },
+        { key: 'health', label: 'Santé', icon: '❤️' },
+        { key: 'other', label: 'Autre', icon: '🎯' }
+    ];
+    
+    const gradients = [
+        ['#9333ea', '#c084fc'],  // Violet
+        ['#ec4899', '#f9a8d4'],  // Rose
+        ['#06b6d4', '#67e8f9'],  // Cyan
+        ['#8b5cf6', '#c4b5fd']   // Violet clair
+    ];
+    
+    const completionRates = {
+        sport: {{ $insights['performance_summary']['sport_completion'] ?? 75 }},
+        education: {{ $insights['performance_summary']['education_completion'] ?? 60 }},
+        health: {{ $insights['performance_summary']['health_completion'] ?? 85 }},
+        other: {{ $insights['performance_summary']['other_completion'] ?? 50 }}
+    };
+    
+    categories.forEach((cat, index) => {
+        const ctx = document.getElementById(`gauge${cat.key.charAt(0).toUpperCase() + cat.key.slice(1)}`);
+        if (!ctx) return;
+        
+        const percentage = completionRates[cat.key];
+        
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 150);
+        gradient.addColorStop(0, gradients[index][0]);
+        gradient.addColorStop(1, gradients[index][1]);
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [percentage, 100 - percentage],
+                    backgroundColor: [gradient, 'rgba(229, 231, 235, 0.3)'],
+                    borderWidth: 0,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                cutout: '78%',
+                animation: {
+                    animateRotate: true,
+                    duration: 1500,
+                    easing: 'easeOutQuart'
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                }
+            },
+            plugins: [{
+                id: 'gaugeText',
+                afterDraw: (chart) => {
+                    const { ctx, width, height } = chart;
+                    ctx.save();
+                    
+                    // Icône
+                    ctx.font = '24px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(cat.icon, width / 2, height / 2 - 15);
+                    
+                    // Pourcentage
+                    ctx.font = 'bold 20px Inter';
+                    const gradient = ctx.createLinearGradient(0, height / 2, 0, height / 2 + 20);
+                    gradient.addColorStop(0, gradients[index][0]);
+                    gradient.addColorStop(1, gradients[index][1]);
+                    ctx.fillStyle = gradient;
+                    ctx.fillText(`${percentage}%`, width / 2, height / 2 + 10);
+                    
+                    ctx.restore();
+                }
+            }]
+        });
+    });
+}
+
+// 📊 Chart 3: PIE CHART MODERNE (remplace les barres horizontales)
+function initMonthlyProgress() {
+    const ctx = document.getElementById('monthlyProgressChart');
+    if (!ctx) return;
+    
+    const objectives = @json($myObjectives->take(5)->map(function($obj) {
+        return [
+            'name' => $obj->title,
+            'progress' => $obj->computeProgressPercent(auth()->id())
+        ];
+    }));
+    
+    const labels = objectives.map(obj => {
+        const name = obj.name.length > 20 ? obj.name.substring(0, 18) + '...' : obj.name;
+        return `${name} (${obj.progress}%)`;
+    });
+    const data = objectives.map(obj => obj.progress);
+    
+    const gradient1 = ctx.getContext('2d').createLinearGradient(0, 0, 400, 0);
+    gradient1.addColorStop(0, '#9333ea');
+    gradient1.addColorStop(1, '#c084fc');
+    
+    const gradient2 = ctx.getContext('2d').createLinearGradient(0, 0, 400, 0);
+    gradient2.addColorStop(0, '#ec4899');
+    gradient2.addColorStop(1, '#f9a8d4');
+    
+    const gradient3 = ctx.getContext('2d').createLinearGradient(0, 0, 400, 0);
+    gradient3.addColorStop(0, '#06b6d4');
+    gradient3.addColorStop(1, '#67e8f9');
+    
+    const gradient4 = ctx.getContext('2d').createLinearGradient(0, 0, 400, 0);
+    gradient4.addColorStop(0, '#8b5cf6');
+    gradient4.addColorStop(1, '#c4b5fd');
+    
+    const gradient5 = ctx.getContext('2d').createLinearGradient(0, 0, 400, 0);
+    gradient5.addColorStop(0, '#f59e0b');
+    gradient5.addColorStop(1, '#fbbf24');
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [gradient1, gradient2, gradient3, gradient4, gradient5],
+                borderColor: '#ffffff',
+                borderWidth: 3,
+                hoverOffset: 25,
+                hoverBorderWidth: 4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            animation: {
+                animateRotate: true,
+                animateScale: true,
+                duration: 2000,
+                easing: 'easeOutBounce'
+            },
             plugins: {
                 legend: {
-                    display: false // Hiding legend for a cleaner look
+                    position: 'right',
+                    labels: {
+                        padding: 20,
+                        font: { size: 12, weight: '600', family: 'Inter' },
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 12,
+                        boxHeight: 12
+                    }
                 },
                 tooltip: {
-                    enabled: true,
-                    backgroundColor: '#fff',
-                    titleColor: '#333',
-                    bodyColor: '#666',
-                    borderColor: '#ddd',
+                    backgroundColor: 'rgba(0,0,0,0.9)',
+                    padding: 16,
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 },
+                    borderColor: 'rgba(255,255,255,0.2)',
                     borderWidth: 1,
-                    padding: 10,
-                    usePointStyle: true,
-                    boxPadding: 4,
+                    cornerRadius: 8,
                     callbacks: {
                         label: function(context) {
-                            return ` ${context.dataset.label}: ${context.formattedValue}`;
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            return ` ${value}% complété`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 📈 Chart 4: STREAM GRAPH TRIÉ (Stacked Area Chart)
+function initTimelineChart() {
+    const ctx = document.getElementById('timelineChart');
+    if (!ctx) return;
+    
+    const timeline = @json($chartData['timeline'] ?? ['dates' => [], 'series' => []]);
+    const rawDates = timeline.dates || [];
+    const series = timeline.series || {};
+
+    // Labels formatés JJ/MM
+    const labels = rawDates.map(d => {
+        const date = new Date(d + 'T00:00:00');
+        return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
+    });
+
+    // Créer les gradients
+    const gradientSport = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+    gradientSport.addColorStop(0, 'rgba(147, 51, 234, 0.7)');
+    gradientSport.addColorStop(1, 'rgba(147, 51, 234, 0.1)');
+    
+    const gradientEducation = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+    gradientEducation.addColorStop(0, 'rgba(236, 72, 153, 0.7)');
+    gradientEducation.addColorStop(1, 'rgba(236, 72, 153, 0.1)');
+    
+    const gradientHealth = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+    gradientHealth.addColorStop(0, 'rgba(6, 182, 212, 0.7)');
+    gradientHealth.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
+    
+    const gradientOther = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+    gradientOther.addColorStop(0, 'rgba(139, 92, 246, 0.7)');
+    gradientOther.addColorStop(1, 'rgba(139, 92, 246, 0.1)');
+
+    // Préparer les séries par catégorie avec somme totale pour tri
+    const categories = [
+        { key: 'sport', label: '💪 Sport', borderColor: '#9333ea', backgroundColor: gradientSport, data: series.sport || [] },
+        { key: 'education', label: '📚 Éducation', borderColor: '#ec4899', backgroundColor: gradientEducation, data: series.education || [] },
+        { key: 'health', label: '❤️ Santé', borderColor: '#06b6d4', backgroundColor: gradientHealth, data: series.health || [] },
+        { key: 'other', label: '🎯 Autre', borderColor: '#8b5cf6', backgroundColor: gradientOther, data: series.other || [] },
+    ];
+
+    categories.forEach(c => c.sum = (c.data || []).reduce((a, b) => a + (b || 0), 0));
+    const sortedCategories = categories.sort((a, b) => b.sum - a.sum);
+
+    const datasets = sortedCategories.map(c => ({
+        label: c.label,
+        data: c.data,
+        borderColor: c.borderColor,
+        backgroundColor: c.backgroundColor,
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 0,
+        pointHoverRadius: 6,
+        pointHoverBackgroundColor: c.borderColor,
+        pointHoverBorderColor: '#fff',
+        pointHoverBorderWidth: 3
+    }));
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            scales: {
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)',
+                        borderDash: [5, 5],
+                        drawBorder: false
+                    },
+                    ticks: {
+                        padding: 12,
+                        font: { size: 11, family: 'Inter' },
+                        color: '#6b7280'
+                    }
+                },
+                x: {
+                    stacked: true,
+                    grid: { display: false },
+                    ticks: {
+                        padding: 12,
+                        font: { size: 11, family: 'Inter' },
+                        color: '#6b7280',
+                        maxRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 10
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        padding: 20,
+                        font: { size: 13, weight: '600', family: 'Inter' }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.9)',
+                    padding: 16,
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255,255,255,0.2)',
+                    borderWidth: 1,
+                    cornerRadius: 10,
+                    usePointStyle: true,
+                    callbacks: {
+                        title: function(context) {
+                            return `📅 ${context[0].label}`;
+                        },
+                        label: function(context) {
+                            return ` ${context.dataset.label}: ${context.formattedValue} progrès`;
+                        },
+                        footer: function(tooltipItems) {
+                            let sum = 0;
+                            tooltipItems.forEach(item => {
+                                sum += item.parsed.y;
+                            });
+                            return `Total: ${sum} progrès`;
                         }
                     }
                 }
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0,0,0,0.05)',
-                        borderDash: [3, 3],
-                        drawBorder: false
-                    },
-                    ticks: {
-                        padding: 10,
-                        font: { size: 11 }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        padding: 10,
-                        font: { size: 11 },
-                        maxRotation: 0,
-                        minRotation: 0,
-                        autoSkip: true,
-                        maxTicksLimit: 7
-                    }
-                }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index'
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
             }
         }
     });
 }
 
 function refreshInsights() {
-    // Afficher un indicateur de chargement
     const refreshBtn = document.querySelector('[onclick="refreshInsights()"]');
     const originalText = refreshBtn.innerHTML;
     refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Actualisation...';
     refreshBtn.disabled = true;
     
-    // Récupérer les nouvelles recommandations
     fetch('{{ route("front.smart-dashboard.recommendations") }}')
         .then(response => response.json())
         .then(data => {
@@ -1078,7 +1455,6 @@ function refreshInsights() {
             console.error('Erreur lors de l\'actualisation:', error);
         })
         .finally(() => {
-            // Restaurer le bouton
             refreshBtn.innerHTML = originalText;
             refreshBtn.disabled = false;
         });
@@ -1128,7 +1504,6 @@ function updateRecommendations(recommendations) {
 }
 
 function activateObjective(objectiveId) {
-    // Implémenter l'activation d'objectif via AJAX
     fetch(`/objectifs/${objectiveId}/activate`, {
         method: 'POST',
         headers: {
@@ -1139,9 +1514,7 @@ function activateObjective(objectiveId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Afficher une notification de succès
             showNotification('Objectif activé avec succès !', 'success');
-            // Actualiser la page après un court délai
             setTimeout(() => {
                 window.location.reload();
             }, 1500);
@@ -1154,7 +1527,6 @@ function activateObjective(objectiveId) {
 }
 
 function showNotification(message, type) {
-    // Créer une notification toast
     const toast = document.createElement('div');
     toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
     toast.setAttribute('role', 'alert');
@@ -1165,7 +1537,6 @@ function showNotification(message, type) {
         </div>
     `;
     
-    // Ajouter au container de toasts
     let container = document.querySelector('.toast-container');
     if (!container) {
         container = document.createElement('div');
@@ -1175,20 +1546,26 @@ function showNotification(message, type) {
     
     container.appendChild(toast);
     
-    // Afficher la notification
     const bsToast = new bootstrap.Toast(toast);
     bsToast.show();
     
-    // Supprimer après fermeture
     toast.addEventListener('hidden.bs.toast', () => {
         toast.remove();
     });
 }
 </script>
+
 <script>
+// Chatbot script
 const chatWindow = document.getElementById('chat-window');
 const input = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
+
+function isSportRelated(message) {
+    const sportKeywords = ['football', 'basketball', 'course', 'sport', 'athlétisme', 'tennis', 'natation', 'cyclisme', 'rugby', 'voile', 'fitness', 'entraînement', 'match', 'compétition', 'player', 'team'];
+    const lowerMsg = message.toLowerCase();
+    return sportKeywords.some(keyword => lowerMsg.includes(keyword));
+}
 
 function appendMessage(content, type) {
     const msg = document.createElement('div');
@@ -1212,7 +1589,15 @@ input.addEventListener('keypress', e => { if (e.key === 'Enter') handleSend(); }
 
 async function handleSend() {
     const message = input.value.trim();
+
+    if (message && !isSportRelated(message)) {
+        appendMessage("Désolé, je ne réponds que dans le domaine du sport.", 'bot');
+        input.value = '';
+        return;
+    }
+
     if (!message) return;
+
     appendMessage(message, 'user');
     input.value = '';
 
@@ -1259,21 +1644,16 @@ function simulateTyping(text, i = 0) {
 }
 </script>
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    initSmartCalendar();
-});
-
+// Calendrier Intelligent
 let currentDate = new Date();
 let selectedObjective = null;
 let scheduledObjectives = {};
 let aiSuggestions = {};
-let currentUserId = null; // ID de l'utilisateur connecté
+let currentUserId = null;
 
-// Données de performance utilisateur simulées (à remplacer par des vraies données)
 const userPerformanceData = {
-    bestDays: [1, 3, 5], // Lundi, Mercredi, Vendredi (0 = Dimanche)
+    bestDays: [1, 3, 5],
     avgCompletionRate: 0.75,
     preferredTimes: ['morning', 'evening'],
     energyLevels: {
@@ -1287,21 +1667,17 @@ const userPerformanceData = {
     }
 };
 
-// Récupérer l'ID utilisateur depuis le DOM
 function getCurrentUserId() {
-    // Essayer de récupérer depuis un élément meta ou data attribute
     const userElement = document.querySelector('[data-user-id]');
     if (userElement) {
         return userElement.dataset.userId;
     }
     
-    // Alternative: depuis un meta tag
     const metaUser = document.querySelector('meta[name="user-id"]');
     if (metaUser) {
         return metaUser.content;
     }
     
-    // Par défaut, utiliser un identifiant unique basé sur le timestamp du navigateur
     let userId = localStorage.getItem('temp_user_id');
     if (!userId) {
         userId = 'user_' + Date.now();
@@ -1310,7 +1686,6 @@ function getCurrentUserId() {
     return userId;
 }
 
-// Obtenir la clé de stockage pour l'utilisateur courant
 function getStorageKey() {
     if (!currentUserId) {
         currentUserId = getCurrentUserId();
@@ -1389,8 +1764,8 @@ function renderCalendar() {
     const today = new Date();
     for (let day = 1; day <= lastDay.getDate(); day++) {
         const isToday = day === today.getDate() && 
-                       month === today.getMonth() && 
-                       year === today.getFullYear();
+                    month === today.getMonth() && 
+                    year === today.getFullYear();
         const cell = createSmartDayCell(day, false, year, month, isToday);
         calendar.appendChild(cell);
     }
@@ -1418,16 +1793,13 @@ function createSmartDayCell(day, isOtherMonth, year, month, isToday = false) {
     
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const date = new Date(year, month, day);
-    const dayOfWeek = date.getDay();
     
     cell.dataset.date = dateStr;
     
-    // Vérifier si le jour est suggéré par l'IA
     if (aiSuggestions[dateStr]) {
         cell.classList.add('ai-suggested');
     }
     
-    // Vérifier la charge de travail
     const objectiveCount = scheduledObjectives[dateStr] ? scheduledObjectives[dateStr].length : 0;
     if (objectiveCount > 3) {
         cell.classList.add('overloaded');
@@ -1506,52 +1878,41 @@ function generateAiSuggestions() {
         
         let suggestedDays = [];
         
-        // Algorithme IA intelligent basé sur les performances et préférences
         for (let day = 1; day <= lastDay; day++) {
             const date = new Date(year, month, day);
             const dayOfWeek = date.getDay();
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             
-            // Ne pas suggérer les jours passés
             if (date < new Date()) continue;
             
-            // Ne pas surcharger les jours déjà pleins
             const currentLoad = scheduledObjectives[dateStr] ? scheduledObjectives[dateStr].length : 0;
             if (currentLoad >= 4) continue;
             
-            // Score basé sur les performances historiques
             let score = 0;
             
-            // Jours de meilleure performance
             if (userPerformanceData.bestDays.includes(dayOfWeek)) {
                 score += 30;
             }
             
-            // Niveau d'énergie du jour
             const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
             score += (userPerformanceData.energyLevels[dayName] || 0.5) * 40;
             
-            // Difficulté de l'objectif
             if (difficulty === 'hard' && userPerformanceData.energyLevels[dayName] > 0.7) {
                 score += 15;
             }
             
-            // Éviter le weekend pour les objectifs difficiles
             if (difficulty === 'hard' && (dayOfWeek === 0 || dayOfWeek === 6)) {
                 score -= 20;
             }
             
-            // Bonus pour le début de semaine
             if (dayOfWeek === 1) score += 10;
             
-            // Distribution équilibrée
             const existingCount = scheduledObjectives[dateStr] ? scheduledObjectives[dateStr].length : 0;
             score -= existingCount * 10;
             
             suggestedDays.push({ date: dateStr, score });
         }
         
-        // Trier par score et sélectionner les meilleurs jours
         suggestedDays.sort((a, b) => b.score - a.score);
         
         let daysToSuggest = 0;
@@ -1613,7 +1974,7 @@ function acceptAllSuggestions() {
     });
     
     aiSuggestions = {};
-    autoSaveSchedule(); // Auto-sauvegarde
+    autoSaveSchedule();
     renderCalendar();
     showNotification('Toutes les suggestions ont été appliquées !', 'success');
 }
@@ -1622,7 +1983,6 @@ function showSmartDayDetails(dateStr, date) {
     document.getElementById('modalDate').textContent = 
         date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     
-    // Analyse IA du jour
     const dayOfWeek = date.getDay();
     const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     const energyLevel = userPerformanceData.energyLevels[dayName] || 0.5;
@@ -1681,7 +2041,6 @@ function showSmartDayDetails(dateStr, date) {
         </div>
     `;
     
-    // Liste des objectifs
     const list = document.getElementById('dayObjectivesList');
     list.innerHTML = '';
     
@@ -1714,7 +2073,6 @@ function showSmartDayDetails(dateStr, date) {
         list.innerHTML = '<p class="text-muted text-center py-3">Aucun objectif planifié ce jour</p>';
     }
     
-    // Suggestions IA pour ce jour
     const suggestions = document.getElementById('daySuggestions');
     if (objectiveCount < 3 && date > new Date()) {
         const availableObjectives = getAvailableObjectivesForDay(dateStr);
@@ -1745,7 +2103,6 @@ function showSmartDayDetails(dateStr, date) {
         suggestions.innerHTML = '';
     }
     
-    // Stocker la date courante pour l'optimisation
     document.getElementById('optimizeDay').dataset.currentDate = dateStr;
     
     new bootstrap.Modal(document.getElementById('dayDetailsModal')).show();
@@ -1781,7 +2138,6 @@ function getAvailableObjectivesForDay(dateStr) {
         const option = select.options[i];
         const objId = option.value;
         
-        // Vérifier si l'objectif n'est pas déjà planifié ce jour
         if (!scheduledObjectives[dateStr] || !scheduledObjectives[dateStr].includes(objId)) {
             available.push({
                 id: objId,
@@ -1791,7 +2147,7 @@ function getAvailableObjectivesForDay(dateStr) {
         }
     }
     
-    return available.slice(0, 3); // Maximum 3 suggestions
+    return available.slice(0, 3);
 }
 
 window.quickAddObjective = function(dateStr, objId) {
@@ -1799,7 +2155,7 @@ window.quickAddObjective = function(dateStr, objId) {
         scheduledObjectives[dateStr] = [];
     }
     scheduledObjectives[dateStr].push(objId);
-    autoSaveSchedule(); // Auto-sauvegarde
+    autoSaveSchedule();
     renderCalendar();
     showSmartDayDetails(dateStr, new Date(dateStr));
     showNotification('Objectif ajouté !', 'success');
@@ -1820,7 +2176,6 @@ function optimizeCurrentDay() {
         return;
     }
     
-    // Algorithme d'optimisation basé sur la difficulté et l'énergie
     const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     const energyLevel = userPerformanceData.energyLevels[dayName] || 0.5;
     
@@ -1834,22 +2189,18 @@ function optimizeCurrentDay() {
         };
     });
     
-    // Recommandations d'optimisation
     let recommendations = [];
     
-    // Trop d'objectifs difficiles pour un jour à faible énergie
     const hardObjectives = objectives.filter(o => o.difficulty === 'hard').length;
     if (hardObjectives > 1 && energyLevel < 0.6) {
         recommendations.push("⚠️ Trop d'objectifs difficiles pour votre niveau d'énergie ce jour-là.");
         recommendations.push("💡 Redistribuez 1-2 objectifs difficiles vers des jours à haute énergie.");
     }
     
-    // Surcharge
     if (objectives.length > 4) {
         recommendations.push("⚠️ Charge trop élevée ! Redistribuez au moins " + (objectives.length - 3) + " objectif(s).");
     }
     
-    // Optimisations positives
     if (hardObjectives <= 1 && energyLevel > 0.7 && objectives.length <= 3) {
         recommendations.push("✅ Planning optimal ! Bonne répartition pour ce jour.");
     }
@@ -1909,14 +2260,11 @@ function toggleObjectiveForDay(dateStr, objectiveId) {
         scheduledObjectives[dateStr].push(objectiveId);
     }
     
-    // Auto-save en localStorage à chaque modification
     autoSaveSchedule();
 }
 
-// Fonction d'auto-sauvegarde AMÉLIORÉE
 function autoSaveSchedule() {
     try {
-        // Vérifier qu'on a des données à sauvegarder
         if (!scheduledObjectives || typeof scheduledObjectives !== 'object') {
             console.warn('⚠️ Aucune donnée à sauvegarder');
             return false;
@@ -1936,10 +2284,8 @@ function autoSaveSchedule() {
         console.log('📝 Clé:', storageKey);
         console.log('📝 Données à sauvegarder:', dataToSave);
         
-        // Sauvegarder
         localStorage.setItem(storageKey, dataToSave);
         
-        // Vérifier immédiatement
         const verification = localStorage.getItem(storageKey);
         if (verification === dataToSave) {
             console.log('✅ Sauvegarde réussie et vérifiée!');
@@ -1957,7 +2303,6 @@ function autoSaveSchedule() {
     }
 }
 
-// Mini notification discrète
 function showMiniNotification(text) {
     const existing = document.querySelector('.mini-notification');
     if (existing) existing.remove();
@@ -1986,11 +2331,9 @@ function showMiniNotification(text) {
 }
 
 function updateStatistics() {
-    // Total des jours planifiés
     const totalScheduled = Object.keys(scheduledObjectives).length;
     document.getElementById('totalScheduled').textContent = totalScheduled;
     
-    // Calculer le streak
     let streak = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -2008,7 +2351,6 @@ function updateStatistics() {
     }
     document.getElementById('streakDays').textContent = streak;
     
-    // Score optimal IA
     let totalScore = 0;
     let scoredDays = 0;
     
@@ -2022,13 +2364,10 @@ function updateStatistics() {
         
         let dayScore = 0;
         
-        // Score basé sur l'énergie
         dayScore += energyLevel * 40;
         
-        // Bonus si c'est un jour optimal
         if (isBestDay) dayScore += 20;
         
-        // Pénalité pour surcharge
         if (objectiveCount > 3) dayScore -= 20;
         else if (objectiveCount === 0) dayScore = 0;
         else dayScore += 40;
@@ -2040,7 +2379,6 @@ function updateStatistics() {
     const aiScore = scoredDays > 0 ? Math.round(totalScore / scoredDays) : 0;
     document.getElementById('aiScore').textContent = aiScore + '%';
     
-    // Charge de travail
     const avgObjectivesPerDay = totalScheduled > 0 ? 
         Object.values(scheduledObjectives).reduce((sum, arr) => sum + arr.length, 0) / totalScheduled : 0;
     
@@ -2058,7 +2396,6 @@ function clearSelection() {
     aiSuggestions = {};
     renderCalendar();
     showNotification('Sélection effacée', 'info');
-    // Note: On ne vide pas scheduledObjectives, seulement la sélection courante
 }
 
 async function saveSchedule() {
@@ -2070,12 +2407,10 @@ async function saveSchedule() {
     try {
         const storageKey = getStorageKey();
         
-        // Sauvegarder d'abord en localStorage pour persistance immédiate
         localStorage.setItem(storageKey, JSON.stringify(scheduledObjectives));
         console.log('✅ Planning sauvegardé en localStorage');
         console.log('📦 Données:', scheduledObjectives);
         
-        // Puis envoyer au serveur
         const response = await fetch('/objectives/schedule', {
             method: 'POST',
             headers: {
@@ -2099,7 +2434,6 @@ async function saveSchedule() {
         }
     } catch (error) {
         console.error('❌ Erreur:', error);
-        // Même si le serveur échoue, on a sauvegardé en localStorage
         showNotification('✅ Planning sauvegardé localement', 'info');
     } finally {
         btn.innerHTML = originalHtml;
@@ -2112,7 +2446,6 @@ async function loadScheduledObjectives() {
     console.log('🔄 Chargement du planning pour clé:', storageKey);
     
     try {
-        // Charger depuis localStorage
         const localData = localStorage.getItem(storageKey);
         console.log('📦 Données brutes localStorage (typeof):', typeof localData);
         console.log('📦 Données brutes localStorage (value):', localData);
@@ -2143,7 +2476,6 @@ async function loadScheduledObjectives() {
             console.log('ℹ️ Aucune donnée locale trouvée ou données vides');
         }
         
-        // Si pas de données locales, essayer le serveur
         console.log('🌐 Tentative de chargement depuis le serveur...');
         const response = await fetch('/objectives/get-schedule');
         
@@ -2160,7 +2492,6 @@ async function loadScheduledObjectives() {
             }
         }
         
-        // Si rien n'est trouvé, initialiser avec un objet vide
         if (Object.keys(scheduledObjectives).length === 0) {
             scheduledObjectives = {};
             console.log('ℹ️ Initialisation avec planning vide');
@@ -2175,35 +2506,5 @@ async function loadScheduledObjectives() {
     }
 }
 
-// Fonction utilitaire pour les notifications
-function showNotification(message, type) {
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : type === 'warning' ? 'warning' : type === 'info' ? 'info' : 'danger'} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-        document.body.appendChild(container);
-    }
-    
-    container.appendChild(toast);
-    
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
-}
 </script>
-
-
 @endpush

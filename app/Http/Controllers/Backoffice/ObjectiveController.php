@@ -28,7 +28,7 @@ class ObjectiveController extends Controller
             'description' => 'nullable|string',
             'unit' => 'required|string|max:20',
             'target_value' => 'required|numeric|min:0.01',
-            'category' => 'required|in:activite,nutrition,sommeil,sante',
+            'category' => 'required|in:activite,nutrition,sommeil,sante,sport',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_url' => 'nullable|url',
         ]);
@@ -57,7 +57,7 @@ class ObjectiveController extends Controller
             'description' => 'nullable|string',
             'unit' => 'required|string|max:20',
             'target_value' => 'required|numeric|min:0.01',
-            'category' => 'required|in:activite,nutrition,sommeil,sante',
+            'category' => 'required|in:activite,nutrition,sommeil,sante,sport',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cover_url' => 'nullable|url',
         ]);
@@ -68,7 +68,7 @@ class ObjectiveController extends Controller
             if ($objective->cover_url && file_exists(public_path($objective->cover_url))) {
                 unlink(public_path($objective->cover_url));
             }
-            
+
             $image = $request->file('cover_image');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images/objectives'), $imageName);

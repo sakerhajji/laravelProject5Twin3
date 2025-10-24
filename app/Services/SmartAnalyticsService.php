@@ -16,14 +16,21 @@ class SmartAnalyticsService
      */
     public function getUserInsights(User $user): array
     {
+        $summary = $this->getPerformanceSummary($user);
+        $progressByCategory = $this->getProgressByCategory($user, 30);
+        $timeline = $this->getTimelineByCategory($user, 30);
+
         return [
-            'performance_summary' => $this->getPerformanceSummary($user),
+            'performance_summary' => $summary,
             'trends' => $this->getUserTrends($user),
             'strengths' => $this->getUserStrengths($user),
             'improvements' => $this->getImprovementSuggestions($user),
             'predictions' => $this->getPredictions($user),
             'achievements' => $this->getRecentAchievements($user),
-            'recommendations' => $this->getActionableRecommendations($user)
+            'recommendations' => $this->getActionableRecommendations($user),
+            // Nouveaux jeux de données pour les charts
+            'progress_by_category' => $progressByCategory,
+            'timeline_categories_30d' => $timeline,
         ];
     }
     
@@ -37,14 +44,17 @@ class SmartAnalyticsService
         $completedObjectives = $objectives->filter(function ($obj) use ($user) {
             return $obj->computeProgressPercent($user->id) >= 100;
         })->count();
-        
+
         $avgProgress = $objectives->avg(function ($obj) use ($user) {
             return $obj->computeProgressPercent($user->id);
         }) ?? 0;
-        
+
         $totalProgressEntries = Progress::where('user_id', $user->id)->count();
         $streakDays = $this->calculateCurrentStreak($user);
-        
+
+        // Ajout des métriques de catégories
+        $categoryMetrics = $this->getCategoryMetrics($user);
+
         return [
             'total_objectives' => $totalObjectives,
             'completed_objectives' => $completedObjectives,
@@ -52,7 +62,13 @@ class SmartAnalyticsService
             'average_progress' => round($avgProgress, 1),
             'total_entries' => $totalProgressEntries,
             'current_streak' => $streakDays,
-            'performance_score' => $this->calculatePerformanceScore($user)
+            'performance_score' => $this->calculatePerformanceScore($user),
+            // Données pour les charts
+            'category_breakdown' => $categoryMetrics['breakdown'],
+            'sport_completion' => $categoryMetrics['completion_rates']['sport'] ?? 0,
+            'education_completion' => $categoryMetrics['completion_rates']['education'] ?? 0,
+            'health_completion' => $categoryMetrics['completion_rates']['health'] ?? 0,
+            'other_completion' => $categoryMetrics['completion_rates']['other'] ?? 0,
         ];
     }
     
@@ -499,4 +515,148 @@ class SmartAnalyticsService
         // Plus le coefficient est bas, plus la confiance est élevée
         return max(0.3, min(0.9, 1 - $coefficient));
     }
+
+// Normalise les libellés de catégories vers des clés canoniques
+private function normalizeCategory(?string $raw): string
+{
+    $s = mb_strtolower(trim($raw ?? ''));
+    $s = strtr($s, [
+        'é' => 'e', 'è' => 'e', 'ê' => 'e',
+        'à' => 'a', 'â' => 'a',
+        'û' => 'u', 'ù' => 'u',
+        'î' => 'i', 'ï' => 'i',
+        'ô' => 'o', 'ö' => 'o',
+    ]);
+
+    if ($s === 'sport' || in_array($s, ['activite','activity'])) return 'sport';
+    if (in_array($s, ['education', 'educ', 'etude', 'formation'])) return 'education';
+    if (in_array($s, ['sante', 'health', 'sommeil', 'sleep'])) return 'health';
+    if (in_array($s, ['autre', 'other', 'others', 'divers'])) return 'other';
+    if (in_array($s, ['nutrition','alimentation','diet'])) return 'health';
+    return 'other';
+}
+
+// Calcule la répartition par catégorie et les taux de complétion moyens par catégorie
+private function getCategoryMetrics(User $user): array
+{
+    $objectives = $user->objectives;
+
+    $categories = ['sport', 'education', 'health', 'other'];
+    $counts = [
+        'sport' => 0,
+        'education' => 0,
+        'health' => 0,
+        'other' => 0,
+    ];
+    $progressBuckets = [
+        'sport' => [],
+        'education' => [],
+        'health' => [],
+        'other' => [],
+    ];
+
+    foreach ($objectives as $obj) {
+        $cat = $this->normalizeCategory($obj->category ?? null);
+        $counts[$cat]++;
+        $progressBuckets[$cat][] = (float) ($obj->computeProgressPercent($user->id) ?? 0);
+    }
+
+    $total = max(1, array_sum($counts));
+
+    $breakdown = [];
+    $completionRates = [];
+
+    foreach ($categories as $cat) {
+        $breakdown[$cat] = round(($counts[$cat] / $total) * 100);
+        $values = $progressBuckets[$cat];
+        $avg = !empty($values) ? array_sum($values) / count($values) : 0;
+        $completionRates[$cat] = round($avg);
+    }
+
+    return [
+        'breakdown' => $breakdown,
+        'completion_rates' => $completionRates,
+    ];
+}
+
+// Somme des progrès par catégorie sur les N derniers jours
+private function getProgressByCategory(User $user, int $days = 30): array
+{
+    $end = now();
+    $start = now()->subDays($days - 1)->startOfDay();
+
+    $progresses = Progress::where('user_id', $user->id)
+        ->whereBetween('entry_date', [$start, $end])
+        ->with('objective')
+        ->get();
+
+    $totals = [
+        'sport' => 0,
+        'education' => 0,
+        'health' => 0,
+        'other' => 0,
+    ];
+
+    foreach ($progresses as $p) {
+        $cat = $this->normalizeCategory($p->objective->category ?? null);
+        if (!isset($totals[$cat])) $cat = 'other';
+        $totals[$cat] += (float) $p->value;
+    }
+
+    return $totals;
+}
+
+// Timeline des progrès par catégorie sur les N derniers jours
+private function getTimelineByCategory(User $user, int $days = 30): array
+{
+    $end = now()->endOfDay();
+    $start = now()->subDays($days - 1)->startOfDay();
+
+    $progresses = Progress::where('user_id', $user->id)
+        ->whereBetween('entry_date', [$start, $end])
+        ->with('objective')
+        ->get();
+
+    // Préparer structure dates
+    $dates = [];
+    $series = [
+        'sport' => [],
+        'education' => [],
+        'health' => [],
+        'other' => [],
+    ];
+
+    $dayMap = [];
+    for ($i = 0; $i < $days; $i++) {
+        $d = $start->copy()->addDays($i);
+        $key = $d->toDateString();
+        $dates[] = $key;
+        $dayMap[$key] = [
+            'sport' => 0,
+            'education' => 0,
+            'health' => 0,
+            'other' => 0,
+        ];
+    }
+
+    foreach ($progresses as $p) {
+        $dateKey = $p->entry_date->toDateString();
+        $cat = $this->normalizeCategory($p->objective->category ?? null);
+        if (!isset($dayMap[$dateKey])) continue;
+        if (!isset($dayMap[$dateKey][$cat])) $cat = 'other';
+        $dayMap[$dateKey][$cat] += (float) $p->value;
+    }
+
+    foreach ($dates as $key) {
+        $series['sport'][] = $dayMap[$key]['sport'];
+        $series['education'][] = $dayMap[$key]['education'];
+        $series['health'][] = $dayMap[$key]['health'];
+        $series['other'][] = $dayMap[$key]['other'];
+    }
+
+    return [
+        'dates' => $dates,
+        'series' => $series,
+    ];
+}
 }
